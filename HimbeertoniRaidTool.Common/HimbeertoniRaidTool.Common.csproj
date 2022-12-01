@@ -10,10 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="Lumina.Excel" Version="6.2.1">
-      <PrivateAssets>all</PrivateAssets>
+      <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2">
-      <PrivateAssets>all</PrivateAssets>
+      <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
   </ItemGroup>
 </Project>
