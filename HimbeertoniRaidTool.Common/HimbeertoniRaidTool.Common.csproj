@@ -1,11 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <PackageProjectUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common</PackageProjectUrl>
+    <Authors>Koenari</Authors>
+    <Company></Company>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <Nullable>enable</Nullable>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyName>HimbeertoniRaidTool.Common</AssemblyName>
+    <Product>Himbeertoni Raid Tool Common Library</Product>
+    <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
+    <RootNamespace>HimbeertoniRaidTool.Common</RootNamespace>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net6.0": {
+      "Lumina.Excel": {
+        "type": "Direct",
+        "requested": "[6.2.1, )",
+        "resolved": "6.2.1",
+        "contentHash": "czgE8ZrB91HFDFHRopdOHAwbo71r+XVmLvyteFl/+Mqa43WxhbmOlDkxV8yeh33qkqNzP6cCyU7ja30p0MRlxw==",
+        "dependencies": {
+          "Lumina": "3.10.0"
+        }
+      },
+      "Newtonsoft.Json": {
+        "type": "Direct",
+        "requested": "[13.0.2, )",
+        "resolved": "13.0.2",
+        "contentHash": "R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg=="
+      },
+      "Lumina": {
+        "type": "Transitive",
+        "resolved": "3.10.0",
+        "contentHash": "OKDBlcz8VcapWCZjJWKoCq6iWjtooiN2WSu8ijP6hGtSTX03ksHuPFypSswur8KBCY9I6XYOYVBZ6IccFjrjnA=="
+      }
+    }
+  }
+}
