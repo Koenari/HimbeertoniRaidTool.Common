@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -18,7 +19,17 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     [JsonProperty("Name")]
     public string Name = "";
     [JsonProperty("MainJob")]
-    public Job? MainJob;
+    private Job? _mainJob;
+    public Job? MainJob
+    {
+        get
+        {
+            if (_mainJob == null && Classes.Any())
+                _mainJob = Classes.First().Job;
+            return _mainJob;
+        }
+        set => _mainJob = value;
+    }
     public PlayableClass? MainClass => MainJob.HasValue ? this[MainJob.Value] : null;
     [JsonProperty("WorldID")]
     public uint HomeWorldID;
@@ -46,14 +57,13 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
         HomeWorldID = worldID;
     }
     public IEnumerable<PlayableClass> Classes => _classes;
-    public void AddClass(PlayableClass classToAdd)
+    public PlayableClass AddClass(Job job)
     {
-        _classes.Add(classToAdd);
+        PlayableClass classtoAdd = new(job, this);
+        _classes.Add(classtoAdd);
+        return classtoAdd;
     }
-    public PlayableClass? this[Job type]
-    {
-        get => _classes.Find(x => x.Job == type);
-    }
+    public PlayableClass? this[Job type] => _classes.Find(x => x.Job == type);
     public bool RemoveClass(Job type)
     {
         return _classes.RemoveAll(job => job.Job == type) > 0;
