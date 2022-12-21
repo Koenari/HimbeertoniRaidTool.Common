@@ -29,15 +29,18 @@ public class ItemInfo
             for (int idx = 0; idx < shop.ShopEntries.Length; idx++)
             {
                 var entry = shop.ShopEntries[idx];
-                //Cannot handle dual output
-                if (entry.ItemReceiveEntries[1].Item.Row != 0)
-                    continue;
-                ShopIndex[entry.ItemReceiveEntries[0].Item.Row] = (shop.RowId, idx);
-                foreach (var item in entry.ItemCostEntries)
+                for (int receiveIdx = 0; receiveIdx < entry.ItemReceiveEntries.Length; receiveIdx++)
                 {
-                    if (!UsedAsCurrency.ContainsKey(item.Item.Row))
-                        UsedAsCurrency.Add(item.Item.Row, new());
-                    UsedAsCurrency[item.Item.Row].Add(entry.ItemReceiveEntries[0].Item.Row);
+                    if (entry.ItemReceiveEntries[receiveIdx].Item.Row == 0)
+                        continue;
+                    ShopIndex[entry.ItemReceiveEntries[receiveIdx].Item.Row] = (shop.RowId, idx);
+                    foreach (var item in entry.ItemCostEntries)
+                    {
+                        if (item.Item.Row == 0) continue;
+                        if (!UsedAsCurrency.ContainsKey(item.Item.Row))
+                            UsedAsCurrency.Add(item.Item.Row, new());
+                        UsedAsCurrency[item.Item.Row].Add(entry.ItemReceiveEntries[0].Item.Row);
+                    }
                 }
             }
         }
