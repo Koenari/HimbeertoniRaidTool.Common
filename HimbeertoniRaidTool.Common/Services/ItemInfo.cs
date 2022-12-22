@@ -15,7 +15,7 @@ public class ItemInfo
     private readonly Dictionary<uint, (uint shopID, int idx)> ShopIndex;
     private readonly Dictionary<uint, List<uint>> UsedAsCurrency;
     private readonly Dictionary<uint, List<uint>> LootSources;
-    public ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
+    internal ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
     {
         _gameInfo = gameInfo;
         ItemContainerDB = curData.ItemContainerDB;

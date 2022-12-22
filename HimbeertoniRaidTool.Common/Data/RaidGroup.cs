@@ -96,19 +96,6 @@ public class RaidGroup : IEnumerable<Player>
             _Players[idx] = value;
         }
     }
-    internal Character? GetCharacter(string name)
-    {
-        foreach (var p in _Players)
-        {
-            foreach (var c in p.Chars)
-            {
-                if (name.Equals(c.Name))
-                    return c;
-            }
-        }
-        return null;
-    }
-
     public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();

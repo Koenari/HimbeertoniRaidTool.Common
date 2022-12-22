@@ -8,7 +8,7 @@ public class GameInfo
     private readonly GameExpansion[] Expansions = new GameExpansion[6];
     private readonly Dictionary<uint, InstanceWithLoot> InstanceDB;
     public GameExpansion CurrentExpansion => Expansions[5];
-    public GameInfo(CuratedData curatedData)
+    internal GameInfo(CuratedData curatedData)
     {
         InstanceDB = new();
         foreach (var instance in curatedData.InstanceDB)

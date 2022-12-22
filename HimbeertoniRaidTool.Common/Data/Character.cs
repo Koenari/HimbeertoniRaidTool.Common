@@ -42,7 +42,7 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     [JsonProperty("LodestoneID")]
     public int LodestoneID = 0;
     [JsonProperty("Wallet")]
-    internal readonly Wallet Wallet = new();
+    public readonly Wallet Wallet = new();
     [JsonProperty("MainInventory")]
     public readonly Inventory MainInventory = new();
     public World? HomeWorld

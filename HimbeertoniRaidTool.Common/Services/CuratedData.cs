@@ -17,7 +17,7 @@ namespace HimbeertoniRaidTool.Common.Services;
 ///     Just add entries as a new line of format:
 ///     { ItemID, GearSlot.Name },
 /// </summary>
-public class CuratedData
+internal class CuratedData
 {
     internal CuratedData()
     {
