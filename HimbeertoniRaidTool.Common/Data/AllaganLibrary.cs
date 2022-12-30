@@ -106,15 +106,13 @@ public static class AllaganLibrary
     }
     /// <summary>
     /// This function evaluates a stat to it's respective effective used effect.
-    /// Only works for level 90
+    /// Only works for level 90/80/70
     /// </summary>
-    /// <param name="type">Type of stat that is input</param>
-    /// <param name="totalStat">total value of stat</param>
-    /// <param name="level">level of the job to evaluate for</param>
-    /// <param name="job">current job</param>
-    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param
-    /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
-    /// <returns>Evaluated value including unit</returns>
+    /// <param name="type">Type of stat that should be evaluated</param>
+    /// <param name="curClass">The job/class to evaluate for</param>
+    /// <param name="bis">If true evaluates for BiS gear else for current</param>
+    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
+    /// <returns>Evaluated value including unit</returns>    
     public static string EvaluateStatToDisplay(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
     {
         string notAvail = "n.A.";
@@ -140,13 +138,12 @@ public static class AllaganLibrary
     }
     /// <summary>
     /// This function evaluates a stat to it's respective effective used effect.
-    /// Only works for level 90
+    /// Only works for level 90/80/70 (some stats may work for aother levels too)
     /// </summary>
-    /// <param name="type">Type of stat that is input</param>
-    /// <param name="totalStat">total value of stat</param>
-    /// <param name="level">level of the job to evaluate for</param>
-    /// <param name="job">current job</param>
-    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
+    /// <param name="type">Type of stat that should be evaluated</param>
+    /// <param name="curClass">The job/class to evaluate for</param>
+    /// <param name="bis">If true evaluates for BiS gear else for current</param>
+    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
     /// /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
     public static float EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
@@ -171,7 +168,7 @@ public static class AllaganLibrary
             (StatType.SkillSpeed, _) or (StatType.SpellSpeed, _) => MathF.Floor(2500f * (1000 + MathF.Ceiling(130 * (LevelTable[level].SUB - totalStat) / LevelTable[level].DIV)) / 10000f) / 100f,
             (StatType.Defense, _) or (StatType.MagicDefense, _) => MathF.Floor(15 * totalStat / LevelTable[level].DIV) / 100f,
             //ToDO: Still rounding issues
-            (StatType.Vitality, _) => MathF.Floor(LevelTable[level].HP * GetJobModifier(StatType.HP, curClass.ClassJob))
+            (StatType.Vitality, _) => MathF.Ceiling(LevelTable[level].HP * GetJobModifier(StatType.HP, curClass.ClassJob))
                 + MathF.Floor((totalStat - LevelTable[level].MAIN) * GetHPMultiplier(level, job)),
             (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _) => CalcExpDamage(),
             _ => float.NaN
@@ -223,6 +220,13 @@ public static class AllaganLibrary
         float tenacityMultiplier = EvaluateStat(StatType.Tenacity, curClass, bis, 1);
         return baseDmg * determinationMultiplier * tenacityMultiplier * trait / 100f;
     }
+    /// <summary>
+    /// Calculates the Hp multiplier (aslo called ??). Bassically SE's way to balance Vitality to actual HP
+    /// Currently depends on level and if you are tank or not
+    /// </summary>
+    /// <param name="level">Level of the job supplied</param>
+    /// <param name="job">THe job to be evaluated for</param>
+    /// <returns>A multiplier to calcualte HP from Vit</returns>
     private static float GetHPMultiplier(int level, Job? job) => (job.GetRole(), level) switch
     {
         (Role.Tank, 90) => 34.6f,
