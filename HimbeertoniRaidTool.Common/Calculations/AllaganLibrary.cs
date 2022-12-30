@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using HimbeertoniRaidTool.Common.Data;
 using Lumina.Excel.GeneratedSheets;
 
-namespace HimbeertoniRaidTool.Common.Data;
+namespace HimbeertoniRaidTool.Common.Calculations;
 
 public static class AllaganLibrary
 {
@@ -168,7 +169,7 @@ public static class AllaganLibrary
             (StatType.SkillSpeed, _) or (StatType.SpellSpeed, _) => MathF.Floor(2500f * (1000 + MathF.Ceiling(130 * (LevelTable[level].SUB - totalStat) / LevelTable[level].DIV)) / 10000f) / 100f,
             (StatType.Defense, _) or (StatType.MagicDefense, _) => MathF.Floor(15 * totalStat / LevelTable[level].DIV) / 100f,
             //ToDO: Still rounding issues
-            (StatType.Vitality, _) => MathF.Ceiling(LevelTable[level].HP * GetJobModifier(StatType.HP, curClass.ClassJob))
+            (StatType.Vitality, _) => MathF.Floor(LevelTable[level].HP * GetJobModifier(StatType.HP, curClass.ClassJob))
                 + MathF.Floor((totalStat - LevelTable[level].MAIN) * GetHPMultiplier(level, job)),
             (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _) => CalcExpDamage(),
             _ => float.NaN
@@ -187,32 +188,16 @@ public static class AllaganLibrary
     }
     private static float CalcBaseDamageMultiplier(PlayableClass curClass, bool bis)
     {
-        int weaponDamage;
-        int mainStat;
-        (weaponDamage, mainStat) = (curClass.Job.GetRole(), bis) switch
+        (int weaponDamage, int mainStat) = (curClass.Job.GetRole(), bis) switch
         {
-            (Role.Caster, false) or (Role.Healer, false) => (curClass.GetCurrentStat(StatType.MagicalDamage), curClass.GetCurrentStat(StatType.AttackMagicPotency)),
-            (Role.Caster, true) or (Role.Healer, true) => (curClass.GetBiSStat(StatType.MagicalDamage), curClass.GetBiSStat(StatType.AttackMagicPotency)),
+            (Role.Caster or Role.Healer, false) => (curClass.GetCurrentStat(StatType.MagicalDamage), curClass.GetCurrentStat(StatType.AttackMagicPotency)),
+            (Role.Caster or Role.Healer, true) => (curClass.GetBiSStat(StatType.MagicalDamage), curClass.GetBiSStat(StatType.AttackMagicPotency)),
             (_, false) => (curClass.GetCurrentStat(StatType.PhysicalDamage), curClass.GetCurrentStat(StatType.AttackPower)),
             (_, true) => (curClass.GetBiSStat(StatType.PhysicalDamage), curClass.GetBiSStat(StatType.AttackPower)),
         };
-        int m = (curClass.Job.GetRole(), curClass.Level) switch
-        {
-            (Role.Tank, 90) => 156,
-            (Role.Tank, 80) => 115,
-            (Role.Tank, 70) => 105,
-            (_, 90) => 195,
-            (_, 80) => 165,
-            (_, 70) => 125,
-            _ => 0
-        };
-        float trait = curClass.Job.GetRole() switch
-        {
-            Role.Caster or Role.Healer => 1.3f,
-            Role.Ranged => 1.2f,
-            _ => 1f
-        };
-        if (m == 0 || mainStat < 0)
+        float m = GetAttackModifierM(curClass.Level, curClass.Job);
+        float trait = GetTraitModifier(curClass.Level, curClass.Job);
+        if (float.IsNaN(m) || mainStat <= 0)
             return float.NaN;
         float baseDmg = MathF.Floor((weaponDamage + MathF.Floor(LevelTable[curClass.Level].MAIN * GetJobModifier(curClass.Job.MainStat(), curClass.ClassJob) / 10f))
             * (100 + (mainStat - LevelTable[curClass.Level].MAIN) * m / LevelTable[curClass.Level].MAIN)) / 100f;
@@ -221,21 +206,70 @@ public static class AllaganLibrary
         return baseDmg * determinationMultiplier * tenacityMultiplier * trait / 100f;
     }
     /// <summary>
+    /// Calculates the Attack modifier. Named 'm' in AllagangStudies formulas
+    /// </summary>
+    /// <param name="level">current level of the job</param>
+    /// <param name="job">curretn job</param>
+    /// <returns>Attack Modifier 'm'</returns>
+    private static float GetAttackModifierM(int level, Job job) => (job.GetRole(), level) switch
+    {
+        //See: https://github.com/Kouzukii/ffxiv-characterstatus-refined/blob/master/CharacterPanelRefined/LevelModifiers.cs
+        (Role.Tank, <= 80) => level + 35,
+        (Role.Tank, <= 90) => (level - 80) * 4.1f + 115,
+        (_, <= 50) => 75,
+        (_, <= 70) => (level - 50) * 2.5f + 75,
+        (_, <= 80) => (level - 70) * 4 + 125,
+        (_, <= 90) => (level - 80) * 3 + 165,
+        _ => float.NaN,
+    };
+    /// <summary>
+    /// Calculates the trait modifier
+    /// </summary>
+    /// <param name="level">current level of the job</param>
+    /// <param name="job">curretn job</param>
+    /// <returns>Trait modifier</returns>
+    private static float GetTraitModifier(int level, Job job) => job switch
+    {
+        //See: https://github.com/Kouzukii/ffxiv-characterstatus-refined/blob/master/CharacterPanelRefined/JobInfo.cs
+        Job.BLU => level switch
+        {
+            >= 50 => 1.5f,
+            >= 40 => 1.4f,
+            >= 30 => 1.3f,
+            >= 20 => 1.2f,
+            >= 10 => 1.1f,
+            _ => 1,
+        },
+        Job.DNC => level switch
+        {
+            >= 60 => 1.2f,
+            >= 50 => 1.1f,
+            _ => 1f,
+        },
+        _ => (job.GetRole(), level) switch
+        {
+            //Maim and mend
+            (Role.Caster or Role.Healer, >= 40) => 1.3f,
+            (Role.Caster or Role.Healer, >= 20) => 1.1f,
+            (Role.Caster or Role.Healer, _) => 1.0f,
+            // increased action damage trait
+            (Role.Ranged, >= 40) => 1.2f,
+            (Role.Ranged, >= 20) => 1.1f,
+            _ => 1f,
+        }
+    };
+    /// <summary>
     /// Calculates the Hp multiplier (aslo called ??). Bassically SE's way to balance Vitality to actual HP
     /// Currently depends on level and if you are tank or not
     /// </summary>
     /// <param name="level">Level of the job supplied</param>
     /// <param name="job">THe job to be evaluated for</param>
     /// <returns>A multiplier to calcualte HP from Vit</returns>
-    private static float GetHPMultiplier(int level, Job? job) => (job.GetRole(), level) switch
+    private static float GetHPMultiplier(int level, Job? job) => (job.GetRole()) switch
     {
-        (Role.Tank, 90) => 34.6f,
-        (Role.Tank, 80) => 26.6f,
-        (Role.Tank, 70) => 18.8f,
-        (_, 90) => 24.3f,
-        (_, 80) => 18.8f,
-        (_, 70) => 14f,
-        _ => float.NaN
+        //See: https://github.com/Kouzukii/ffxiv-characterstatus-refined/blob/master/CharacterPanelRefined/LevelModifiers.cs
+        Role.Tank => 6.7f + 0.31f * level,
+        _ => 4.5f + 0.22f * level
     };
     public static int GetStatWithModifiers(StatType type, int fromGear, int level, Job? job, Tribe? tribe)
     {
@@ -244,7 +278,7 @@ public static class AllaganLibrary
     public static int GetBaseStat(StatType type, int level)
     {
         if (level < 1 || level > 90)
-            return 0;
+            return 0; ''
         return type switch
         {
             StatType.HP => LevelTable[level].HP,

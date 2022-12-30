@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HimbeertoniRaidTool.Common.Calculations;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;

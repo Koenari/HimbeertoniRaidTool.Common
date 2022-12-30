@@ -1,4 +1,5 @@
 ﻿using HimbeertoniRaidTool.Common.Services;
+using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
@@ -228,6 +229,8 @@ public enum StatType : uint
 }
 public static class EnumExtensions
 {
+    private static ExcelSheet<ClassJob>? JobSheetCache = null;
+    private static ExcelSheet<ClassJob>? JobSheet => JobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
     public static Role GetRole(this PlayableClass? c) => (c?.Job).GetRole();
     public static Role GetRole(this Job? c) => c.HasValue ? GetRole(c.Value) : Role.None;
     public static Role GetRole(this Job c) => c switch
@@ -240,7 +243,7 @@ public static class EnumExtensions
         _ => Role.None,
     };
     public static ClassJob? GetClassJob(this Job? c) =>
-        c.HasValue ? ServiceManager.ExcelModule.GetSheet<ClassJob>()?.GetRow((uint)c.Value) : null;
+        c.HasValue ? JobSheet?.GetRow((uint)c.Value) : null;
     public static StatType MainStat(this Job job) => job switch
     {
         Job.NIN => StatType.Dexterity,
