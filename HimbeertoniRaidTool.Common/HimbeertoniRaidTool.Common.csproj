@@ -31,4 +31,8 @@
       <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\lib\XIVCalc\XIVCalc\XIVCalc.csproj" />
+  </ItemGroup>
 </Project>

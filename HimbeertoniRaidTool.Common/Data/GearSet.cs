@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Lumina.Excel.Extensions;
 using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;

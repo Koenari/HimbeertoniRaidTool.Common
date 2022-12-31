@@ -21,6 +21,12 @@
         "type": "Transitive",
         "resolved": "3.10.0",
         "contentHash": "OKDBlcz8VcapWCZjJWKoCq6iWjtooiN2WSu8ijP6hGtSTX03ksHuPFypSswur8KBCY9I6XYOYVBZ6IccFjrjnA=="
+      },
+      "xivcalc": {
+        "type": "Project",
+        "dependencies": {
+          "Lumina.Excel": "[6.2.1, )"
+        }
       }
     }
   }

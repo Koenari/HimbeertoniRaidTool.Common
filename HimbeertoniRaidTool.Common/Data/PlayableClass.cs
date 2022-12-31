@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using HimbeertoniRaidTool.Common.Calculations;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
+using XIVCalc.Calculations;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -16,7 +16,7 @@ public class PlayableClass
     [JsonProperty("Job")]
     public Job Job;
     [JsonIgnore]
-    public ClassJob? ClassJob => _classJobSheet?.GetRow((uint)Job)!;
+    public ClassJob ClassJob => _classJobSheet?.GetRow((uint)Job)!;
     public Character? Parent { get; private set; }
     [JsonProperty("Level")]
     public int Level = 1;
@@ -110,7 +110,18 @@ public class PlayableClass
             StatType.AttackPower => Job.MainStat(),
             _ => type,
         };
-        return AllaganLibrary.GetStatWithModifiers(type, set.GetStat(type), Level, Job, Parent?.Tribe);
+        int baseStat = type switch
+        {
+            StatType.HP => LevelTable.HP(Level),
+            StatType.MP => LevelTable.MP(Level),
+            StatType.Strength or StatType.Dexterity or StatType.Vitality or StatType.Intelligence or StatType.Mind or StatType.Determination or StatType.Piety => LevelTable.MAIN(Level),
+            StatType.Tenacity or StatType.DirectHitRate or StatType.CriticalHit or StatType.CriticalHitPower or StatType.SkillSpeed or StatType.SpellSpeed => LevelTable.SUB(Level),
+            _ => 0
+        };
+        return set.GetStat(type) //Gear Stats
+            + (int)MathF.Round(LevelTable.GetBaseStat((byte)type, Level) * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
+            + (Parent?.Tribe?.GetRacialModifier(type) ?? 0); //"Racial" modiier +- up to 2
+        //AllaganLibrary.GetStatWithModifiers(type, set.GetStat(type), Level, Job, Parent?.Tribe);
     }
     public void SetParent(Character c)
     {

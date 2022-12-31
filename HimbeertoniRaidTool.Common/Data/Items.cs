@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
-using Lumina.Excel.Extensions;
 using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
 

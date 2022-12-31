@@ -6,12 +6,20 @@ using Lumina.Data;
 using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
 
-namespace HimbeertoniRaidTool.Common.Data
+namespace HimbeertoniRaidTool.Common
 {
-
-}
-namespace Lumina.Excel.Extensions
-{
+    public static class TribeExtensions
+    {
+        public static int GetRacialModifier(this Tribe t, StatType type) => type switch
+        {
+            StatType.Strength => t.STR,
+            StatType.Dexterity => t.DEX,
+            StatType.Vitality => t.VIT,
+            StatType.Intelligence => t.INT,
+            StatType.Mind => t.MND,
+            _ => 0
+        };
+    }
     public static class EquipSlotCategoryExtensions
     {
         public static bool Contains(this EquipSlotCategory? self, GearSetSlot? slot) => self.HasValueAt(slot, 1);
