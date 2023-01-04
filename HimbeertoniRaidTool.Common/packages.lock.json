@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
+      "Koenari.XIVCalc": {
+        "type": "Direct",
+        "requested": "[0.1.1, )",
+        "resolved": "0.1.1",
+        "contentHash": "h42wWZo7keAUc/7SCq0xmo+YUisZF47/A85XsT/MvvzoYpfRA4QnpitGyGpQC9ALmYZha3YRUVZuI3E+Q9LQcg==",
+        "dependencies": {
+          "Lumina.Excel": "6.2.1"
+        }
+      },
       "Lumina.Excel": {
         "type": "Direct",
         "requested": "[6.2.1, )",
@@ -21,12 +30,6 @@
         "type": "Transitive",
         "resolved": "3.10.0",
         "contentHash": "OKDBlcz8VcapWCZjJWKoCq6iWjtooiN2WSu8ijP6hGtSTX03ksHuPFypSswur8KBCY9I6XYOYVBZ6IccFjrjnA=="
-      },
-      "xivcalc": {
-        "type": "Project",
-        "dependencies": {
-          "Lumina.Excel": "[6.2.1, )"
-        }
       }
     }
   }

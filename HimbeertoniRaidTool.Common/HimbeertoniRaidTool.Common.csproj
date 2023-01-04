@@ -30,9 +30,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2">
       <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\lib\XIVCalc\XIVCalc\XIVCalc.csproj" />
+    <PackageReference Include="Koenari.XIVCalc" Version="0.1.1"/>
   </ItemGroup>
 </Project>
