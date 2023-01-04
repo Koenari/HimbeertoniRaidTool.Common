@@ -1,4 +1,5 @@
-﻿using HimbeertoniRaidTool.Common.Services;
+﻿using System.Collections.Generic;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
@@ -64,35 +65,50 @@ public enum EncounterDifficulty
 public enum Job : byte
 {
     ADV = 0,
-    AST = 33,
-    BLM = 25,
-    BLU = 36,
-    BRD = 23,
-    DNC = 38,
-    DRG = 22,
-    DRK = 32,
-    GNB = 37,
-    MCH = 31,
-    MNK = 20,
-    NIN = 30,
-    PLD = 19,
-    RDM = 35,
-    RPR = 39,
-    SAM = 34,
-    SCH = 28,
-    SGE = 40,
-    SMN = 27,
-    WAR = 21,
-    WHM = 24,
+    //Old jobs
     GLA = 1,
+    PGL = 2,
     MRD = 3,
     LNC = 4,
-    PGL = 2,
     ARC = 5,
-    THM = 7,
-    ACN = 26,
     CNJ = 6,
+    THM = 7,
+    //Crafter
+    CRP = 8,
+    BSM = 9,
+    ARM = 10,
+    GSM = 11,
+    LTW = 12,
+    WVR = 13,
+    ALC = 14,
+    CUL = 15,
+    //Gatherer
+    MIN = 16,
+    BTN = 17,
+    FSH = 18,
+    //End game Jobs
+    PLD = 19,
+    MNK = 20,
+    WAR = 21,
+    DRG = 22,
+    BRD = 23,
+    WHM = 24,
+    BLM = 25,
+    ACN = 26,
+    SMN = 27,
+    SCH = 28,
     ROG = 29,
+    NIN = 30,
+    MCH = 31,
+    DRK = 32,
+    AST = 33,
+    SAM = 34,
+    RDM = 35,
+    BLU = 36,
+    GNB = 37,
+    DNC = 38,
+    RPR = 39,
+    SGE = 40,
 }
 
 public enum Role : byte
@@ -103,6 +119,8 @@ public enum Role : byte
     Melee = 2,
     Ranged = 3,
     Caster = 5,
+    DoL = 6,
+    DoH = 7,
 }
 public enum InstanceType
 {
@@ -231,32 +249,24 @@ public static class EnumExtensions
 {
     private static ExcelSheet<ClassJob>? JobSheetCache = null;
     private static ExcelSheet<ClassJob>? JobSheet => JobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
-    public static Role GetRole(this PlayableClass? c) => (c?.Job).GetRole();
-    public static Role GetRole(this Job? c) => c.HasValue ? GetRole(c.Value) : Role.None;
-    public static Role GetRole(this Job c) => c switch
+    private static readonly Dictionary<Job, ClassJob?> JobCache = new();
+    private static ClassJob? GetClassJob(Job j)
     {
-        Job.DRK or Job.GNB or Job.PLD or Job.WAR or Job.GLA or Job.MRD => Role.Tank,
-        Job.AST or Job.SCH or Job.SGE or Job.WHM or Job.CNJ => Role.Healer,
-        Job.DRG or Job.MNK or Job.NIN or Job.RPR or Job.SAM or Job.LNC or Job.PGL or Job.ROG => Role.Melee,
-        Job.BLM or Job.BLU or Job.RDM or Job.SMN or Job.THM or Job.ACN => Role.Caster,
-        Job.BRD or Job.DNC or Job.MCH or Job.ARC => Role.Ranged,
-        _ => Role.None,
-    };
-    public static ClassJob? GetClassJob(this Job? c) =>
-        c.HasValue ? JobSheet?.GetRow((uint)c.Value) : null;
-    public static StatType MainStat(this Job job) => job switch
+        if (!JobCache.ContainsKey(j))
+            JobCache[j] = null;
+        return JobCache[j] ??= JobSheet?.GetRow((uint)j);
+    }
+    public static Role GetRole(this Job c)
     {
-        Job.NIN => StatType.Dexterity,
-        _ => job.GetRole().MainStat(),
-    };
-    public static StatType MainStat(this Role role) => role switch
-    {
-        Role.Tank or Role.Melee => StatType.Strength,
-        Role.Healer => StatType.Mind,
-        Role.Caster => StatType.Intelligence,
-        Role.Ranged => StatType.Dexterity,
-        _ => StatType.None,
-    };
+        ClassJob? cj = GetClassJob(c);
+        if (cj is null)
+            return Role.None;
+        if (cj.PartyBonus > 4)
+            return (Role)cj.PartyBonus;
+        return (Role)cj.Role;
+    }
+    public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
+
     public static int GroupSize(this GroupType groupType) => groupType switch
     {
         GroupType.Solo => 1,
@@ -264,7 +274,10 @@ public static class EnumExtensions
         GroupType.Raid => 8,
         _ => 0
     };
-    public static bool IsCombatJob(this Job j) => j.MainStat() != StatType.None;
+    public static bool IsCombatJob(this Job j) => !(Job.CRP <= j && j <= Job.FSH);
+    public static bool IsDoH(this Job j) => Job.MIN <= j && j <= Job.FSH;
+    public static bool IsDoL(this Job j) => Job.CRP <= j && j <= Job.CUL;
+
     public static StatType GetStatType(this MateriaCategory materiaCategory) => materiaCategory switch
     {
         MateriaCategory.Piety => StatType.Piety,

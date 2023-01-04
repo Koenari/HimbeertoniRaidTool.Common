@@ -72,7 +72,7 @@ namespace HimbeertoniRaidTool.Common
             return jobs;
         }
 
-        public static bool Contains(this ClassJobCategory? cat, Job? job) => cat is not null && job switch
+        public static bool Contains(this ClassJobCategory? cat, Job job) => cat is not null && job switch
         {
             Job.ADV => cat.ADV,
             Job.AST => cat.AST,

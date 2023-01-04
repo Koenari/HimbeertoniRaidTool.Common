@@ -17,6 +17,7 @@ public class PlayableClass
     public Job Job;
     [JsonIgnore]
     public ClassJob ClassJob => _classJobSheet?.GetRow((uint)Job)!;
+    public Role Role => Job.GetRole();
     public Character? Parent { get; private set; }
     [JsonProperty("Level")]
     public int Level = 1;
