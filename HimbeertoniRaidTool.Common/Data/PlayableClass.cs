@@ -120,7 +120,7 @@ public class PlayableClass
             _ => 0
         };
         return set.GetStat(type) //Gear Stats
-            + (int)MathF.Round(LevelTable.GetBaseStat((byte)type, Level) * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
+            + (int)Math.Round(LevelTable.GetBaseStat((byte)type, Level) * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
             + (Parent?.Tribe?.GetRacialModifier(type) ?? 0); //"Racial" modiier +- up to 2
         //AllaganLibrary.GetStatWithModifiers(type, set.GetStat(type), Level, Job, Parent?.Tribe);
     }

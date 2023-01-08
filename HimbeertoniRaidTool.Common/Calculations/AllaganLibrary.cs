@@ -18,8 +18,8 @@ public static class AllaganLibrary
     public static string EvaluateStatToDisplay(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
     {
         string notAvail = "n.A.";
-        float evaluatedValue = EvaluateStat(type, curClass, bis, alternative);
-        if (float.IsNaN(evaluatedValue))
+        double evaluatedValue = EvaluateStat(type, curClass, bis, alternative);
+        if (double.IsNaN(evaluatedValue))
             return notAvail;
         return (type, alternative) switch
         {
@@ -48,7 +48,7 @@ public static class AllaganLibrary
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
     /// /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
-    public static float EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
+    public static double EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
     {
         Func<StatType, int> getStat = bis ? curClass.GetBiSStat : curClass.GetCurrentStat;
         int totalStat = bis ? curClass.GetBiSStat(type) : curClass.GetCurrentStat(type);

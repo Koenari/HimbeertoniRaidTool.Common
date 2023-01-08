@@ -4,9 +4,9 @@
     "net6.0": {
       "Koenari.XIVCalc": {
         "type": "Direct",
-        "requested": "[0.1.1, )",
-        "resolved": "0.1.1",
-        "contentHash": "h42wWZo7keAUc/7SCq0xmo+YUisZF47/A85XsT/MvvzoYpfRA4QnpitGyGpQC9ALmYZha3YRUVZuI3E+Q9LQcg==",
+        "requested": "[0.1.2, )",
+        "resolved": "0.1.2",
+        "contentHash": "2S9ZlQGzEMWneVaqjHMFrzWjr8nOuj0HzzuQy2P1VJ8O6oS5IvWIkUa05XInW+EyoXODxoHf7gMMtoHfHGZbrg==",
         "dependencies": {
           "Lumina.Excel": "6.2.1"
         }
