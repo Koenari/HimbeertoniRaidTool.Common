@@ -120,10 +120,10 @@ namespace Lumina.Excel.CustomSheets
         public const int RECEIVE_SIZE = 4;
         public const int NUM_COST = 3;
         public const int COST_SIZE = 4;
-        public const int ADDITIONAL_SHOPENTRY_FIELDS = 5;
-        public const int COST_OFFSET = GLOBAL_OFFSET + NUM_ENTRIES * NUM_RECEIVE * RECEIVE_SIZE;
-        public const int AFTER_COST_OFFSET = COST_OFFSET + NUM_ENTRIES * NUM_COST * COST_SIZE;
-        public const int AFTER_ENTRIES_OFFSET = AFTER_COST_OFFSET + NUM_ENTRIES * ADDITIONAL_SHOPENTRY_FIELDS;
+        public const int ADDITIONAL_SHOPENTRY_FIELDS = 7;
+        public const int COST_OFFSET = GLOBAL_OFFSET + NUM_ENTRIES * NUM_RECEIVE * RECEIVE_SIZE;//481
+        public const int AFTER_COST_OFFSET = COST_OFFSET + NUM_ENTRIES * NUM_COST * COST_SIZE;//481+720 = 1201
+        public const int AFTER_ENTRIES_OFFSET = AFTER_COST_OFFSET + NUM_ENTRIES * ADDITIONAL_SHOPENTRY_FIELDS;//1201 + 420 = 1621
 
 
         public SeString Name { get; set; }
@@ -143,8 +143,12 @@ namespace Lumina.Excel.CustomSheets
             public ItemCostEntry[] ItemCostEntries { get; set; } = new ItemCostEntry[NUM_COST];
             public LazyRow<Quest> Quest { get; set; }
             public int UnknownData1261 { get; set; }
-            public LazyRow<Achievement> AchievementUnlock { get; set; }
+            public byte UnknownData1321 { get; set; }
             public byte UnknownData1381 { get; set; }
+            public LazyRow<Achievement> AchievementUnlock { get; set; }
+            //Achievement related??
+            //HAs entries for Triple Troiad Cards, Whistels/Horns, Current Tome Gear(100)
+            public byte UnknownData1501 { get; set; }
             public ushort PatchNumber { get; set; }
         }
         public class ItemReceiveEntry
@@ -196,10 +200,13 @@ namespace Lumina.Excel.CustomSheets
                 ShopEntries[i].Quest =
                     new LazyRow<Quest>(gameData, parser.ReadColumn<int>(AFTER_COST_OFFSET + 0 * NUM_ENTRIES + i), language);
                 ShopEntries[i].UnknownData1261 = parser.ReadColumn<int>(AFTER_COST_OFFSET + 1 * NUM_ENTRIES + i);
-                ShopEntries[i].AchievementUnlock =
-                    new LazyRow<Achievement>(gameData, parser.ReadColumn<int>(AFTER_COST_OFFSET + 2 * NUM_ENTRIES + i), language);
+                ShopEntries[i].UnknownData1321 = parser.ReadColumn<byte>(AFTER_COST_OFFSET + 2 * NUM_ENTRIES + i);
                 ShopEntries[i].UnknownData1381 = parser.ReadColumn<byte>(AFTER_COST_OFFSET + 3 * NUM_ENTRIES + i);
-                ShopEntries[i].PatchNumber = parser.ReadColumn<ushort>(AFTER_COST_OFFSET + 4 * NUM_ENTRIES + i);
+
+                ShopEntries[i].AchievementUnlock =
+                    new LazyRow<Achievement>(gameData, parser.ReadColumn<int>(AFTER_COST_OFFSET + 4 * NUM_ENTRIES + i), language);
+                ShopEntries[i].UnknownData1501 = parser.ReadColumn<byte>(AFTER_COST_OFFSET + 5 * NUM_ENTRIES + i);
+                ShopEntries[i].PatchNumber = parser.ReadColumn<ushort>(AFTER_COST_OFFSET + 6 * NUM_ENTRIES + i);
                 if (ShopEntries[i].PatchNumber == 600)
                 {
                     foreach (var item in ShopEntries[i].ItemCostEntries)
