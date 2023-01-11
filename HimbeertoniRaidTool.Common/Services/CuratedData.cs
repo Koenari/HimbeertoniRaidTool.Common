@@ -98,5 +98,10 @@ internal class CuratedData
         new(30121, Savage , new ItemIDList(38391, 38393, 38395, 38388, 38389), 38382),
         new(30122, Normal , (38375, 38380),38385),
         new(30123, Savage , new ItemIDList((38081, 38099), 38390, 38392), 38384),
+        //6.3
+        //Lapis Manalis
+        new(89, Normal , (38957, 39011)),
+        //Euphrosyne
+        new(30125, Normal , new ItemIDList((39089, 39123) ,39373,39481,39600,39601,39602), 38950),
     };
 }
