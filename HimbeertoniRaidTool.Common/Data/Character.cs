@@ -39,6 +39,14 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     public Gender Gender = Gender.Unknown;
     [JsonIgnore]
     public Tribe? Tribe => _tribeSheet?.GetRow(TribeID)!;
+    /// <summary>
+    /// Unique identifier for characters. Can only be read from withing game client.
+    /// </summary>
+    [JsonProperty("ContentID")]
+    public long ContentID = 0;
+    /// <summary>
+    /// Unique character identifier for Lodestone. Maps 1:1 to Content (but not hte same.
+    /// </summary>
     [JsonProperty("LodestoneID")]
     public int LodestoneID = 0;
     [JsonProperty("Wallet")]
