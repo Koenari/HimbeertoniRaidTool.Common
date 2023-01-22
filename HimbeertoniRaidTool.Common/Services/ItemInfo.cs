@@ -102,6 +102,10 @@ public class ItemInfo
             return ItemSource.Crafted;
         if (CanBePurchased(itemID))
         {
+            if ((GetShopEntryForItem(itemID)?.ItemCostEntries.Any(e => CanbBeCrafted(e.Item.Row))).GetValueOrDefault()
+                 || (GetShopEntryForItem(itemID)?.ItemCostEntries.Where(e => e.Item.Row != 0)
+                        .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Crafted)).GetValueOrDefault())
+                return ItemSource.Crafted;
             if ((GetShopEntryForItem(itemID)?.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row))).GetValueOrDefault()
                  || (GetShopEntryForItem(itemID)?.ItemCostEntries.Where(e => e.Item.Row != 0)
                         .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Tome)).GetValueOrDefault())
