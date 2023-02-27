@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -38,12 +39,12 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     [JsonProperty]
     public Gender Gender = Gender.Unknown;
     [JsonIgnore]
-    public Tribe? Tribe => _tribeSheet?.GetRow(TribeID)!;
+    public Tribe? Tribe => _tribeSheet?.GetRow(TribeID);
     /// <summary>
-    /// Unique identifier for characters. Can only be read from withing game client.
+    /// Calculated from characters ContentID.
     /// </summary>
-    [JsonProperty("ContentID")]
-    public long ContentID = 0;
+    [JsonProperty("HrtCharID")]
+    public ulong CharID = 0;
     /// <summary>
     /// Unique character identifier for Lodestone. Maps 1:1 to Content (but not hte same.
     /// </summary>
@@ -84,6 +85,14 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     }
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
     public override int GetHashCode() => Name.GetHashCode();
+
+    public static ulong CalcCharID(long contentID)
+    {
+        if (contentID == 0)
+            return 0;
+        byte[] hash = SHA256.HashData(BitConverter.GetBytes(contentID));
+        return BitConverter.ToUInt64(hash);
+    }
 
     public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
