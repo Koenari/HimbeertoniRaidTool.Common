@@ -102,7 +102,7 @@ public class PlayableClass
     private static bool BisComparer(GearItem item, GearItem bis) => item.ID == bis.ID;
     public int GetCurrentStat(StatType type) => GetStat(type, Gear);
     public int GetBiSStat(StatType type) => GetStat(type, BIS);
-    private int GetStat(StatType type, GearSet set)
+    internal int GetStat(StatType type, IReadOnlyGearSet set)
     {
         type = type switch
         {

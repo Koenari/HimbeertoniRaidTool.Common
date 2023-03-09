@@ -1,12 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
+public interface IReadOnlyGearSet
+{
+    GearItem this[GearSetSlot slot] { get; }
+    int GetStat(StatType type);
+}
+
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
 {
     [JsonProperty("TimeStamp")]
     public DateTime? TimeStamp;
@@ -183,4 +190,43 @@ public class GearSet : IEnumerable<GearItem>
         return Items.GetEnumerator();
     }
 }
+internal class GearSetOverride : IReadOnlyGearSet
+{
+    private readonly IReadOnlyGearSet _base;
+    private readonly GearSetSlot _slot;
+    private readonly GearItem _override;
+    public GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item)
+    {
+        _base = baseSet;
+        _slot = slot;
+        _override = item;
+    }
 
+    public GearItem this[GearSetSlot slot]
+    {
+        get
+        {
+            if (slot == _slot)
+                return _override;
+            return _base[slot];
+        }
+    }
+
+    public int GetStat(StatType statType)
+    {
+        int result = _base.GetStat(statType);
+        result -= _base[_slot].GetStat(statType);
+        result += _override.GetStat(statType);
+        return result;
+    }
+}
+public static class GearSetExtensions
+{
+    public static IReadOnlyGearSet With(this IReadOnlyGearSet baseSet, GearItem item, GearSetSlot slot = GearSetSlot.None)
+    {
+        if (slot is GearSetSlot.None)
+            slot = item.Slots.First();
+        return new GearSetOverride(baseSet, slot, item);
+    }
+
+}
