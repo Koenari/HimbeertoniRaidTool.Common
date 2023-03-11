@@ -1,5 +1,4 @@
-﻿using System;
-using HimbeertoniRaidTool.Common.Data;
+﻿using HimbeertoniRaidTool.Common.Data;
 using XIVCalc.Calculations;
 
 namespace HimbeertoniRaidTool.Common.Calculations;
@@ -14,27 +13,26 @@ public static class AllaganLibrary
     /// <param name="curClass">The job/class to evaluate for</param>
     /// <param name="bis">If true evaluates for BiS gear else for current</param>
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
-    /// <returns>Evaluated value including unit</returns>    
-    public static string EvaluateStatToDisplay(StatType type, PlayableClass curClass, bool bis, int alternative = 0, IReadOnlyGearSet? gear = null)
+    /// <returns>Evaluated value including unit</returns>
+    public static (string Val, string Unit) FormatStatValue(double evaluatedValue, StatType type, int alternative = 0)
     {
-        string notAvail = "n.A.";
-        double evaluatedValue = EvaluateStat(type, curClass, bis, alternative, gear);
+        var notAvail = ("n.A.", "");
         if (double.IsNaN(evaluatedValue))
             return notAvail;
         return (type, alternative) switch
         {
-            (StatType.CriticalHit, _) => $"{evaluatedValue * 100:N1} %%",
-            (StatType.DirectHitRate, _) => $"{evaluatedValue * 100:N1} %%",
-            (StatType.Determination, _) => $"{evaluatedValue * 100:N1} %%",
-            (StatType.Tenacity, _) => $"{evaluatedValue * 100:N1} %%",
-            (StatType.Piety, _) => $"+{evaluatedValue:N0} MP/s",
+            (StatType.CriticalHit, _) => ($"{evaluatedValue * 100:N1}", "%%"),
+            (StatType.DirectHitRate, _) => ($"{evaluatedValue * 100:N1}", "%%"),
+            (StatType.Determination, _) => ($"{evaluatedValue * 100:N1}", "%%"),
+            (StatType.Tenacity, _) => ($"{evaluatedValue * 100:N1}", "%%"),
+            (StatType.Piety, _) => ($"{evaluatedValue:N0}", "MP/s"),
             //AA/DoT Multiplier
-            (StatType.SkillSpeed, 1) or (StatType.SpellSpeed, 1) => $"{evaluatedValue * 100:N2} %%",
+            (StatType.SkillSpeed, 1) or (StatType.SpellSpeed, 1) => ($"{evaluatedValue * 100:N2}", "%%"),
             //GCD
-            (StatType.SkillSpeed, _) or (StatType.SpellSpeed, _) => $"{evaluatedValue:N2} s",
-            (StatType.Defense, _) or (StatType.MagicDefense, _) => $"{evaluatedValue * 100:N1} %%",
-            (StatType.Vitality, _) => $"{evaluatedValue:N0} HP",
-            (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _) => $"{evaluatedValue * 100:N0} Dmg/100",
+            (StatType.SkillSpeed, _) or (StatType.SpellSpeed, _) => ($"{evaluatedValue:N2}", "s"),
+            (StatType.Defense, _) or (StatType.MagicDefense, _) => ($"{evaluatedValue * 100:N1}", "%%"),
+            (StatType.Vitality, _) => ($"{evaluatedValue:N0}", "HP"),
+            (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _) => ($"{evaluatedValue * 100:N0}", "Dmg/100"),
             _ => notAvail
         };
     }
@@ -48,10 +46,9 @@ public static class AllaganLibrary
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
     /// /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
-    public static double EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0, IReadOnlyGearSet? gear = null)
+    public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, int alternative = 0)
     {
-        Func<StatType, int> getStat = gear != null ? (StatType t) => curClass.GetStat(t, gear) : (bis ? curClass.GetBiSStat : curClass.GetCurrentStat);
-        int totalStat = getStat(type);
+        int totalStat = curClass.GetStat(type, gear);
         int level = curClass.Level;
         var job = curClass.Job;
         return (type, alternative) switch
@@ -74,12 +71,12 @@ public static class AllaganLibrary
             (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
             (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _)
                 => StatEquations.CalcAvarageDamage(
-                    getStat(StatType.PhysicalDamage),
-                    getStat((StatType)curClass.ClassJob.PrimaryStat),
-                    getStat(StatType.CriticalHit),
-                    getStat(StatType.DirectHitRate),
-                    getStat(StatType.Determination),
-                    getStat(StatType.Tenacity),
+                    curClass.GetStat(StatType.PhysicalDamage, gear),
+                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
+                    curClass.GetStat(StatType.CriticalHit, gear),
+                    curClass.GetStat(StatType.DirectHitRate, gear),
+                    curClass.GetStat(StatType.Determination, gear),
+                    curClass.GetStat(StatType.Tenacity, gear),
                     level,
                     curClass.ClassJob),
             _ => float.NaN
