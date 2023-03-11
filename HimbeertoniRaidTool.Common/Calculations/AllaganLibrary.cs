@@ -15,10 +15,10 @@ public static class AllaganLibrary
     /// <param name="bis">If true evaluates for BiS gear else for current</param>
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
     /// <returns>Evaluated value including unit</returns>    
-    public static string EvaluateStatToDisplay(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
+    public static string EvaluateStatToDisplay(StatType type, PlayableClass curClass, bool bis, int alternative = 0, IReadOnlyGearSet? gear = null)
     {
         string notAvail = "n.A.";
-        double evaluatedValue = EvaluateStat(type, curClass, bis, alternative);
+        double evaluatedValue = EvaluateStat(type, curClass, bis, alternative, gear);
         if (double.IsNaN(evaluatedValue))
             return notAvail;
         return (type, alternative) switch
@@ -48,10 +48,10 @@ public static class AllaganLibrary
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
     /// /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
-    public static double EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0)
+    public static double EvaluateStat(StatType type, PlayableClass curClass, bool bis, int alternative = 0, IReadOnlyGearSet? gear = null)
     {
-        Func<StatType, int> getStat = bis ? curClass.GetBiSStat : curClass.GetCurrentStat;
-        int totalStat = bis ? curClass.GetBiSStat(type) : curClass.GetCurrentStat(type);
+        Func<StatType, int> getStat = gear != null ? (StatType t) => curClass.GetStat(t, gear) : (bis ? curClass.GetBiSStat : curClass.GetCurrentStat);
+        int totalStat = getStat(type);
         int level = curClass.Level;
         var job = curClass.Job;
         return (type, alternative) switch

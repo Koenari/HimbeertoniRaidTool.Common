@@ -13,6 +13,8 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class GearItem : HrtItem, IEquatable<GearItem>
 {
+    [JsonIgnore]
+    public static readonly GearItem Empty = new();
     [JsonProperty]
     public bool IsHq = false;
     [JsonIgnore]
