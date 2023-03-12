@@ -157,7 +157,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
         HrtID = gearSet.HrtID;
         Name = gearSet.Name;
         ManagedBy = gearSet.ManagedBy;
-        gearSet.Items.CopyTo(Items, 0);
+        //Do an actual copy of the item
+        for (int i = 0; i < Items.Length; i++)
+            Items[i] = gearSet.Items[i].Clone();
         InvalidateCaches();
     }
     public void UpdateID(Character c, Job ac) => HrtID = GenerateID(c, ac, this);
