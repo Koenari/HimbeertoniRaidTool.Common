@@ -142,12 +142,24 @@ public enum GearSetManager
     HRT,
     Etro
 }
-//Please don't make this political this is just to "correctly" reflect game logic and made an enum in hope there will be more in the future
 public enum Gender
 {
     Unknown = 0,
     Female = 1,
     Male = 2,
+}
+public enum MateriaLevel : byte
+{
+    I = 0,
+    II = 1,
+    III = 2,
+    IV = 3,
+    V = 4,
+    VI = 5,
+    VII = 6,
+    VIII = 7,
+    IX = 8,
+    X = 9,
 }
 public enum MateriaCategory : ushort
 {

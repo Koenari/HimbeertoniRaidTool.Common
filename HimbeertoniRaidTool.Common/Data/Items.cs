@@ -138,8 +138,20 @@ public class HrtItem : IEquatable<HrtItem>
 [JsonObject(MemberSerialization.OptIn)]
 public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
+    //Static
+    [JsonIgnore]
+    public static readonly string LongestCatName;
+    [JsonIgnore]
+    public static readonly string LongestLevelName;
+    static HrtMateria()
+    {
+        LongestCatName = Enum.GetNames<MateriaCategory>().MaxBy(s => s.Length) ?? "";
+        LongestLevelName = Enum.GetNames<MateriaLevel>().MaxBy(s => s.Length) ?? "";
+    }
+
+    //Begin Object
     [JsonProperty("Category")]
-    private readonly MateriaCategory Category;
+    public readonly MateriaCategory Category;
     [JsonProperty("MateriaLevel")]
     public readonly byte MateriaLevel;
     [JsonIgnore]
