@@ -286,6 +286,7 @@ public static class EnumExtensions
         GroupType.Raid => 8,
         _ => 0
     };
+    public static bool CanHaveShield(this Job job) => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
     public static bool IsCombatJob(this Job j) => !(Job.CRP <= j && j <= Job.FSH);
     public static bool IsDoH(this Job j) => Job.MIN <= j && j <= Job.FSH;
     public static bool IsDoL(this Job j) => Job.CRP <= j && j <= Job.CUL;

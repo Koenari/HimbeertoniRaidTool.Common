@@ -138,22 +138,13 @@ public class HrtItem : IEquatable<HrtItem>
 [JsonObject(MemberSerialization.OptIn)]
 public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
-    //Static
-    [JsonIgnore]
-    public static readonly string LongestCatName;
-    [JsonIgnore]
-    public static readonly string LongestLevelName;
-    static HrtMateria()
-    {
-        LongestCatName = Enum.GetNames<MateriaCategory>().MaxBy(s => s.Length) ?? "";
-        LongestLevelName = Enum.GetNames<MateriaLevel>().MaxBy(s => s.Length) ?? "";
-    }
-
     //Begin Object
     [JsonProperty("Category")]
     public readonly MateriaCategory Category;
     [JsonProperty("MateriaLevel")]
-    public readonly byte MateriaLevel;
+    private readonly byte MateriaLevel;
+    [JsonIgnore]
+    public MateriaLevel Level => (MateriaLevel)MateriaLevel;
     [JsonIgnore]
     private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule?.GetSheet<Materia>();
     private uint? IDCache = null;
@@ -161,8 +152,9 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
     public override uint ID => IDCache ??= Materia?.Item[MateriaLevel].Row ?? 0;
     public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
     public StatType StatType => Category.GetStatType();
-    public HrtMateria() : this(0, 0) { }
+    public HrtMateria() : this(0, (byte)0) { }
     public HrtMateria((MateriaCategory cat, byte lvl) mat) : this(mat.cat, mat.lvl) { }
+    public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : base(0) => (Category, MateriaLevel) = (cat, (byte)lvl);
     [JsonConstructor]
     public HrtMateria(MateriaCategory cat, byte lvl) : base(0) => (Category, MateriaLevel) = (cat, lvl);
     public int GetStat() => Materia?.Value[MateriaLevel] ?? 0;
