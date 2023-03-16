@@ -4,7 +4,7 @@
     <PackageProjectUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common</PackageProjectUrl>
     <Authors>Koenari</Authors>
     <Company></Company>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
   </PropertyGroup>
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -24,10 +24,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lumina.Excel" Version="6.3.1">
+    <PackageReference Include="Lumina.Excel" Version="6.3.2">
       <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2">
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
       <PrivateAssets>runtime</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Koenari.XIVCalc" Version="0.1.2" />
