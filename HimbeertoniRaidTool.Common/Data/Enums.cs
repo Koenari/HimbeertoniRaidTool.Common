@@ -49,6 +49,7 @@ public enum LootRuleEnum
     RolePrio = 4,
     Random = 5,
     DPS = 6,
+    DPSGain = 7,
     NeedGreed = 997,
     Greed = 998,
     Custom = 999,
