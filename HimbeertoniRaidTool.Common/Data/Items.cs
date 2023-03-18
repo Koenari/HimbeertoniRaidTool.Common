@@ -18,14 +18,16 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonProperty]
     public bool IsHq = false;
     [JsonIgnore]
-    [Obsolete("Evaluate for all availbale slots")]
-    public GearSetSlot Slot => (Item?.EquipSlotCategory.Value).ToSlot();
-    [JsonIgnore]
     public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
     [JsonIgnore]
     public IEnumerable<GearSetSlot> Slots => (Item?.EquipSlotCategory.Value).AvailableSlots();
     [JsonProperty("Materia")]
-    public List<HrtMateria> Materia = new();
+    private readonly List<HrtMateria> _materia = new();
+    [JsonIgnore]
+    public IEnumerable<HrtMateria> Materia => _materia;
+    [JsonIgnore]
+    public int MaxMateriaSlots =>
+        (Item?.IsAdvancedMeldingPermitted ?? false) ? 5 : (Item?.MateriaSlotCount ?? 2);
     public int GetStat(StatType type, bool includeMateria = true)
     {
         if (Item is null) return 0;
@@ -46,7 +48,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                 break;
         }
         if (includeMateria)
-            foreach (var materia in Materia.Where(x => x.StatType == type))
+            foreach (var materia in _materia.Where(x => x.StatType == type))
                 result += materia.GetStat();
         return result;
     }
@@ -61,16 +63,16 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         if (IsHq != other.IsHq) return false;
         if (mode == ItemComparisonMode.IgnoreMateria) return true;
         //Full
-        if (Materia.Count != other.Materia.Count) return false;
+        if (_materia.Count != other._materia.Count) return false;
         Dictionary<HrtMateria, int> cnt = new();
-        foreach (var s in Materia)
+        foreach (var s in _materia)
         {
             if (cnt.ContainsKey(s))
                 cnt[s]++;
             else
                 cnt.Add(s, 1);
         }
-        foreach (var s in other.Materia)
+        foreach (var s in other._materia)
         {
             if (cnt.ContainsKey(s))
                 cnt[s]--;
@@ -81,6 +83,33 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             if (s != 0)
                 return false;
         return true;
+    }
+    public bool CanAffixMateria() => _materia.Count < MaxMateriaSlots;
+
+    public void AddMateria(HrtMateria materia)
+    {
+        if (CanAffixMateria())
+            _materia.Add(materia);
+    }
+    public void RemoveMateria(int removeAt)
+    {
+        if (removeAt < _materia.Count)
+            _materia.RemoveAt(removeAt);
+    }
+    public void ReplacecMateria(int index, HrtMateria newMat)
+    {
+        if (index < _materia.Count)
+            _materia[index] = newMat;
+    }
+    //ToDo: Do from Lumina
+    public MateriaLevel MaxAffixableMateriaLevel()
+    {
+        if (!CanAffixMateria()) return 0;
+        MateriaLevel maxAllowed = MateriaLevel.X;
+        if (_materia.Count >= Item?.MateriaSlotCount)
+            maxAllowed--;
+
+        return maxAllowed;
     }
 }
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
