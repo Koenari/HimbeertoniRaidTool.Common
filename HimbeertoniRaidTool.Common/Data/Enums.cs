@@ -278,6 +278,9 @@ public static class EnumExtensions
             return (Role)cj.PartyBonus;
         return (Role)cj.Role;
     }
+    public static bool IsCombatRole(this Role role) =>
+        role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
+
     public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
 
     public static int GroupSize(this GroupType groupType) => groupType switch

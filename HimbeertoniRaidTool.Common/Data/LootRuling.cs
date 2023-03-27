@@ -10,14 +10,17 @@ public class RolePriority : Dictionary<Role, int>
 {
     public delegate bool InputIntImpl(string desc, ref int val);
     private int Max => this.Aggregate(0, (sum, x) => Math.Max(sum, x.Value));
-    public int GetPriority(Role r) => ContainsKey(r) ? this[r] : Max + 1;
+    public int GetPriority(Role r) => TryGetValue(r, out int val) ? val : Max + 1;
 
     public void DrawEdit(InputIntImpl uiImplementation)
     {
         foreach (Role r in Enum.GetValues<Role>())
         {
-            if (r == Role.None)
+            if (!r.IsCombatRole())
+            {
+                Remove(r);
                 continue;
+            }
             if (!ContainsKey(r))
             {
                 Add(r, Max + 1);
@@ -33,7 +36,7 @@ public class RolePriority : Dictionary<Role, int>
     {
 
         if (Count == 0)
-            return string.Join(" = ", Enum.GetNames<Role>());
+            return string.Join(" = ", Enum.GetValues<Role>().Where(r => r.IsCombatRole()));
         List<KeyValuePair<Role, int>> ordered = this.ToList();
         ordered.Sort((l, r) => l.Value - r.Value);
         string result = "";
@@ -42,7 +45,7 @@ public class RolePriority : Dictionary<Role, int>
             result += $"{ordered[i].Key} {(ordered[i].Value < ordered[i + 1].Value ? ">" : "=")} ";
         }
         result += ordered[^1].Key;
-        List<Role> missing = Enum.GetValues<Role>().Where(r => !ContainsKey(r)).Where(r => r != Role.None).ToList();
+        List<Role> missing = Enum.GetValues<Role>().Where(r => !ContainsKey(r)).Where(r => r.IsCombatRole()).ToList();
         if (missing.Any())
         {
             result += " > ";
