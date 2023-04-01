@@ -32,6 +32,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     {
         if (Item is null) return 0;
         int result = 0;
+        bool isSecondary = false;
         switch (type)
         {
             case StatType.PhysicalDamage: result += Item.DamagePhys; break;
@@ -39,6 +40,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             case StatType.Defense: result += Item.DefensePhys; break;
             case StatType.MagicDefense: result += Item.DefenseMag; break;
             default:
+                isSecondary = true;
                 if (IsHq)
                     foreach (var param in Item.UnkData73.Where(x => x.BaseParamSpecial == (byte)type))
                         result += param.BaseParamValueSpecial;
@@ -50,6 +52,12 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         if (includeMateria)
             foreach (var materia in _materia.Where(x => x.StatType == type))
                 result += materia.GetStat();
+        if (isSecondary)
+        {
+            int maxVal = IsHq ? Item.UnkData73[2].BaseParamValueSpecial : Item.UnkData59[2].BaseParamValue;
+            if (result > maxVal)
+                result = maxVal;
+        }
         return result;
     }
     public GearItem(uint ID = 0) : base(ID) { }
