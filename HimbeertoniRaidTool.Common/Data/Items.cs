@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
@@ -16,7 +17,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonIgnore]
     public static readonly GearItem Empty = new();
     [JsonProperty]
-    public bool IsHq = false;
+    public bool IsHq { get; init; } = false;
     [JsonIgnore]
     public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
     [JsonIgnore]
@@ -28,8 +29,17 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonIgnore]
     public int MaxMateriaSlots =>
         (Item?.IsAdvancedMeldingPermitted ?? false) ? 5 : (Item?.MateriaSlotCount ?? 2);
+    //This holds the total stats if this gear item (including materia)
+    [JsonIgnore]
+    private readonly Dictionary<StatType, int> _statCache = new();
+    private void InvalidateCache()
+    {
+        _statCache.Clear();
+    }
     public int GetStat(StatType type, bool includeMateria = true)
     {
+        if (includeMateria && _statCache.TryGetValue(type, out int cached))
+            return cached;
         if (Item is null) return 0;
         int result = 0;
         bool isSecondary = false;
@@ -49,15 +59,17 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                     result += param.BaseParamValue;
                 break;
         }
-        if (includeMateria)
-            foreach (var materia in _materia.Where(x => x.StatType == type))
-                result += materia.GetStat();
+        if (!includeMateria)
+            return result;
+        foreach (var materia in _materia.Where(x => x.StatType == type))
+            result += materia.GetStat();
         if (isSecondary)
         {
             int maxVal = IsHq ? Item.UnkData73[2].BaseParamValueSpecial : Item.UnkData59[2].BaseParamValue;
             if (result > maxVal)
                 result = maxVal;
         }
+        _statCache.TryAdd(type, result);
         return result;
     }
     public GearItem(uint ID = 0) : base(ID) { }
@@ -97,17 +109,26 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     public void AddMateria(HrtMateria materia)
     {
         if (CanAffixMateria())
+        {
             _materia.Add(materia);
+            InvalidateCache();
+        }
     }
     public void RemoveMateria(int removeAt)
     {
         if (removeAt < _materia.Count)
+        {
             _materia.RemoveAt(removeAt);
+            InvalidateCache();
+        }
     }
     public void ReplacecMateria(int index, HrtMateria newMat)
     {
         if (index < _materia.Count)
+        {
             _materia[index] = newMat;
+            InvalidateCache();
+        }
     }
     //ToDo: Do from Lumina
     public MateriaLevel MaxAffixableMateriaLevel()
@@ -132,9 +153,9 @@ public class HrtItem : IEquatable<HrtItem>
     public bool IsGear => this is GearItem || (Item?.ClassJobCategory.Row ?? 0) != 0;
     public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
     [JsonIgnore]
-    public uint? ILevelCache = null;
+    public Lazy<uint> ILevelCache;
     [JsonIgnore]
-    public uint ItemLevel => ILevelCache ??= Item?.LevelItem.Row ?? 0;
+    public uint ItemLevel => ILevelCache.Value;
     public bool Filled => ID > 0;
     /*
     public string SourceShortName
@@ -164,7 +185,11 @@ public class HrtItem : IEquatable<HrtItem>
     [JsonIgnore]
     protected static readonly ExcelSheet<Item>? _itemSheet = ServiceManager.ExcelModule?.GetSheet<Item>();
 
-    public HrtItem(uint ID) => _ID = ID;
+    public HrtItem(uint ID)
+    {
+        _ID = ID;
+        ILevelCache = new(() => Item?.LevelItem.Row ?? 0);
+    }
 
     public bool Equals(HrtItem? obj)
     {
@@ -173,6 +198,7 @@ public class HrtItem : IEquatable<HrtItem>
     public override int GetHashCode() => ID.GetHashCode();
 }
 [JsonObject(MemberSerialization.OptIn)]
+[ImmutableObject(true)]
 public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
     //Begin Object
@@ -184,16 +210,22 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
     public MateriaLevel Level => (MateriaLevel)MateriaLevel;
     [JsonIgnore]
     private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule?.GetSheet<Materia>();
-    private uint? IDCache = null;
     [JsonIgnore]
-    public override uint ID => IDCache ??= Materia?.Item[MateriaLevel].Row ?? 0;
+    private readonly Lazy<uint> IDCache;
+    [JsonIgnore]
+    public override uint ID => IDCache.Value;
     public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
     public StatType StatType => Category.GetStatType();
     public HrtMateria() : this(0, (byte)0) { }
     public HrtMateria((MateriaCategory cat, byte lvl) mat) : this(mat.cat, mat.lvl) { }
-    public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : base(0) => (Category, MateriaLevel) = (cat, (byte)lvl);
+    public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : this(cat, (byte)lvl) { }
     [JsonConstructor]
-    public HrtMateria(MateriaCategory cat, byte lvl) : base(0) => (Category, MateriaLevel) = (cat, lvl);
+    public HrtMateria(MateriaCategory cat, byte lvl) : base(0)
+    {
+        Category = cat;
+        MateriaLevel = lvl;
+        IDCache = new(() => Materia?.Item[MateriaLevel].Row ?? 0);
+    }
     public int GetStat() => Materia?.Value[MateriaLevel] ?? 0;
     public bool Equals(HrtMateria? other) => base.Equals(other);
 }

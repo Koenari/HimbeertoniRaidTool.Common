@@ -99,6 +99,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
         {
             this[i] = new(0);
         }
+        InvalidateCaches();
     }
     public GearItem this[GearSetSlot slot]
     {
