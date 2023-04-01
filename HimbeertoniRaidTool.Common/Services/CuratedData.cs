@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using HimbeertoniRaidTool.Common.Data;
-using static HimbeertoniRaidTool.Common.Data.EncounterDifficulty;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
@@ -21,13 +19,16 @@ internal class CuratedData
 {
     internal CuratedData()
     {
-        CurrentExpansion = new(6, MateriaLevel.X, 90, 2);
+        CurrentExpansion = new(6, MateriaLevel.X, 90, 3);
         CurrentExpansion.SavageRaidTiers[0] = new(Savage, 605, 600,
             "Asphodelos Savage", new uint[] { 30112, 30114, 30110, 30108 });
         CurrentExpansion.SavageRaidTiers[1] = new(Savage, 635, 630,
             "Abyssos Savage", new uint[] { 30117, 30121, 30119, 30123 });
+        CurrentExpansion.SavageRaidTiers[2] = new(Savage, 665, 660,
+            "Anabaseios Savage", new uint[] { });
         CurrentExpansion.NormalRaidTiers[0] = new(Normal, 590, 580, "Asphodelos", System.Array.Empty<uint>());
         CurrentExpansion.NormalRaidTiers[1] = new(Normal, 620, 610, "Abyssos", System.Array.Empty<uint>());
+        CurrentExpansion.NormalRaidTiers[2] = new(Normal, 650, 640, "Anabaseios", System.Array.Empty<uint>());
     }
     internal readonly GameExpansion CurrentExpansion;
 
@@ -103,5 +104,7 @@ internal class CuratedData
         new(89, Normal , (38957, 39011)),
         //Euphrosyne
         new(30125, Normal , new ItemIDList((39089, 39123) ,39373,39481,39600,39601,39602), 38950),
+        //6.4
+
     };
 }
