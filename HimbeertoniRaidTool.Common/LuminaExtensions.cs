@@ -132,11 +132,11 @@ namespace Lumina.Excel.CustomSheets
         public LazyRow<Quest> UnlockQuest { get; set; }
         public LazyRow<DefaultTalk> CompleteText { get; set; }
         public LazyRow<DefaultTalk> NotCompleteText { get; set; }
-        public uint UnknownData1505 { get; set; }
-        public bool UnknownData1506 { get; set; }
-        public ushort UnknownData1507 { get; set; }
-        public uint UnknownData1508 { get; set; }
-        public bool UnknownData1509 { get; set; }
+        public uint UnknownData1625 { get; set; }
+        public bool UnknownData1626 { get; set; }
+        public ushort UnknownData1627 { get; set; }
+        public uint UnknownData1628 { get; set; }
+        public bool UnknownData1629 { get; set; }
         public class ShopEntry
         {
             public ItemReceiveEntry[] ItemReceiveEntries { get; set; } = new ItemReceiveEntry[NUM_RECEIVE];
@@ -236,11 +236,11 @@ namespace Lumina.Excel.CustomSheets
             UnlockQuest = new LazyRow<Quest>(gameData, parser.ReadColumn<int>(AFTER_ENTRIES_OFFSET + 1), language);
             CompleteText = new LazyRow<DefaultTalk>(gameData, parser.ReadColumn<int>(AFTER_ENTRIES_OFFSET + 2), language);
             NotCompleteText = new LazyRow<DefaultTalk>(gameData, parser.ReadColumn<int>(AFTER_ENTRIES_OFFSET + 3), language);
-            UnknownData1505 = parser.ReadColumn<uint>(AFTER_ENTRIES_OFFSET + 4);
-            UnknownData1506 = parser.ReadColumn<bool>(AFTER_ENTRIES_OFFSET + 5);
-            UnknownData1507 = parser.ReadColumn<ushort>(AFTER_ENTRIES_OFFSET + 6);
-            UnknownData1508 = parser.ReadColumn<uint>(AFTER_ENTRIES_OFFSET + 7);
-            UnknownData1509 = parser.ReadColumn<bool>(AFTER_ENTRIES_OFFSET + 8);
+            UnknownData1625 = parser.ReadColumn<uint>(AFTER_ENTRIES_OFFSET + 4);
+            UnknownData1626 = parser.ReadColumn<bool>(AFTER_ENTRIES_OFFSET + 5);
+            UnknownData1627 = parser.ReadColumn<ushort>(AFTER_ENTRIES_OFFSET + 6);
+            UnknownData1628 = parser.ReadColumn<uint>(AFTER_ENTRIES_OFFSET + 7);
+            UnknownData1629 = parser.ReadColumn<bool>(AFTER_ENTRIES_OFFSET + 8);
         }
     }
 }
