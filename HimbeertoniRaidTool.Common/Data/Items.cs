@@ -65,7 +65,9 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             result += materia.GetStat();
         if (isSecondary)
         {
-            int maxVal = IsHq ? Item.UnkData73[2].BaseParamValueSpecial : Item.UnkData59[2].BaseParamValue;
+            int maxVal = Item.UnkData59[2].BaseParamValue;
+            if (IsHq)
+                maxVal += Item.UnkData73[2].BaseParamValueSpecial;
             if (result > maxVal)
                 result = maxVal;
         }
