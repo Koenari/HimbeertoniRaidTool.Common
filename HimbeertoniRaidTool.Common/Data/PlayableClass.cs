@@ -34,8 +34,8 @@ public class PlayableClass
     public PlayableClass(Job job, Character c)
     {
         Job = job;
-        Gear = new(GearSetManager.HRT, c, Job);
-        BIS = new(GearSetManager.HRT, c, Job, "BIS");
+        Gear = new(GearSetManager.HRT);
+        BIS = new(GearSetManager.HRT, "BIS");
     }
     public (GearItem, GearItem) this[GearSetSlot slot]
     {
@@ -124,12 +124,7 @@ public class PlayableClass
             + (Parent?.Tribe?.GetRacialModifier(type) ?? 0); //"Racial" modiier +- up to 2
         //AllaganLibrary.GetStatWithModifiers(type, set.GetStat(type), Level, Job, Parent?.Tribe);
     }
-    public void SetParent(Character c)
-    {
-        string testString = string.Format("{0:X}-{1:X}", c.HomeWorldID, c.Name.ConsistentHash());
-        if (Gear.HrtID.StartsWith(testString))
-            Parent = c;
-    }
+    public void SetParent(Character c) => Parent = c;
     public bool IsEmpty => Level == 1 && Gear.IsEmpty && BIS.IsEmpty;
     /*
     public void ManageGear()
