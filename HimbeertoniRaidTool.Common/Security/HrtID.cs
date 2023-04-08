@@ -49,8 +49,8 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
         Type = type;
         Sequence = sequence;
     }
-    public override string ToString() => $"HRT-{Revision}-{Authority:X}-" +
-        $"{Type}-{Sequence:X}";
+    public override string ToString() => $"HRT-{Revision:D}-{Authority:X}-" +
+        $"{Type:D}-{Sequence:X}";
     public bool Equals(HrtID? other) =>
         other is not null && Type == other.Type && Authority == other.Authority && Sequence == other.Sequence && Revision == other.Revision;
 
@@ -64,7 +64,7 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
         return 0;
     }
 
-    public enum IDType
+    public enum IDType : byte
     {
         None = 0,
         Player = 1,
@@ -79,7 +79,7 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
         Remote = 5,
         Local = 10,
     }
-
+    public override int GetHashCode() => (int)(Sequence & int.MaxValue);
     public override bool Equals(object? obj) => Equals(obj as HrtID);
     public static bool operator ==(HrtID left, HrtID right) => left.Equals(right);
     public static bool operator !=(HrtID left, HrtID right) => !(left == right);
@@ -87,4 +87,5 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
     public static bool operator <=(HrtID left, HrtID right) => left.CompareTo(right) <= 0;
     public static bool operator >(HrtID left, HrtID right) => left.CompareTo(right) > 0;
     public static bool operator >=(HrtID left, HrtID right) => left.CompareTo(right) >= 0;
+    public static explicit operator HrtID(string id) => FromString(id);
 }
