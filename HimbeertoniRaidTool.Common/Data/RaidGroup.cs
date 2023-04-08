@@ -49,11 +49,8 @@ public class RaidGroup : IEnumerable<Player>
         {
             for (int i = 0; i < Count; i++)
             {
-                int idx = i;
-                if (Type == GroupType.Group)
-                    idx *= 2;
-                if (_Players[idx].Filled)
-                    yield return _Players[idx];
+                if (this[i].Filled)
+                    yield return this[i];
             }
         }
 
@@ -85,6 +82,8 @@ public class RaidGroup : IEnumerable<Player>
                 throw new IndexOutOfRangeException($"Raidgroup of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
+            if (_Players[idx] == null)
+                _Players[idx] = new Player();
             return _Players[idx];
         }
         set

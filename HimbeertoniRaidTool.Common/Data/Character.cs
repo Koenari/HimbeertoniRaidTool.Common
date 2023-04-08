@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -15,12 +16,35 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
 {
     private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule?.GetSheet<World>();
     private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule?.GetSheet<Tribe>();
-    [JsonProperty("Classes")]
-    private readonly List<PlayableClass> _classes = new();
-    [JsonProperty("Name")]
-    public string Name = "";
-    [JsonProperty("MainJob")]
-    private Job? _mainJob;
+    //Identifiers
+    [JsonProperty("WorldID")] public uint HomeWorldID;
+    [JsonProperty("Name")] public string Name = "";
+    /// <summary>
+    /// Character unique ID calculated from characters ContentID.
+    /// </summary>
+    [JsonProperty("HrtCharID")] public ulong CharID = 0;
+    /// <summary>
+    /// Unique character identifier for Lodestone. Maps 1:1 to ContentID (but not calculatable).
+    /// </summary>
+    [JsonProperty("LodestoneID")] public int LodestoneID = 0;
+    /// <summary>
+    /// HRT specific uniuqe ID used for local storage.
+    /// </summary>
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtID LocalID = HrtID.Empty;
+    /// <summary>
+    /// HRT specific uniuqe IDs used for remote storage and lookup.
+    /// </summary>
+    [JsonProperty("RemoteIDs")] public readonly List<HrtID> RemoteIDs = new();
+
+    //Properties
+    [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
+    [JsonProperty("MainJob")] private Job? _mainJob;
+    [JsonProperty("Tribe")] public uint TribeID = 0;
+    [JsonProperty("Gender")] public Gender Gender = Gender.Unknown;
+    [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
+    [JsonProperty("MainInventory")] public readonly Inventory MainInventory = new();
+    //Runtime only Properties
     public Job? MainJob
     {
         get
@@ -32,28 +56,7 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
         set => _mainJob = value;
     }
     public PlayableClass? MainClass => MainJob.HasValue ? this[MainJob.Value] : null;
-    [JsonProperty("WorldID")]
-    public uint HomeWorldID;
-    [JsonProperty("Tribe")]
-    public uint TribeID = 0;
-    [JsonProperty]
-    public Gender Gender = Gender.Unknown;
-    [JsonIgnore]
     public Tribe? Tribe => _tribeSheet?.GetRow(TribeID);
-    /// <summary>
-    /// Calculated from characters ContentID.
-    /// </summary>
-    [JsonProperty("HrtCharID")]
-    public ulong CharID = 0;
-    /// <summary>
-    /// Unique character identifier for Lodestone. Maps 1:1 to Content (but not hte same.
-    /// </summary>
-    [JsonProperty("LodestoneID")]
-    public int LodestoneID = 0;
-    [JsonProperty("Wallet")]
-    public readonly Wallet Wallet = new();
-    [JsonProperty("MainInventory")]
-    public readonly Inventory MainInventory = new();
     public World? HomeWorld
     {
         get => HomeWorldID > 0 ? _worldSheet?.GetRow(HomeWorldID) : null;
