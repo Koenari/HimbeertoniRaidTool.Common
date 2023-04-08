@@ -17,6 +17,7 @@ public class Player
     {
         get
         {
+            Chars.RemoveAll(x => x is null);
             if (Chars.Count == 0)
                 Chars.Insert(0, new());
             return Chars[0];
