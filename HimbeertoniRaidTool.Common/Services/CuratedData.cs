@@ -21,7 +21,7 @@ internal class CuratedData
 {
     internal CuratedData()
     {
-        CurrentExpansion = new(6, 10, 90, 2);
+        CurrentExpansion = new(6, MateriaLevel.X, 90, 2);
         CurrentExpansion.SavageRaidTiers[0] = new(Savage, 605, 600,
             "Asphodelos Savage", new uint[] { 30112, 30114, 30110, 30108 });
         CurrentExpansion.SavageRaidTiers[1] = new(Savage, 635, 630,

@@ -8,7 +8,7 @@ public class GameExpansion
     [JsonProperty]
     public readonly byte Number;
     [JsonProperty]
-    public readonly byte MaxMateriaLevel;
+    public readonly MateriaLevel MaxMateriaLevel;
     [JsonProperty]
     public readonly int MaxLevel;
     public readonly RaidTier[] SavageRaidTiers;
@@ -26,10 +26,10 @@ public class GameExpansion
         _ => Localize("Unknown", "Unknown")
     };
     */
-    public GameExpansion(byte v, int maxMatLevel, int maxLvl, int unlockedRaidTiers)
+    public GameExpansion(byte v, MateriaLevel maxMatLevel, int maxLvl, int unlockedRaidTiers)
     {
         Number = v;
-        MaxMateriaLevel = (byte)(maxMatLevel - 1);
+        MaxMateriaLevel = maxMatLevel;
         MaxLevel = maxLvl;
         NormalRaidTiers = new RaidTier[unlockedRaidTiers];
         SavageRaidTiers = new RaidTier[unlockedRaidTiers];

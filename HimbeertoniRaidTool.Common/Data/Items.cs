@@ -218,14 +218,13 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
     public override uint ID => IDCache.Value;
     public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
     public StatType StatType => Category.GetStatType();
-    public HrtMateria() : this(0, (byte)0) { }
-    public HrtMateria((MateriaCategory cat, byte lvl) mat) : this(mat.cat, mat.lvl) { }
-    public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : this(cat, (byte)lvl) { }
+    public HrtMateria() : this(0, 0) { }
+    public HrtMateria((MateriaCategory cat, MateriaLevel lvl) mat) : this(mat.cat, mat.lvl) { }
     [JsonConstructor]
-    public HrtMateria(MateriaCategory cat, byte lvl) : base(0)
+    public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : base(0)
     {
         Category = cat;
-        MateriaLevel = lvl;
+        MateriaLevel = (byte)lvl;
         IDCache = new(() => Materia?.Item[MateriaLevel].Row ?? 0);
     }
     public int GetStat() => Materia?.Value[MateriaLevel] ?? 0;
