@@ -151,6 +151,7 @@ public enum Gender
 }
 public enum MateriaLevel : byte
 {
+    None = 255,
     I = 0,
     II = 1,
     III = 2,

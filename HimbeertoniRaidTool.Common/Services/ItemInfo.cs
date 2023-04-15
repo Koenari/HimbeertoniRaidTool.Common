@@ -12,7 +12,7 @@ public class ItemInfo
     private readonly ExcelSheet<SpecialShop> ShopSheet;
     private readonly ExcelSheet<Lumina.Excel.GeneratedSheets.RecipeLookup> RecipeLookupSheet;
     private readonly Dictionary<uint, ItemIDCollection> ItemContainerDB;
-    private readonly Dictionary<uint, (uint shopID, int idx)> ShopIndex;
+    private readonly Dictionary<uint, List<(uint shopID, int idx)>> ShopIndex;
     private readonly Dictionary<uint, List<uint>> UsedAsCurrency;
     private readonly Dictionary<uint, List<uint>> LootSources;
     internal ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
@@ -33,7 +33,11 @@ public class ItemInfo
                 {
                     if (entry.ItemReceiveEntries[receiveIdx].Item.Row == 0)
                         continue;
-                    ShopIndex[entry.ItemReceiveEntries[receiveIdx].Item.Row] = (shop.RowId, idx);
+                    if (!ShopIndex.ContainsKey(entry.ItemReceiveEntries[receiveIdx].Item.Row))
+                        ShopIndex[entry.ItemReceiveEntries[receiveIdx].Item.Row] = new();
+                    if (ShopIndex[entry.ItemReceiveEntries[receiveIdx].Item.Row].Contains((shop.RowId, idx)))
+                        continue;
+                    ShopIndex[entry.ItemReceiveEntries[receiveIdx].Item.Row].Add((shop.RowId, idx));
                     foreach (var item in entry.ItemCostEntries)
                     {
                         if (item.Item.Row == 0) continue;
@@ -74,7 +78,20 @@ public class ItemInfo
     public bool CanbBeCrafted(uint itemID) => RecipeLookupSheet.GetRow(itemID) != null;
     public ItemIDCollection GetPossiblePurchases(uint itemID) => new ItemIDList(UsedAsCurrency.GetValueOrDefault(itemID) ?? Enumerable.Empty<uint>());
     public ItemIDCollection GetContainerContents(uint itemID) => ItemContainerDB.GetValueOrDefault(itemID, ItemIDCollection.Empty);
-    public SpecialShop.ShopEntry? GetShopEntryForItem(uint itemID) => ShopSheet.GetRow(ShopIndex[itemID].shopID)?.ShopEntries[ShopIndex[itemID].idx];
+    public IEnumerable<(string shopName, SpecialShop.ShopEntry entry)> GetShopEntriesForItem(uint itemID)
+    {
+        if (ShopIndex.TryGetValue(itemID, out var shopEntries))
+        {
+            foreach (var (shopID, idx) in shopEntries)
+            {
+                var shop = ShopSheet.GetRow(shopID);
+                if (shop != null)
+                    yield return (shop.Name, shop.ShopEntries[idx]);
+            }
+        }
+
+    }
+
     public static bool IsTomeStone(uint itemID) => itemID switch
     {
         23 => true,
@@ -102,15 +119,15 @@ public class ItemInfo
             return ItemSource.Crafted;
         if (CanBePurchased(itemID))
         {
-            if ((GetShopEntryForItem(itemID)?.ItemCostEntries.Any(e => CanbBeCrafted(e.Item.Row))).GetValueOrDefault()
-                 || (GetShopEntryForItem(itemID)?.ItemCostEntries.Where(e => e.Item.Row != 0)
-                        .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Crafted)).GetValueOrDefault())
+            if (GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Any(e => CanbBeCrafted(e.Item.Row)))
+                 || GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
+                        .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Crafted)))
                 return ItemSource.Crafted;
-            if ((GetShopEntryForItem(itemID)?.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row))).GetValueOrDefault()
-                 || (GetShopEntryForItem(itemID)?.ItemCostEntries.Where(e => e.Item.Row != 0)
-                        .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Tome)).GetValueOrDefault())
+            if (GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row)))
+                 || GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
+                        .Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Tome)))
                 return ItemSource.Tome;
-            if ((GetShopEntryForItem(itemID)?.ItemCostEntries.Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Raid)).GetValueOrDefault())
+            if ((GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Any(e => GetSource(new(e.Item.Row), maxDepth) == ItemSource.Raid))))
                 return ItemSource.Raid;
             return ItemSource.Shop;
         }
