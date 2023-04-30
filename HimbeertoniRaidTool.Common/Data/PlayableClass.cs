@@ -36,6 +36,7 @@ public class PlayableClass
         Job = job;
         Gear = new(GearSetManager.HRT);
         BIS = new(GearSetManager.HRT, "BIS");
+        Parent = c;
     }
     public (GearItem, GearItem) this[GearSetSlot slot]
     {
