@@ -98,7 +98,7 @@ public class ItemInfo
         24 => true,
         26 => true,
         28 => true,
-        >= 30 and <= 44 => true,
+        >= 30 and <= 45 => true,
         _ => false,
     };
     public ItemSource GetSource(HrtItem item, int maxDepth = 10)

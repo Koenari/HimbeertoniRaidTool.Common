@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using HimbeertoniRaidTool.Common.Data;
+using static HimbeertoniRaidTool.Common.Data.EncounterDifficulty;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
@@ -25,10 +27,10 @@ internal class CuratedData
         CurrentExpansion.SavageRaidTiers[1] = new(Savage, 635, 630,
             "Abyssos Savage", new uint[] { 30117, 30121, 30119, 30123 });
         CurrentExpansion.SavageRaidTiers[2] = new(Savage, 665, 660,
-            "Anabaseios Savage", new uint[] { });
+            "Anabaseios Savage", new uint[] { 30127, 30129, 30131, 30133 });
         CurrentExpansion.NormalRaidTiers[0] = new(Normal, 590, 580, "Asphodelos", System.Array.Empty<uint>());
         CurrentExpansion.NormalRaidTiers[1] = new(Normal, 620, 610, "Abyssos", System.Array.Empty<uint>());
-        CurrentExpansion.NormalRaidTiers[2] = new(Normal, 650, 640, "Anabaseios", System.Array.Empty<uint>());
+        CurrentExpansion.NormalRaidTiers[2] = new(Normal, 650, 640, "Anabaseios", new uint[] { 30126, 30128, 30130, 30132 });
     }
     internal readonly GameExpansion CurrentExpansion;
 
@@ -56,6 +58,17 @@ internal class CuratedData
         { 38397, new ItemIDRange(38141, 38145) },//Abyssos necklace coffer
         { 38398, new ItemIDRange(38146, 38150) },//Abyssos bracelet coffer
         { 38399, new ItemIDRange(38151, 38155) },//Abyssos ring coffers
+        //6.4
+        { 40307, new ItemIDRange(40165, 40183) },//Ascension weapon coffer
+        { 40308, new ItemIDList(40185, 40190, 40195, 40200, 40205, 40210, 40215) },//Ascension head gear coffer
+        { 40309, new ItemIDList(40186, 40191, 40196, 40201, 40206, 40211, 40216) },//Ascension chest gear coffer
+        { 40310, new ItemIDList(40187, 40192, 40197, 40202, 40207, 40212, 40217) },//Ascension hand gear coffer
+        { 40311, new ItemIDList(40188, 40193, 40198, 40203, 40208, 40213, 40218) },//Ascension leg gear coffer
+        { 40312, new ItemIDList(40189, 40194, 40199, 40204, 40209, 40214, 40219) },//Ascension foot gear coffer
+        { 40313, new ItemIDRange(40220, 40224) },//Ascension earring coffer
+        { 40314, new ItemIDRange(40225, 40229) },//Ascension necklace coffer
+        { 40315, new ItemIDRange(40230, 40234) },//Ascension bracelet coffer
+        { 40316, new ItemIDRange(40245, 40249) },//Ascension ring coffers
     };
     //I only record Gear and items used to get gear
     internal readonly HashSet<InstanceWithLoot> InstanceDB = new()
@@ -105,6 +118,14 @@ internal class CuratedData
         //Euphrosyne
         new(30125, Normal , new ItemIDList((39089, 39123) ,39373,39481,39600,39601,39602), 38950),
         //6.4
-
+        //40303-40306 Mythos
+        new(30126, Normal , (40298,40302)),
+        new(30127, Savage , new ItemIDRange(40313,40316) ,40303),
+        new(30128, Normal , (40298,40302)),
+        new(30129, Savage , new ItemIDList(40307,40310,40312,40320,40321) ,40304),
+        new(30130, Normal , (40298,40302)),
+        new(30131, Savage , new ItemIDList(40307,40310,40311,40312,40318,40319) ,40305),
+        new(30132, Normal , (40298,40302),40317),
+        new(30133, Savage , new ItemIDList((40165,40183),40307,40309) ,40306),
     };
 }
