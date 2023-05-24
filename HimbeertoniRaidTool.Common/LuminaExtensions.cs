@@ -223,11 +223,25 @@ namespace Lumina.Excel.CustomSheets
                     {
                         switch (item.Item.Row)
                         {
-                            case 2: item.Item = new(gameData, 25199, language); break; //White crafter scrip
-                            case 3: item.Item = new(gameData, 44, language); break; //Casualty TomeStone
-                            case 4: item.Item = new(gameData, 25200, language); break; //White gatherer scrip
-                            case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
-                            case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
+                            case 2: item.Item = new(gameData, 44, language); break; //White crafter scrip
+                                                                                    //case 3: item.Item = new(gameData, 44, language); break; //Casualty TomeStone
+                                                                                    //case 4: item.Item = new(gameData, 25200, language); break; //White gatherer scrip
+                                                                                    //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
+                                                                                    //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
+                        }
+                    }
+                }
+                if (ShopEntries[i].PatchNumber == 640)
+                {
+                    foreach (var item in ShopEntries[i].ItemCostEntries)
+                    {
+                        switch (item.Item.Row)
+                        {
+                            //case 2: item.Item = new(gameData, 25199, language); break; //White crafter scrip
+                            case 3: item.Item = new(gameData, 45, language); break; //Casualty TomeStone
+                                                                                    //case 4: item.Item = new(gameData, 25200, language); break; //White gatherer scrip
+                                                                                    //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
+                                                                                    //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
                         }
                     }
                 }
