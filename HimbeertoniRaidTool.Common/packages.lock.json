@@ -13,9 +13,9 @@
       },
       "Lumina.Excel": {
         "type": "Direct",
-        "requested": "[6.3.2, )",
-        "resolved": "6.3.2",
-        "contentHash": "tdSIhTDV5Tnh19slA8qRDv8f1ewSY3ujrkwQteFRmIgydBq6kvZO6suC69/3uv9tHpUe7Ec+aiylW530E8nlMg==",
+        "requested": "[6.4.0, )",
+        "resolved": "6.4.0",
+        "contentHash": "BzkxwTFZC8449GS1dIiK9m+WLsPLykCSfW4nzj2Bx2lpTbBrXk2jUdlQG+iAbHWemfOB/lVWsr8vnspEoFPdEw==",
         "dependencies": {
           "Lumina": "3.10.0"
         }
