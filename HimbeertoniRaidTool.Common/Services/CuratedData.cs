@@ -68,7 +68,7 @@ internal class CuratedData
         { 40313, new ItemIDRange(40220, 40224) },//Ascension earring coffer
         { 40314, new ItemIDRange(40225, 40229) },//Ascension necklace coffer
         { 40315, new ItemIDRange(40230, 40234) },//Ascension bracelet coffer
-        { 40316, new ItemIDRange(40245, 40249) },//Ascension ring coffers
+        { 40316, new ItemIDRange(40235, 40239) },//Ascension ring coffers
     };
     //I only record Gear and items used to get gear
     internal readonly HashSet<InstanceWithLoot> InstanceDB = new()
