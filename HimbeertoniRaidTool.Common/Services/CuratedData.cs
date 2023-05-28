@@ -118,14 +118,19 @@ internal class CuratedData
         //Euphrosyne
         new(30125, Normal , new ItemIDList((39089, 39123) ,39373,39481,39600,39601,39602), 38950),
         //6.4
-        //40303-40306 Mythos
-        new(30126, Normal , (40298,40302)),
+        //Dungeon
+        new(90, Normal, new ItemIDList((40240,40294))),
+        //Trial
+        new(20089, Normal, new ItemIDList()),
+        new(20090, Extreme, new ItemIDList((39940,39959),40296),40295),
+        //Raids
+        new(30126, Normal , (40297,40302)),
         new(30127, Savage , new ItemIDRange(40313,40316) ,40303),
-        new(30128, Normal , (40298,40302)),
-        new(30129, Savage , new ItemIDList(40307,40310,40312,40320,40321) ,40304),
-        new(30130, Normal , (40298,40302)),
-        new(30131, Savage , new ItemIDList(40307,40310,40311,40312,40318,40319) ,40305),
-        new(30132, Normal , (40298,40302),40317),
-        new(30133, Savage , new ItemIDList((40165,40183),40307,40309) ,40306),
+        new(30128, Normal , (40297,40302)),
+        new(30129, Savage , new ItemIDList(40308, 40310,40312,40320,40321) ,40304),
+        new(30130, Normal , (40297,40302)),
+        new(30131, Savage , new ItemIDList(40308, 40310,40309,40311,40312,40318,40319) ,40305),
+        new(30132, Normal , (40297,40302),40317),
+        new(30133, Savage , new ItemIDList((40165,40183),40307) ,40306),
     };
 }
