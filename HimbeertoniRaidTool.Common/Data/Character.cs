@@ -100,4 +100,26 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
 
+    public void MergeInfos(Character toMerge)
+    {
+        if (CharID == 0)
+            CharID = toMerge.CharID;
+        if (LodestoneID == 0)
+            LodestoneID = toMerge.LodestoneID;
+        if (TribeID == 0)
+            TribeID = toMerge.TribeID;
+        foreach (PlayableClass job in _classes)
+        {
+            var jobToMerge = toMerge[job.Job];
+            if (jobToMerge == null)
+                continue;
+            job.Level = Math.Max(job.Level, jobToMerge.Level);
+            if (jobToMerge.Gear.TimeStamp > job.Gear.TimeStamp)
+                job.Gear.CopyFrom(jobToMerge.Gear);
+            if (jobToMerge.BIS.TimeStamp > job.BIS.TimeStamp)
+                job.BIS.CopyFrom(jobToMerge.BIS);
+            toMerge._classes.Remove(jobToMerge);
+        }
+        _classes.AddRange(toMerge._classes);
+    }
 }
