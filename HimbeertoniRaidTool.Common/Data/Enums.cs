@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using HimbeertoniRaidTool.Common.Services;
+﻿using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
+using System;
+using System.Collections.Generic;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -48,7 +49,7 @@ public enum LootRuleEnum
     HighesItemLevelGain = 3,
     RolePrio = 4,
     Random = 5,
-    DPS = 6,
+    [Obsolete("DPSGain", true)] DPS = 6,
     DPSGain = 7,
     NeedGreed = 997,
     Greed = 998,

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -40,7 +40,6 @@ public class Player
 [JsonObject(MemberSerialization.OptIn)]
 public class AdditionalPlayerData
 {
-    private const string ManualDPSKey = "ManualDPS";
     [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public Dictionary<string, int> IntData = new();
     [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -48,9 +47,4 @@ public class AdditionalPlayerData
     [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public Dictionary<string, string> StringData = new();
 
-    public int ManualDPS
-    {
-        get { return IntData.GetValueOrDefault(ManualDPSKey, 0); }
-        set { IntData[ManualDPSKey] = value; }
-    }
 }
