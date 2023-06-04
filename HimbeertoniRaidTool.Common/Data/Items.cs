@@ -1,37 +1,41 @@
-﻿using System;
+﻿using HimbeertoniRaidTool.Common.Services;
+using Lumina.Excel;
+using Lumina.Excel.GeneratedSheets;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using HimbeertoniRaidTool.Common.Services;
-using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class GearItem : HrtItem, IEquatable<GearItem>
 {
-    [JsonIgnore]
-    public static readonly GearItem Empty = new();
-    [JsonProperty]
-    public bool IsHq { get; init; } = false;
-    [JsonIgnore]
-    public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
-    [JsonIgnore]
-    public IEnumerable<GearSetSlot> Slots => (Item?.EquipSlotCategory.Value).AvailableSlots();
-    [JsonProperty("Materia")]
-    private readonly List<HrtMateria> _materia = new();
-    [JsonIgnore]
-    public IEnumerable<HrtMateria> Materia => _materia;
+    [JsonIgnore] public static readonly GearItem Empty = new();
+
+    [JsonProperty] public bool IsHq { get; init; } = false;
+
+    [JsonIgnore] public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
+
+    [JsonIgnore] public IEnumerable<GearSetSlot> Slots => (Item?.EquipSlotCategory.Value).AvailableSlots();
+
+    [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
+
+    [JsonIgnore] public IEnumerable<HrtMateria> Materia => _materia;
+
     [JsonIgnore]
     public int MaxMateriaSlots =>
         (Item?.IsAdvancedMeldingPermitted ?? false) ? 5 : (Item?.MateriaSlotCount ?? 2);
-    //This holds the total stats if this gear item (including materia)
-    [JsonIgnore]
-    private readonly Dictionary<StatType, int> _statCache = new();
+    [JsonIgnore] public int StatCap => _statCapImpl.Value;
+
+    [JsonIgnore] private readonly Lazy<int> _statCapImpl;
+
+    //This holds the total stats of this gear item (including materia)
+    [JsonIgnore] private readonly Dictionary<StatType, int> _statCache = new();
+
     private void InvalidateCache()
     {
         _statCache.Clear();
@@ -42,7 +46,6 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             return cached;
         if (Item is null) return 0;
         int result = 0;
-        bool isSecondary = false;
         switch (type)
         {
             case StatType.PhysicalDamage: result += Item.DamagePhys; break;
@@ -50,7 +53,6 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             case StatType.Defense: result += Item.DefensePhys; break;
             case StatType.MagicDefense: result += Item.DefenseMag; break;
             default:
-                isSecondary = true;
                 if (IsHq)
                     foreach (var param in Item.UnkData73.Where(x => x.BaseParamSpecial == (byte)type))
                         result += param.BaseParamValueSpecial;
@@ -63,18 +65,23 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             return result;
         foreach (var materia in _materia.Where(x => x.StatType == type))
             result += materia.GetStat();
-        if (isSecondary)
-        {
-            int maxVal = Item.UnkData59[2].BaseParamValue;
-            if (IsHq)
-                maxVal += Item.UnkData73[2].BaseParamValueSpecial;
-            if (result > maxVal)
-                result = maxVal;
-        }
+        if (type.IsSecondary())
+            result = int.Min(result, StatCap);
         _statCache.TryAdd(type, result);
         return result;
     }
-    public GearItem(uint ID = 0) : base(ID) { }
+    public GearItem(uint ID = 0) : base(ID)
+    {
+        _statCapImpl = new Lazy<int>(() =>
+        {
+            //Fail in a safe way and do not cap values
+            if (Item is null) return int.MaxValue;
+            int maxVal = int.Max(Item.UnkData59[2].BaseParamValue, Item.UnkData59[3].BaseParamValue);
+            if (IsHq)
+                maxVal += int.Max(Item.UnkData73[2].BaseParamValueSpecial, Item.UnkData73[3].BaseParamValueSpecial);
+            return maxVal;
+        });
+    }
     public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
     public bool Equals(GearItem? other, ItemComparisonMode mode)
     {

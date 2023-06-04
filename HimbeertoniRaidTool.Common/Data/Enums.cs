@@ -320,4 +320,19 @@ public static class EnumExtensions
         InstanceType.Dungeon => ItemSource.Dungeon,
         _ => ItemSource.undefined,
     };
+    public static bool IsSecondary(this StatType statType) => statType switch
+    {
+        StatType.CriticalHit => true,
+        StatType.Determination => true,
+        StatType.DirectHitRate => true,
+        StatType.SpellSpeed => true,
+        StatType.SkillSpeed => true,
+        StatType.Piety => true,
+        StatType.Tenacity => true,
+        StatType.Craftsmanship => true,
+        StatType.Control => true,
+        StatType.Gathering => true,
+        StatType.Perception => true,
+        _ => false
+    };
 }
