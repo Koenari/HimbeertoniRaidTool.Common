@@ -149,6 +149,27 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 
         return maxAllowed;
     }
+
+    public IEnumerable<StatType> StatTypesAffected
+    {
+        get
+        {
+            HashSet<StatType> done = new();
+            foreach (var stat in Item.UnkData59)
+            {
+                StatType type = (StatType)stat.BaseParam;
+                done.Add(type);
+                yield return type;
+            }
+            foreach (var mat in Materia)
+            {
+                if (done.Contains(mat.StatType))
+                    continue;
+                done.Add(mat.StatType);
+                yield return mat.StatType;
+            }
+        }
+    }
 }
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class HrtItem : IEquatable<HrtItem>
