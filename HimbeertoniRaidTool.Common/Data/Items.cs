@@ -20,11 +20,17 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 
     [JsonIgnore] public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
 
-    [JsonIgnore] public IEnumerable<GearSetSlot> Slots => (Item?.EquipSlotCategory.Value).AvailableSlots();
+    [JsonIgnore] public EquipSlotCategory EquipSlotCategory => Item?.EquipSlotCategory.Value ?? new EquipSlotCategory();
+
+    [JsonIgnore] public IEnumerable<GearSetSlot> Slots => EquipSlotCategory.AvailableSlots();
+
+    [JsonIgnore] public bool IsUnique => Item?.IsUnique ?? true;
 
     [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
 
     [JsonIgnore] public IEnumerable<HrtMateria> Materia => _materia;
+
+    [JsonIgnore] public int MateriaSlotCount => Item?.MateriaSlotCount ?? 0;
 
     [JsonIgnore]
     public int MaxMateriaSlots =>
@@ -176,16 +182,26 @@ public class HrtItem : IEquatable<HrtItem>
 {
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
     protected readonly uint _ID = 0;
+
     public virtual uint ID => _ID;
+
     private Item? ItemCache = null;
-    public Item? Item => ItemCache ??= _itemSheet?.GetRow(ID);
+
+    [JsonIgnore] public Rarity Rarity => (Rarity)(Item?.Rarity ?? 0);
+
+    [JsonIgnore] public ushort Icon => Item?.Icon ?? 0;
+
+    protected Item? Item => ItemCache ??= _itemSheet?.GetRow(ID);
+
     public string Name => Item?.Name.RawString ?? "";
+
     public bool IsGear => this is GearItem || (Item?.ClassJobCategory.Row ?? 0) != 0;
     public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
-    [JsonIgnore]
-    public Lazy<uint> ILevelCache;
-    [JsonIgnore]
-    public uint ItemLevel => ILevelCache.Value;
+
+    [JsonIgnore] public Lazy<uint> ILevelCache;
+
+    [JsonIgnore] public uint ItemLevel => ILevelCache.Value;
+
     public bool Filled => ID > 0;
     /*
     public string SourceShortName

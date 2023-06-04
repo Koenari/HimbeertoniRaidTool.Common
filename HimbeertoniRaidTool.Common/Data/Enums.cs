@@ -181,6 +181,14 @@ public enum MateriaCategory : ushort
     SkillSpeed = 24,
     SpellSpeed = 25,
 }
+public enum Rarity : byte
+{
+    None = 0,
+    Common = 1,
+    Uncommon = 2,
+    Rare = 3,
+    Relic = 4,
+}
 public enum StatType : uint
 {
     None,

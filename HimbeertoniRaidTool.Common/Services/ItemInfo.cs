@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HimbeertoniRaidTool.Common.Data;
+﻿using HimbeertoniRaidTool.Common.Data;
 using Lumina.Excel;
 using Lumina.Excel.CustomSheets;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
@@ -111,7 +111,7 @@ public class ItemInfo
         {
             return ItemSource.undefined;
         }
-        if (item.Item?.Rarity == 4)
+        if (item.Rarity == Rarity.Relic)
             return ItemSource.Relic;
         if (LootSources.TryGetValue(itemID, out List<uint>? instanceID))
             return _gameInfo.GetInstance(instanceID.First()).InstanceType.ToItemSource();

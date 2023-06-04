@@ -1,9 +1,9 @@
-﻿using System;
+﻿using HimbeertoniRaidTool.Common.Security;
+using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using HimbeertoniRaidTool.Common.Security;
-using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -95,7 +95,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
             if (Items[i] != null && Items[i].ItemLevel > 0)
             {
                 itemLevel += Items[i].ItemLevel;
-                if (Items[i].Item?.EquipSlotCategory.Value?.Disallows(GearSetSlot.OffHand) ?? false)
+                if (Items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
                     itemLevel += Items[i].ItemLevel;
             }
         }
