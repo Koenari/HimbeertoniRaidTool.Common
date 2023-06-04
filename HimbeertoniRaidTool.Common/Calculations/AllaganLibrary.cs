@@ -69,7 +69,7 @@ public static class AllaganLibrary
             (StatType.Defense or StatType.MagicDefense, _) => StatEquations.CalcDefenseMitigation(totalStat, level),
             //ToDO: Still rounding issues
             (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
-            (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _)
+            (StatType.PhysicalDamage, _)
                 => StatEquations.CalcAvarageDamage(
                     curClass.GetStat(StatType.PhysicalDamage, gear),
                     curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
@@ -77,8 +77,18 @@ public static class AllaganLibrary
                     curClass.GetStat(StatType.DirectHitRate, gear),
                     curClass.GetStat(StatType.Determination, gear),
                     curClass.GetStat(StatType.Tenacity, gear),
-                    level,
-                    curClass.ClassJob),
+                    level, curClass.ClassJob) *
+                    2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear), level),
+            (StatType.MagicalDamage, _)
+                => StatEquations.CalcAvarageDamage(
+                    curClass.GetStat(StatType.PhysicalDamage, gear),
+                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
+                    curClass.GetStat(StatType.CriticalHit, gear),
+                    curClass.GetStat(StatType.DirectHitRate, gear),
+                    curClass.GetStat(StatType.Determination, gear),
+                    curClass.GetStat(StatType.Tenacity, gear),
+                    level, curClass.ClassJob) *
+                    2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear), level),
             _ => float.NaN
         };
     }
