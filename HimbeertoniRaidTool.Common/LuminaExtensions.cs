@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HimbeertoniRaidTool.Common.Data;
+﻿using HimbeertoniRaidTool.Common.Data;
 using Lumina.Data;
 using Lumina.Excel.GeneratedSheets;
 using Lumina.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace HimbeertoniRaidTool.Common
 {
@@ -62,7 +62,7 @@ namespace HimbeertoniRaidTool.Common
         public static List<Job> ToJob(this ClassJobCategory self)
         {
             List<Job> jobs = new();
-            for (int i = 0; i < (int)Job.SGE; i++)
+            for (int i = 0; i < (int)Job.Count; i++)
             {
                 if (self.Contains((Job)i))
                 {

@@ -111,6 +111,7 @@ public enum Job : byte
     DNC = 38,
     RPR = 39,
     SGE = 40,
+    Count
 }
 
 public enum Role : byte
