@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using HimbeertoniRaidTool.Common.Security;
+﻿using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using Newtonsoft.Json;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -93,7 +93,11 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>
     {
         if (contentID == 0)
             return 0;
-        byte[] hash = SHA256.HashData(BitConverter.GetBytes(contentID));
+        using SHA256 sha256 = SHA256.Create();
+#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
+        //Static version crashes in wine
+        byte[] hash = sha256.ComputeHash(BitConverter.GetBytes(contentID));
+#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
         return BitConverter.ToUInt64(hash);
     }
 
