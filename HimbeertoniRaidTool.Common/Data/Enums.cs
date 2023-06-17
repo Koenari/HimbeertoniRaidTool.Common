@@ -8,7 +8,6 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public enum ItemSource
 {
-
     undefined = 0,
 
     Raid = 1,
@@ -23,6 +22,7 @@ public enum ItemSource
     Shop = 50,
     Loot = 60,
 }
+
 public enum GearSetSlot : short
 {
     MainHand = 0,
@@ -39,8 +39,9 @@ public enum GearSetSlot : short
     Ring1 = 11,
     Ring2 = 12,
     SoulCrystal = 13,
-    None = 999
+    None = 999,
 }
+
 public enum LootRuleEnum
 {
     None = 0,
@@ -49,12 +50,14 @@ public enum LootRuleEnum
     HighesItemLevelGain = 3,
     RolePrio = 4,
     Random = 5,
-    [Obsolete("DPSGain", true)] DPS = 6,
+    [Obsolete("DPSGain")] DPS = 6,
     DPSGain = 7,
+    CanUse = 8,
     NeedGreed = 997,
     Greed = 998,
     Custom = 999,
 }
+
 public enum EncounterDifficulty
 {
     None = 0,
@@ -62,11 +65,13 @@ public enum EncounterDifficulty
     Hard,
     Extreme,
     Savage,
-    Ultimate
+    Ultimate,
 }
+
 public enum Job : byte
 {
     ADV = 0,
+
     //Old jobs
     GLA = 1,
     PGL = 2,
@@ -75,6 +80,7 @@ public enum Job : byte
     ARC = 5,
     CNJ = 6,
     THM = 7,
+
     //Crafter
     CRP = 8,
     BSM = 9,
@@ -84,10 +90,12 @@ public enum Job : byte
     WVR = 13,
     ALC = 14,
     CUL = 15,
+
     //Gatherer
     MIN = 16,
     BTN = 17,
     FSH = 18,
+
     //End game Jobs
     PLD = 19,
     MNK = 20,
@@ -111,7 +119,7 @@ public enum Job : byte
     DNC = 38,
     RPR = 39,
     SGE = 40,
-    Count
+    Count,
 }
 
 public enum Role : byte
@@ -125,6 +133,7 @@ public enum Role : byte
     DoL = 6,
     DoH = 7,
 }
+
 public enum InstanceType
 {
     Unknown = 0,
@@ -132,25 +141,28 @@ public enum InstanceType
     Trial = 4,
     Dungeon = 2,
     SoloInstance = 7,
-
 }
+
 public enum GroupType
 {
     Solo,
     Group,
-    Raid
+    Raid,
 }
+
 public enum GearSetManager
 {
     HRT,
-    Etro
+    Etro,
 }
+
 public enum Gender
 {
     Unknown = 0,
     Female = 1,
     Male = 2,
 }
+
 public enum MateriaLevel : byte
 {
     None = 255,
@@ -165,6 +177,7 @@ public enum MateriaLevel : byte
     IX = 8,
     X = 9,
 }
+
 public enum MateriaCategory : ushort
 {
     None = 0,
@@ -182,6 +195,7 @@ public enum MateriaCategory : ushort
     SkillSpeed = 24,
     SpellSpeed = 25,
 }
+
 public enum Rarity : byte
 {
     None = 0,
@@ -190,6 +204,7 @@ public enum Rarity : byte
     Rare = 3,
     Relic = 4,
 }
+
 public enum StatType : uint
 {
     None,
@@ -269,17 +284,20 @@ public enum StatType : uint
     Unknown73,
     Count,
 }
+
 public static class EnumExtensions
 {
     private static ExcelSheet<ClassJob>? JobSheetCache = null;
     private static ExcelSheet<ClassJob>? JobSheet => JobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
     private static readonly Dictionary<Job, ClassJob?> JobCache = new();
+
     private static ClassJob? GetClassJob(Job j)
     {
         if (!JobCache.ContainsKey(j))
             JobCache[j] = null;
         return JobCache[j] ??= JobSheet?.GetRow((uint)j);
     }
+
     public static Role GetRole(this Job c)
     {
         ClassJob? cj = GetClassJob(c);
@@ -289,60 +307,96 @@ public static class EnumExtensions
             return (Role)cj.PartyBonus;
         return (Role)cj.Role;
     }
-    public static bool IsCombatRole(this Role role) =>
-        role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
 
-    public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
+    public static bool IsCombatRole(this Role role)
+    {
+        return role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
+    }
 
-    public static int GroupSize(this GroupType groupType) => groupType switch
+    public static StatType MainStat(this Job job)
     {
-        GroupType.Solo => 1,
-        GroupType.Group => 4,
-        GroupType.Raid => 8,
-        _ => 0
-    };
-    public static bool CanHaveShield(this Job job) => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
-    public static bool IsCombatJob(this Job j) => !(Job.CRP <= j && j <= Job.FSH);
-    public static bool IsDoH(this Job j) => Job.MIN <= j && j <= Job.FSH;
-    public static bool IsDoL(this Job j) => Job.CRP <= j && j <= Job.CUL;
+        return (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
+    }
 
-    public static StatType GetStatType(this MateriaCategory materiaCategory) => materiaCategory switch
+    public static int GroupSize(this GroupType groupType)
     {
-        MateriaCategory.Piety => StatType.Piety,
-        MateriaCategory.DirectHit => StatType.DirectHitRate,
-        MateriaCategory.CriticalHit => StatType.CriticalHit,
-        MateriaCategory.Determination => StatType.Determination,
-        MateriaCategory.Tenacity => StatType.Tenacity,
-        MateriaCategory.Gathering => StatType.Gathering,
-        MateriaCategory.Perception => StatType.Perception,
-        MateriaCategory.GP => StatType.GP,
-        MateriaCategory.Craftsmanship => StatType.Craftsmanship,
-        MateriaCategory.CP => StatType.CP,
-        MateriaCategory.Control => StatType.Control,
-        MateriaCategory.SkillSpeed => StatType.SkillSpeed,
-        MateriaCategory.SpellSpeed => StatType.SpellSpeed,
-        _ => StatType.None,
-    };
-    public static ItemSource ToItemSource(this InstanceType contentType) => contentType switch
+        return groupType switch
+        {
+            GroupType.Solo => 1,
+            GroupType.Group => 4,
+            GroupType.Raid => 8,
+            _ => 0,
+        };
+    }
+
+    public static bool CanHaveShield(this Job job)
     {
-        InstanceType.Raid => ItemSource.Raid,
-        InstanceType.Trial => ItemSource.Trial,
-        InstanceType.Dungeon => ItemSource.Dungeon,
-        _ => ItemSource.undefined,
-    };
-    public static bool IsSecondary(this StatType statType) => statType switch
+        return job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
+    }
+
+    public static bool IsCombatJob(this Job j)
     {
-        StatType.CriticalHit => true,
-        StatType.Determination => true,
-        StatType.DirectHitRate => true,
-        StatType.SpellSpeed => true,
-        StatType.SkillSpeed => true,
-        StatType.Piety => true,
-        StatType.Tenacity => true,
-        StatType.Craftsmanship => true,
-        StatType.Control => true,
-        StatType.Gathering => true,
-        StatType.Perception => true,
-        _ => false
-    };
+        return !(Job.CRP <= j && j <= Job.FSH);
+    }
+
+    public static bool IsDoH(this Job j)
+    {
+        return Job.MIN <= j && j <= Job.FSH;
+    }
+
+    public static bool IsDoL(this Job j)
+    {
+        return Job.CRP <= j && j <= Job.CUL;
+    }
+
+    public static StatType GetStatType(this MateriaCategory materiaCategory)
+    {
+        return materiaCategory switch
+        {
+            MateriaCategory.Piety => StatType.Piety,
+            MateriaCategory.DirectHit => StatType.DirectHitRate,
+            MateriaCategory.CriticalHit => StatType.CriticalHit,
+            MateriaCategory.Determination => StatType.Determination,
+            MateriaCategory.Tenacity => StatType.Tenacity,
+            MateriaCategory.Gathering => StatType.Gathering,
+            MateriaCategory.Perception => StatType.Perception,
+            MateriaCategory.GP => StatType.GP,
+            MateriaCategory.Craftsmanship => StatType.Craftsmanship,
+            MateriaCategory.CP => StatType.CP,
+            MateriaCategory.Control => StatType.Control,
+            MateriaCategory.SkillSpeed => StatType.SkillSpeed,
+            MateriaCategory.SpellSpeed => StatType.SpellSpeed,
+            _ => StatType.None,
+        };
+    }
+
+    public static ItemSource ToItemSource(this InstanceType contentType)
+    {
+        return contentType switch
+        {
+            InstanceType.Raid => ItemSource.Raid,
+            InstanceType.Trial => ItemSource.Trial,
+            InstanceType.Dungeon => ItemSource.Dungeon,
+            _ => ItemSource.undefined,
+        };
+    }
+
+    public static bool IsSecondary(this StatType statType)
+    {
+        return statType switch
+        {
+            StatType.CriticalHit => true,
+            StatType.Determination => true,
+            StatType.DirectHitRate => true,
+            StatType.SpellSpeed => true,
+            StatType.SkillSpeed => true,
+            StatType.Piety => true,
+            StatType.Tenacity => true,
+            StatType.Craftsmanship => true,
+            StatType.Control => true,
+            StatType.Gathering => true,
+            StatType.Perception => true,
+            _ => false,
+        };
+    }
 }

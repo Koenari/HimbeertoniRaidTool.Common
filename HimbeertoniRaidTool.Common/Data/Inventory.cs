@@ -7,21 +7,32 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonDictionary]
 public class Inventory : Dictionary<int, InventoryEntry>
 {
-    public bool Contains(uint id) => Values.Any(i => i.ID == id);
-    public int IndexOf(uint id) => this.FirstOrDefault(i => i.Value.ID == id).Key;
+    public bool Contains(uint id)
+    {
+        return Values.Any(i => i.ID == id);
+    }
+
+    public int IndexOf(uint id)
+    {
+        return this.FirstOrDefault(i => i.Value.ID == id).Key;
+    }
+
     public int FirstFreeSlot()
     {
         for (int i = 0; i < Values.Count; i++)
-            if (!ContainsKey(i)) return i;
+            if (!ContainsKey(i))
+                return i;
         return Values.Count;
     }
 }
+
 [JsonDictionary]
 public class Wallet : Dictionary<Currency, uint>
 {
-
 }
-[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore, MemberSerialization = MemberSerialization.Fields)]
+
+[JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore,
+    MemberSerialization = MemberSerialization.Fields)]
 public class InventoryEntry
 {
     public int quantity = 0;
@@ -31,7 +42,10 @@ public class InventoryEntry
     private HrtMateria? hrtMateria;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public InventoryEntry(HrtItem item) => Item = item;
+    public InventoryEntry(HrtItem item)
+    {
+        Item = item;
+    }
 #pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
     private InventoryEntry(string typeArg)
@@ -73,20 +87,30 @@ public class InventoryEntry
             }
         }
     }
+
     public bool IsGear => type == nameof(GearItem);
     public bool IsMateria => type == nameof(HrtMateria);
+
     public uint ID
     {
         get
         {
-            if (type == nameof(GearItem)) return gearItem!.ID;
-            if (type == nameof(HrtMateria)) return hrtMateria!.ID;
-            if (type == nameof(HrtItem)) return hrtItem!.ID;
-            return 0;
+            return type switch
+            {
+                nameof(GearItem) => gearItem!.ID,
+                nameof(HrtMateria) => hrtMateria!.ID,
+                nameof(HrtItem) => hrtItem!.ID,
+                _ => 0,
+            };
         }
     }
-    public static implicit operator InventoryEntry(HrtItem item) => new(item);
+
+    public static implicit operator InventoryEntry(HrtItem item)
+    {
+        return new InventoryEntry(item);
+    }
 }
+
 public enum Currency : uint
 {
     Unknown = 0,
@@ -100,6 +124,5 @@ public enum Currency : uint
     MGP = 29,
     TomestoneOfLaw = 30,
     TomestoneOfAstronomy = 43,
-    TomestoneOfCausality = 44
-
+    TomestoneOfCausality = 44,
 }
