@@ -12,6 +12,11 @@ public class Inventory : Dictionary<int, InventoryEntry>
         return Values.Any(i => i.ID == id);
     }
 
+    public int ItemCount(uint id)
+    {
+        return this.Where(i => i.Value.ID == id).Sum(i => i.Value.quantity);
+    }
+
     public int IndexOf(uint id)
     {
         return this.FirstOrDefault(i => i.Value.ID == id).Key;
