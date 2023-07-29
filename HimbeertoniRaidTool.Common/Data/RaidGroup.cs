@@ -8,53 +8,25 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class RaidGroup : IEnumerable<Player>
 {
-    [JsonProperty("TimeStamp")]
-    public DateTime TimeStamp;
-    [JsonProperty("Name")]
-    public string Name;
-    [JsonProperty("Members")]
-    private readonly Player[] _Players;
-    [JsonProperty("Type")]
-    public GroupType Type;
+    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
+    [JsonProperty("Name")] public string Name;
+    [JsonProperty("Members")] private readonly Player[] _players;
+    [JsonProperty("Type")] public GroupType Type;
+    [JsonProperty("TypeLocked")] public bool TypeLocked;
+
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public RolePriority? RolePriority = null;
-    //These are needed for deserialization of RaidGRoups.json from versions < 1.1.0
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Tank1 { set => _Players[0] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Tank2 { set => _Players[1] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Heal1 { set => _Players[2] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Heal2 { set => _Players[3] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Melee1 { set => _Players[4] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Melee2 { set => _Players[5] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Ranged { set => _Players[6] = value; }
-    [Obsolete("Use []", true)]
-    [JsonProperty]
-    private Player Caster { set => _Players[7] = value; }
+
     private IEnumerable<Player> Players
     {
         get
         {
             for (int i = 0; i < Count; i++)
-            {
                 if (this[i].Filled)
                     yield return this[i];
-            }
         }
-
     }
+
     public int Count => Type switch
     {
         GroupType.Solo => 1,
@@ -62,18 +34,17 @@ public class RaidGroup : IEnumerable<Player>
         GroupType.Raid => 8,
         _ => throw new NotImplementedException(),
     };
+
     [JsonConstructor]
     public RaidGroup(string name = "", GroupType type = GroupType.Raid)
     {
         Type = type;
         TimeStamp = DateTime.Now;
         Name = name;
-        _Players = new Player[8];
-        for (int i = 0; i < _Players.Length; i++)
-        {
-            _Players[i] = new();
-        }
+        _players = new Player[8];
+        for (int i = 0; i < _players.Length; i++) _players[i] = new Player();
     }
+
     public Player this[int idx]
     {
         get
@@ -82,9 +53,7 @@ public class RaidGroup : IEnumerable<Player>
                 throw new IndexOutOfRangeException($"Raidgroup of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            if (_Players[idx] == null)
-                _Players[idx] = new Player();
-            return _Players[idx];
+            return _players[idx];
         }
         set
         {
@@ -92,21 +61,28 @@ public class RaidGroup : IEnumerable<Player>
                 throw new IndexOutOfRangeException($"Raidgroup of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            _Players[idx] = value;
+            _players[idx] = value;
         }
     }
-    public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
+    public IEnumerator<Player> GetEnumerator()
+    {
+        return Players.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return Players.GetEnumerator();
+    }
 }
+
 [JsonObject(MemberSerialization.OptIn)]
 public class Alliance
 {
-    [JsonProperty("Name")]
-    public string Name { get; set; }
+    [JsonProperty("Name")] public string Name { get; set; }
     public DateTime TimeStamp { get; set; }
-    [JsonProperty("Groups")]
-    public RaidGroup[] RaidGroups { get; set; }
+    [JsonProperty("Groups")] public RaidGroup[] RaidGroups { get; set; }
+
     [JsonConstructor]
     public Alliance(string name = "")
     {
