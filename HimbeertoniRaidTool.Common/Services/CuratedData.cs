@@ -130,7 +130,7 @@ internal class CuratedData
         new InstanceWithLoot(91, Normal, (40765, 40819)),
         //Trial (The Abyssal Fracture)
         new InstanceWithLoot(20091, Normal),
-        new InstanceWithLoot(20092, Extreme),
+        new InstanceWithLoot(20092, Extreme, new ItemIDList((41033, 41051), 41054), 41053),
         //Alliance Raid (Thaleia)
         new InstanceWithLoot(30134, Normal, (40897, 40931)),
     };
