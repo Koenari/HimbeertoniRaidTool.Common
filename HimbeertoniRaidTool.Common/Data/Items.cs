@@ -163,7 +163,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     public MateriaLevel MaxAffixableMateriaLevel()
     {
         if (!CanAffixMateria()) return 0;
-        MateriaLevel maxAllowed = MateriaLevel.X;
+        var maxAllowed = MateriaLevel.X;
         if (_materia.Count >= Item?.MateriaSlotCount)
             maxAllowed--;
 
@@ -175,9 +175,10 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         get
         {
             HashSet<StatType> done = new();
+            if (Item is null) yield break;
             foreach (Item.ItemUnkData59Obj? stat in Item.UnkData59)
             {
-                StatType type = (StatType)stat.BaseParam;
+                var type = (StatType)stat.BaseParam;
                 done.Add(type);
                 yield return type;
             }
