@@ -14,9 +14,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHasHrtId
 {
-    private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule?.GetSheet<World>();
+    private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
-    private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule?.GetSheet<Tribe>();
+    private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Character;
     //Identifiers
@@ -26,21 +26,21 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
     /// <summary>
     /// Character unique ID calculated from characters ContentID.
     /// </summary>
-    [JsonProperty("HrtCharID")] public ulong CharID = 0;
+    [JsonProperty("HrtCharID")] public ulong CharId = 0;
 
     /// <summary>
-    /// Unique character identifier for Lodestone. Maps 1:1 to ContentID (but not calculatable).
+    /// Unique character identifier for Lodestone. Maps 1:1 to ContentID (but not calculable).
     /// </summary>
-    [JsonProperty("LodestoneID")] public int LodestoneID = 0;
+    [JsonProperty("LodestoneID")] public int LodestoneId = 0;
 
     /// <summary>
-    /// HRT specific uniuqe ID used for local storage.
+    /// HRT specific unique ID used for local storage.
     /// </summary>
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
 
     /// <summary>
-    /// HRT specific uniuqe IDs used for remote storage and lookup.
+    /// HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
     [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
     [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
@@ -77,19 +77,19 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
 
     public bool Filled => Name != "";
 
-    public Character(string name = "", uint worldID = 0)
+    public Character(string name = "", uint worldId = 0)
     {
         Name = name;
-        HomeWorldId = worldID;
+        HomeWorldId = worldId;
     }
 
     public IEnumerable<PlayableClass> Classes => _classes;
 
     public PlayableClass AddClass(Job job)
     {
-        PlayableClass classtoAdd = new(job, this);
-        _classes.Add(classtoAdd);
-        return classtoAdd;
+        PlayableClass classToAdd = new(job, this);
+        _classes.Add(classToAdd);
+        return classToAdd;
     }
 
     public PlayableClass? this[Job type] => _classes.Find(x => x.Job == type);
@@ -136,14 +136,14 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
 
     public override int GetHashCode() => Name.GetHashCode();
 
-    public static ulong CalcCharID(long contentID)
+    public static ulong CalcCharId(long contentId)
     {
-        if (contentID == 0)
+        if (contentId == 0)
             return 0;
         using var sha256 = SHA256.Create();
 #pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
         //Static version crashes in wine
-        byte[] hash = sha256.ComputeHash(BitConverter.GetBytes(contentID));
+        byte[] hash = sha256.ComputeHash(BitConverter.GetBytes(contentId));
 #pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
         return BitConverter.ToUInt64(hash);
     }
@@ -154,10 +154,10 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
 
     public void MergeInfos(Character toMerge)
     {
-        if (CharID == 0)
-            CharID = toMerge.CharID;
-        if (LodestoneID == 0)
-            LodestoneID = toMerge.LodestoneID;
+        if (CharId == 0)
+            CharId = toMerge.CharId;
+        if (LodestoneId == 0)
+            LodestoneId = toMerge.LodestoneId;
         if (TribeId == 0)
             TribeId = toMerge.TribeId;
         foreach (PlayableClass job in _classes)
@@ -168,8 +168,8 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
             job.Level = Math.Max(job.Level, jobToMerge.Level);
             if (jobToMerge.Gear.TimeStamp > job.Gear.TimeStamp)
                 job.Gear.CopyFrom(jobToMerge.Gear);
-            if (jobToMerge.BIS.TimeStamp > job.BIS.TimeStamp)
-                job.BIS.CopyFrom(jobToMerge.BIS);
+            if (jobToMerge.Bis.TimeStamp > job.Bis.TimeStamp)
+                job.Bis.CopyFrom(jobToMerge.Bis);
             toMerge._classes.Remove(jobToMerge);
         }
 

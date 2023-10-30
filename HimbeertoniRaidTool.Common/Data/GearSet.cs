@@ -16,11 +16,11 @@ public interface IReadOnlyGearSet
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
 public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 {
-    private const int NumSlots = 12;
+    private const int NUM_SLOTS = 12;
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
     //IDs
-    [JsonProperty("HrtID")] [Obsolete] public string OldHrtID = "";
+    [JsonProperty("HrtID")] [Obsolete] public string OldHrtId = "";
 
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
@@ -28,7 +28,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
     [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
 
-    [JsonProperty("EtroID")] public string EtroID = "";
+    [JsonProperty("EtroID")] public string EtroId = "";
 
     //Properties
     [JsonProperty("TimeStamp")] public DateTime? TimeStamp;
@@ -38,7 +38,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
 
     //Actual Gear data
-    [JsonProperty("Items")] private readonly GearItem[] Items = new GearItem[NumSlots];
+    [JsonProperty("Items")] private readonly GearItem[] _items = new GearItem[NUM_SLOTS];
 
     //Abstractions for Deserialization of Versions older than 1.2.0
     [JsonProperty]
@@ -126,16 +126,16 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     }
 
     //Runtime only properties
-    public bool IsEmpty => Array.TrueForAll(Items, x => x.ID == 0);
+    public bool IsEmpty => Array.TrueForAll(_items, x => x.Id == 0);
 
-    public int ItemLevel => ILevelCache ??= CalcItemLevel();
+    public int ItemLevel => _levelCache ??= CalcItemLevel();
 
     //Caches
-    [JsonIgnore] private int? ILevelCache = null;
+    [JsonIgnore] private int? _levelCache = null;
 
     public GearSet()
     {
-        ManagedBy = GearSetManager.HRT;
+        ManagedBy = GearSetManager.Hrt;
         Clear();
     }
 
@@ -148,7 +148,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     public void Clear()
     {
-        for (int i = 0; i < NumSlots; i++) this[i] = new GearItem(0);
+        for (int i = 0; i < NUM_SLOTS; i++) this[i] = new GearItem(0);
         InvalidateCaches();
     }
 
@@ -160,46 +160,46 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     private GearItem this[int idx]
     {
-        get => Items[idx];
+        get => _items[idx];
         set
         {
-            Items[idx] = value;
+            _items[idx] = value;
             InvalidateCaches();
         }
     }
 
     private void InvalidateCaches()
     {
-        ILevelCache = null;
+        _levelCache = null;
     }
 
     private int CalcItemLevel()
     {
         uint itemLevel = 0;
-        for (int i = 0; i < NumSlots; i++)
-            if (Items[i] != null && Items[i].ItemLevel > 0)
+        for (int i = 0; i < NUM_SLOTS; i++)
+            if (_items[i] != null && _items[i].ItemLevel > 0)
             {
-                itemLevel += Items[i].ItemLevel;
-                if (Items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
-                    itemLevel += Items[i].ItemLevel;
+                itemLevel += _items[i].ItemLevel;
+                if (_items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
+                    itemLevel += _items[i].ItemLevel;
             }
 
-        return (int)((float)itemLevel / NumSlots);
+        return (int)((float)itemLevel / NUM_SLOTS);
     }
 
     public int Count(HrtItem item)
     {
-        return Array.FindAll(Items, x => x.Equals(item)).Count();
+        return Array.FindAll(_items, x => x.Equals(item)).Count();
     }
 
     public bool Contains(HrtItem item)
     {
-        return Array.Exists(Items, x => x.Equals(item));
+        return Array.Exists(_items, x => x.Equals(item));
     }
 
     public bool ContainsExact(GearItem item)
     {
-        return Array.Exists(Items, x => x.Equals(item, ItemComparisonMode.Full));
+        return Array.Exists(_items, x => x.Equals(item, ItemComparisonMode.Full));
     }
 
     /*
@@ -208,7 +208,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     public int GetStat(StatType type)
     {
         int result = 0;
-        Array.ForEach(Items, x => result += x.GetStat(type));
+        Array.ForEach(_items, x => result += x.GetStat(type));
         return result;
     }
 
@@ -235,12 +235,12 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     public void CopyFrom(GearSet gearSet)
     {
         TimeStamp = gearSet.TimeStamp;
-        EtroID = gearSet.EtroID;
+        EtroId = gearSet.EtroId;
         Name = gearSet.Name;
         ManagedBy = gearSet.ManagedBy;
         //Do an actual copy of the item
-        for (int i = 0; i < Items.Length; i++)
-            Items[i] = gearSet.Items[i].Clone();
+        for (int i = 0; i < _items.Length; i++)
+            _items[i] = gearSet._items[i].Clone();
         InvalidateCaches();
     }
 
@@ -253,9 +253,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         }
     }
 
-    public IEnumerator<GearItem> GetEnumerator() => ((IEnumerable<GearItem>)Items).GetEnumerator();
+    public IEnumerator<GearItem> GetEnumerator() => ((IEnumerable<GearItem>)_items).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 }
 
 internal class GearSetOverride : IReadOnlyGearSet

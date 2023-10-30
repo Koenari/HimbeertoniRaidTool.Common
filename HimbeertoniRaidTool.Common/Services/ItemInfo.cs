@@ -12,7 +12,7 @@ public class ItemInfo
     private readonly GameInfo _gameInfo;
     private readonly ExcelSheet<SpecialShop> _shopSheet;
     private readonly ExcelSheet<Lumina.Excel.GeneratedSheets.RecipeLookup> _recipeLookupSheet;
-    private readonly Dictionary<uint, ItemIDCollection> _itemContainerDb;
+    private readonly Dictionary<uint, ItemIdCollection> _itemContainerDb;
     private readonly Dictionary<uint, List<(uint shopID, int idx)>> _shopIndex;
     private readonly Dictionary<uint, List<uint>> _usedAsCurrency;
     private readonly Dictionary<uint, List<uint>> _lootSources;
@@ -20,7 +20,7 @@ public class ItemInfo
     internal ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
     {
         _gameInfo = gameInfo;
-        _itemContainerDb = curData.ItemContainerDB;
+        _itemContainerDb = curData.ItemContainerDb;
         _shopSheet = excelModule.GetSheet<SpecialShop>()!;
         _recipeLookupSheet = excelModule.GetSheet<Lumina.Excel.GeneratedSheets.RecipeLookup>()!;
         //Load Vendor Data
@@ -53,58 +53,58 @@ public class ItemInfo
         foreach (InstanceWithLoot instance in _gameInfo.GetInstances())
         foreach (HrtItem loot in instance.AllLoot)
         {
-            RegisterLoot(loot.ID, instance.InstanceID);
-            if (!IsItemContainer(loot.ID)) continue;
-            foreach (HrtItem item in GetContainerContents(loot.ID).Select(id => new HrtItem(id)))
-                RegisterLoot(item.ID, instance.InstanceID);
+            RegisterLoot(loot.Id, instance.InstanceId);
+            if (!IsItemContainer(loot.Id)) continue;
+            foreach (HrtItem item in GetContainerContents(loot.Id).Select(id => new HrtItem(id)))
+                RegisterLoot(item.Id, instance.InstanceId);
         }
     }
 
-    private void RegisterLoot(uint itemID, uint instanceID)
+    private void RegisterLoot(uint itemId, uint instanceId)
     {
-        if (!_lootSources.ContainsKey(itemID))
-            _lootSources[itemID] = new List<uint>();
-        if (!_lootSources[itemID].Contains(instanceID))
-            _lootSources[itemID].Add(instanceID);
+        if (!_lootSources.ContainsKey(itemId))
+            _lootSources[itemId] = new List<uint>();
+        if (!_lootSources[itemId].Contains(instanceId))
+            _lootSources[itemId].Add(instanceId);
     }
 
-    public bool CanBeLooted(uint itemID) => _lootSources.ContainsKey(itemID);
+    public bool CanBeLooted(uint itemId) => _lootSources.ContainsKey(itemId);
 
-    public IEnumerable<InstanceWithLoot> GetLootSources(uint itemID)
+    public IEnumerable<InstanceWithLoot> GetLootSources(uint itemId)
     {
-        if (_lootSources.TryGetValue(itemID, out var instanceIDs))
-            foreach (uint instanceID in instanceIDs)
-                yield return _gameInfo.GetInstance(instanceID);
+        if (_lootSources.TryGetValue(itemId, out var instanceIDs))
+            foreach (uint instanceId in instanceIDs)
+                yield return _gameInfo.GetInstance(instanceId);
     }
 
-    public bool IsItemContainer(uint itemID) => _itemContainerDb.ContainsKey(itemID);
+    public bool IsItemContainer(uint itemId) => _itemContainerDb.ContainsKey(itemId);
 
     public static bool IsCurrency(uint itemId) => Enum.IsDefined((Currency)itemId);
 
-    public bool UsedAsShopCurrency(uint itemID) => _usedAsCurrency.ContainsKey(itemID);
+    public bool UsedAsShopCurrency(uint itemId) => _usedAsCurrency.ContainsKey(itemId);
 
-    public bool CanBePurchased(uint itemID) => _shopIndex.ContainsKey(itemID);
+    public bool CanBePurchased(uint itemId) => _shopIndex.ContainsKey(itemId);
 
-    public bool CanBeCrafted(uint itemID) => _recipeLookupSheet.GetRow(itemID) != null;
+    public bool CanBeCrafted(uint itemId) => _recipeLookupSheet.GetRow(itemId) != null;
 
-    public ItemIDCollection GetPossiblePurchases(uint itemID) => new ItemIDList(_usedAsCurrency.GetValueOrDefault(itemID) ?? Enumerable.Empty<uint>());
+    public ItemIdCollection GetPossiblePurchases(uint itemId) => new ItemIdList(_usedAsCurrency.GetValueOrDefault(itemId) ?? Enumerable.Empty<uint>());
 
-    public ItemIDCollection GetContainerContents(uint itemID) => _itemContainerDb.GetValueOrDefault(itemID, ItemIDCollection.Empty);
+    public ItemIdCollection GetContainerContents(uint itemId) => _itemContainerDb.GetValueOrDefault(itemId, ItemIdCollection.Empty);
 
-    public IEnumerable<(string shopName, SpecialShop.ShopEntry entry)> GetShopEntriesForItem(uint itemID)
+    public IEnumerable<(string shopName, SpecialShop.ShopEntry entry)> GetShopEntriesForItem(uint itemId)
     {
-        if (_shopIndex.TryGetValue(itemID, out var shopEntries))
-            foreach ((uint shopID, int idx) in shopEntries)
+        if (_shopIndex.TryGetValue(itemId, out var shopEntries))
+            foreach ((uint shopId, int idx) in shopEntries)
             {
-                SpecialShop? shop = _shopSheet.GetRow(shopID);
+                SpecialShop? shop = _shopSheet.GetRow(shopId);
                 if (shop != null)
                     yield return (shop.Name, shop.ShopEntries[idx]);
             }
     }
 
-    public static bool IsTomeStone(uint itemID)
+    public static bool IsTomeStone(uint itemId)
     {
-        return itemID switch
+        return itemId switch
         {
             23 => true,
             24 => true,
@@ -117,28 +117,28 @@ public class ItemInfo
 
     public ItemSource GetSource(HrtItem item, int maxDepth = 10)
     {
-        uint itemID = item.ID;
+        uint itemId = item.Id;
         maxDepth--;
-        if (itemID == 0)
+        if (itemId == 0)
             return ItemSource.Undefined;
         if (maxDepth < 0) return ItemSource.Undefined;
         if (item.Rarity == Rarity.Relic)
             return ItemSource.Relic;
-        if (_lootSources.TryGetValue(itemID, out var instanceID))
-            return _gameInfo.GetInstance(instanceID.First()).InstanceType.ToItemSource();
-        if (CanBeCrafted(itemID))
+        if (_lootSources.TryGetValue(itemId, out var instanceId))
+            return _gameInfo.GetInstance(instanceId.First()).InstanceType.ToItemSource();
+        if (CanBeCrafted(itemId))
             return ItemSource.Crafted;
-        if (CanBePurchased(itemID))
+        if (CanBePurchased(itemId))
         {
-            if (GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Any(e => CanBeCrafted(e.Item.Row)))
-                || GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
+            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Any(e => CanBeCrafted(e.Item.Row)))
+                || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
                     .Any(e => GetSource(new HrtItem(e.Item.Row), maxDepth) == ItemSource.Crafted)))
                 return ItemSource.Crafted;
-            if (GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row)))
-                || GetShopEntriesForItem(itemID).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
+            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row)))
+                || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
                     .Any(e => GetSource(new HrtItem(e.Item.Row), maxDepth) == ItemSource.Tome)))
                 return ItemSource.Tome;
-            if (GetShopEntriesForItem(itemID).Any(se =>
+            if (GetShopEntriesForItem(itemId).Any(se =>
                     se.entry.ItemCostEntries.Any(e => GetSource(new HrtItem(e.Item.Row), maxDepth) == ItemSource.Raid)))
                 return ItemSource.Raid;
             return ItemSource.Shop;

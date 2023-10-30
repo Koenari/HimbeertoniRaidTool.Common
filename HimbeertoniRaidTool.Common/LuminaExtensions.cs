@@ -26,15 +26,9 @@ namespace HimbeertoniRaidTool.Common
 
     public static class EquipSlotCategoryExtensions
     {
-        public static bool Contains(this EquipSlotCategory? self, GearSetSlot? slot)
-        {
-            return self.HasValueAt(slot, 1);
-        }
+        public static bool Contains(this EquipSlotCategory? self, GearSetSlot? slot) => self.HasValueAt(slot, 1);
 
-        public static bool Disallows(this EquipSlotCategory? self, GearSetSlot? slot)
-        {
-            return self.HasValueAt(slot, -1);
-        }
+        public static bool Disallows(this EquipSlotCategory? self, GearSetSlot? slot) => self.HasValueAt(slot, -1);
 
         public static bool HasValueAt(this EquipSlotCategory? self, GearSetSlot? slot, sbyte value)
         {
@@ -68,10 +62,7 @@ namespace HimbeertoniRaidTool.Common
         }
 
         [Obsolete("Evaluate for all available slots")]
-        public static GearSetSlot ToSlot(this EquipSlotCategory? self)
-        {
-            return self.AvailableSlots().FirstOrDefault(GearSetSlot.None);
-        }
+        public static GearSetSlot ToSlot(this EquipSlotCategory? self) => self.AvailableSlots().FirstOrDefault(GearSetSlot.None);
     }
 
     public static class ClassJobCategoryExtensions
@@ -181,14 +172,14 @@ namespace Lumina.Excel.CustomSheets
             public LazyRow<Item> Item { get; set; }
             public uint Count { get; set; }
             public LazyRow<SpecialShopItemCategory> SpecialShopItemCategory { get; set; }
-            public bool HQ { get; set; }
+            public bool Hq { get; set; }
         }
 
         public class ItemCostEntry
         {
             public LazyRow<Item> Item { get; set; }
             public uint Count { get; set; }
-            public bool HQ { get; set; }
+            public bool Hq { get; set; }
             public ushort CollectabilityRatingCost { get; set; }
         }
 
@@ -213,7 +204,7 @@ namespace Lumina.Excel.CustomSheets
                             new LazyRow<SpecialShopItemCategory>(gameData,
                                 parser.ReadColumn<int>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE +
                                                        2 * NUM_ENTRIES + i), language),
-                        HQ = parser.ReadColumn<bool>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE + 3 * NUM_ENTRIES +
+                        Hq = parser.ReadColumn<bool>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE + 3 * NUM_ENTRIES +
                                                      i),
                     };
                 //COSTS
@@ -225,7 +216,7 @@ namespace Lumina.Excel.CustomSheets
                             language),
                         Count =
                             parser.ReadColumn<uint>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 1 * NUM_ENTRIES + i),
-                        HQ = parser.ReadColumn<bool>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 2 * NUM_ENTRIES + i),
+                        Hq = parser.ReadColumn<bool>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 2 * NUM_ENTRIES + i),
                         CollectabilityRatingCost =
                             parser.ReadColumn<ushort>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 3 * NUM_ENTRIES + i),
                     };

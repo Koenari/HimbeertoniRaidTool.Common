@@ -3,6 +3,7 @@ using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -45,13 +46,13 @@ public enum GearSetSlot : short
 public enum LootRuleEnum
 {
     None = 0,
-    BISOverUpgrade = 1,
+    BisOverUpgrade = 1,
     LowestItemLevel = 2,
     HighestItemLevelGain = 3,
     RolePrio = 4,
     Random = 5,
-    [Obsolete("DPSGain")] DPS = 6,
-    DPSGain = 7,
+    [Obsolete("DPSGain")] Dps = 6,
+    DpsGain = 7,
     CanUse = 8,
     CanBuy = 9,
     NeedGreed = 997,
@@ -69,6 +70,7 @@ public enum EncounterDifficulty
     Ultimate,
 }
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public enum Job : byte
 {
     ADV = 0,
@@ -153,7 +155,7 @@ public enum GroupType
 
 public enum GearSetManager
 {
-    HRT,
+    Hrt,
     Etro,
 }
 
@@ -164,6 +166,7 @@ public enum Gender
     Male = 2,
 }
 
+[SuppressMessage("ReSharper", "InconsistentNaming")]
 public enum MateriaLevel : byte
 {
     None = 255,
@@ -189,9 +192,9 @@ public enum MateriaCategory : ushort
     Tenacity = 17,
     Gathering = 18,
     Perception = 19,
-    GP = 20,
+    Gp = 20,
     Craftsmanship = 21,
-    CP = 22,
+    Cp = 22,
     Control = 23,
     SkillSpeed = 24,
     SpellSpeed = 25,
@@ -215,11 +218,11 @@ public enum StatType : uint
     Intelligence,
     Mind,
     Piety,
-    HP,
-    MP,
-    TP,
-    GP,
-    CP,
+    Hp,
+    Mp,
+    Tp,
+    Gp,
+    Cp,
     PhysicalDamage,
     MagicalDamage,
     Delay,
@@ -260,7 +263,7 @@ public enum StatType : uint
     Enmity,
     EnmityReduction,
     CarefulDesynthesis,
-    EXPBonus,
+    ExpBonus,
     Regen,
     Refresh,
     MovementSpeed,
@@ -288,15 +291,15 @@ public enum StatType : uint
 
 public static class EnumExtensions
 {
-    private static ExcelSheet<ClassJob>? JobSheetCache = null;
-    private static ExcelSheet<ClassJob>? JobSheet => JobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
-    private static readonly Dictionary<Job, ClassJob?> JobCache = new();
+    private static ExcelSheet<ClassJob>? _jobSheetCache = null;
+    private static ExcelSheet<ClassJob>? JobSheet => _jobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static readonly Dictionary<Job, ClassJob?> _jobCache = new();
 
     private static ClassJob? GetClassJob(Job j)
     {
-        if (!JobCache.ContainsKey(j))
-            JobCache[j] = null;
-        return JobCache[j] ??= JobSheet?.GetRow((uint)j);
+        if (!_jobCache.ContainsKey(j))
+            _jobCache[j] = null;
+        return _jobCache[j] ??= JobSheet?.GetRow((uint)j);
     }
 
     public static Role GetRole(this Job c)
@@ -343,9 +346,9 @@ public static class EnumExtensions
             MateriaCategory.Tenacity => StatType.Tenacity,
             MateriaCategory.Gathering => StatType.Gathering,
             MateriaCategory.Perception => StatType.Perception,
-            MateriaCategory.GP => StatType.GP,
+            MateriaCategory.Gp => StatType.Gp,
             MateriaCategory.Craftsmanship => StatType.Craftsmanship,
-            MateriaCategory.CP => StatType.CP,
+            MateriaCategory.Cp => StatType.Cp,
             MateriaCategory.Control => StatType.Control,
             MateriaCategory.SkillSpeed => StatType.SkillSpeed,
             MateriaCategory.SpellSpeed => StatType.SpellSpeed,

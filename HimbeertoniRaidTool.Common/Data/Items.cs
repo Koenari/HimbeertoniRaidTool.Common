@@ -88,7 +88,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         return result;
     }
 
-    public GearItem(uint ID = 0) : base(ID)
+    public GearItem(uint id = 0) : base(id)
     {
         _statCapImpl = new Lazy<int>(() =>
         {
@@ -101,15 +101,12 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         });
     }
 
-    public bool Equals(GearItem? other)
-    {
-        return Equals(other, ItemComparisonMode.Full);
-    }
+    public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
 
     public bool Equals(GearItem? other, ItemComparisonMode mode)
     {
         //idOnly
-        if (ID != other?.ID) return false;
+        if (Id != other?.Id) return false;
         if (mode == ItemComparisonMode.IdOnly) return true;
         //IgnoreMateria
         if (IsHq != other.IsHq) return false;
@@ -131,10 +128,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         return cnt.Values.All(s => s == 0);
     }
 
-    public bool CanAffixMateria()
-    {
-        return _materia.Count < MaxMateriaSlots;
-    }
+    public bool CanAffixMateria() => _materia.Count < MaxMateriaSlots;
 
     public void AddMateria(HrtMateria materia)
     {
@@ -198,28 +192,28 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 public class HrtItem : IEquatable<HrtItem>
 {
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-    protected readonly uint _ID = 0;
+    private readonly uint _id = 0;
 
-    public virtual uint ID => _ID;
+    public virtual uint Id => _id;
 
-    private Item? ItemCache = null;
+    private Item? _itemCache = null;
 
     [JsonIgnore] public Rarity Rarity => (Rarity)(Item?.Rarity ?? 0);
 
     [JsonIgnore] public ushort Icon => Item?.Icon ?? 0;
 
-    protected Item? Item => ItemCache ??= _itemSheet?.GetRow(ID);
+    protected Item? Item => _itemCache ??= ItemSheet?.GetRow(Id);
 
     public string Name => Item?.Name.RawString ?? "";
 
     public bool IsGear => this is GearItem || (Item?.ClassJobCategory.Row ?? 0) != 0;
     public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
 
-    [JsonIgnore] public Lazy<uint> ILevelCache;
+    [JsonIgnore] public Lazy<uint> LevelCache;
 
-    [JsonIgnore] public uint ItemLevel => ILevelCache.Value;
+    [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
-    public bool Filled => ID > 0;
+    public bool Filled => Id > 0;
 
     /*
     public string SourceShortName
@@ -232,39 +226,33 @@ public class HrtItem : IEquatable<HrtItem>
         }
     }
     */
-    public bool IsExchangableItem => ServiceManager.ItemInfo?.UsedAsShopCurrency(ID) ?? false;
-    public bool IsContainerItem => ServiceManager.ItemInfo?.IsItemContainer(ID) ?? false;
+    public bool IsExchangableItem => ServiceManager.ItemInfo.UsedAsShopCurrency(Id);
+    public bool IsContainerItem => ServiceManager.ItemInfo.IsItemContainer(Id);
 
     public IEnumerable<GearItem> PossiblePurchases
     {
         get
         {
             if (IsExchangableItem)
-                foreach (uint canBuy in ServiceManager.ItemInfo.GetPossiblePurchases(ID))
+                foreach (uint canBuy in ServiceManager.ItemInfo.GetPossiblePurchases(Id))
                     yield return new GearItem(canBuy);
             if (IsContainerItem)
-                foreach (uint id in ServiceManager.ItemInfo.GetContainerContents(ID))
+                foreach (uint id in ServiceManager.ItemInfo.GetContainerContents(Id))
                     yield return new GearItem(id);
         }
     }
 
-    [JsonIgnore] protected static readonly ExcelSheet<Item>? _itemSheet = ServiceManager.ExcelModule?.GetSheet<Item>();
+    [JsonIgnore] protected static readonly ExcelSheet<Item>? ItemSheet = ServiceManager.ExcelModule?.GetSheet<Item>();
 
-    public HrtItem(uint ID)
+    public HrtItem(uint id)
     {
-        _ID = ID;
-        ILevelCache = new Lazy<uint>(() => Item?.LevelItem.Row ?? 0);
+        _id = id;
+        LevelCache = new Lazy<uint>(() => Item?.LevelItem.Row ?? 0);
     }
 
-    public bool Equals(HrtItem? obj)
-    {
-        return ID == obj?.ID;
-    }
+    public bool Equals(HrtItem? obj) => Id == obj?.Id;
 
-    public override int GetHashCode()
-    {
-        return ID.GetHashCode();
-    }
+    public override int GetHashCode() => Id.GetHashCode();
 }
 
 [JsonObject(MemberSerialization.OptIn)]
@@ -273,14 +261,14 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
     //Begin Object
     [JsonProperty("Category")] public readonly MateriaCategory Category;
-    [JsonProperty("MateriaLevel")] private readonly byte MateriaLevel;
-    [JsonIgnore] public MateriaLevel Level => (MateriaLevel)MateriaLevel;
+    [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;
+    [JsonIgnore] public MateriaLevel Level => (MateriaLevel)_materiaLevel;
 
     [JsonIgnore]
     private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule?.GetSheet<Materia>();
 
-    [JsonIgnore] private readonly Lazy<uint> IDCache;
-    [JsonIgnore] public override uint ID => IDCache.Value;
+    [JsonIgnore] private readonly Lazy<uint> _idCache;
+    [JsonIgnore] public override uint Id => _idCache.Value;
     public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
     public StatType StatType => Category.GetStatType();
 
@@ -296,79 +284,58 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
     public HrtMateria(MateriaCategory cat, MateriaLevel lvl) : base(0)
     {
         Category = cat;
-        MateriaLevel = (byte)lvl;
-        IDCache = new Lazy<uint>(() => Materia?.Item[MateriaLevel].Row ?? 0);
+        _materiaLevel = (byte)lvl;
+        _idCache = new Lazy<uint>(() => Materia?.Item[_materiaLevel].Row ?? 0);
     }
 
-    public int GetStat()
-    {
-        return Materia?.Value[MateriaLevel] ?? 0;
-    }
+    public int GetStat() => Materia?.Value[_materiaLevel] ?? 0;
 
-    public bool Equals(HrtMateria? other)
-    {
-        return base.Equals(other);
-    }
+    public bool Equals(HrtMateria? other) => base.Equals(other);
 }
 
-public class ItemIDRange : ItemIDCollection
+public class ItemIdRange : ItemIdCollection
 {
-    public ItemIDRange(uint start, uint end) : base(Enumerable.Range((int)start, Math.Max(0, (int)end - (int)start + 1))
+    public ItemIdRange(uint start, uint end) : base(Enumerable.Range((int)start, Math.Max(0, (int)end - (int)start + 1))
         .ToList().ConvertAll(x => (uint)x))
     {
     }
 }
 
-public class ItemIDList : ItemIDCollection
+public class ItemIdList : ItemIdCollection
 {
-    public static implicit operator ItemIDList(uint[] ids)
-    {
-        return new ItemIDList(ids);
-    }
+    public static implicit operator ItemIdList(uint[] ids) => new(ids);
 
-    public ItemIDList(params uint[] ids) : base(ids)
+    public ItemIdList(params uint[] ids) : base(ids)
     {
     }
 
-    public ItemIDList(ItemIDCollection col, params uint[] ids) : base(col.Concat(ids))
+    public ItemIdList(ItemIdCollection col, params uint[] ids) : base(col.Concat(ids))
     {
     }
 
-    public ItemIDList(IEnumerable<uint> ids) : base(ids)
+    public ItemIdList(IEnumerable<uint> ids) : base(ids)
     {
     }
 }
 
-public abstract class ItemIDCollection : IEnumerable<uint>
+public abstract class ItemIdCollection : IEnumerable<uint>
 {
-    public static ItemIDCollection Empty = new ItemIDList();
-    private readonly ReadOnlyCollection<uint> _IDs;
-    public int Count => _IDs.Count;
+    public static readonly ItemIdCollection Empty = new ItemIdList();
+    private readonly ReadOnlyCollection<uint> _iDs;
+    public int Count => _iDs.Count;
 
-    protected ItemIDCollection(IEnumerable<uint> ids)
+    protected ItemIdCollection(IEnumerable<uint> ids)
     {
-        _IDs = new ReadOnlyCollection<uint>(ids.ToList());
+        _iDs = new ReadOnlyCollection<uint>(ids.ToList());
     }
 
-    public IEnumerator<uint> GetEnumerator()
-    {
-        return _IDs.GetEnumerator();
-    }
+    public IEnumerator<uint> GetEnumerator() => _iDs.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return _IDs.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => _iDs.GetEnumerator();
 
-    public static implicit operator ItemIDCollection(uint id)
-    {
-        return new ItemIDList(id);
-    }
+    public static implicit operator ItemIdCollection(uint id) => new ItemIdList(id);
 
-    public static implicit operator ItemIDCollection((uint, uint) id)
-    {
-        return new ItemIDRange(id.Item1, id.Item2);
-    }
+    public static implicit operator ItemIdCollection((uint, uint) id) => new ItemIdRange(id.Item1, id.Item2);
 }
 
 public enum ItemComparisonMode

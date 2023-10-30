@@ -9,17 +9,17 @@ public class Inventory : Dictionary<int, InventoryEntry>
 {
     public bool Contains(uint id)
     {
-        return Values.Any(i => i.ID == id);
+        return Values.Any(i => i.Id == id);
     }
 
     public int ItemCount(uint id)
     {
-        return this.Where(i => i.Value.ID == id).Sum(i => i.Value.quantity);
+        return this.Where(i => i.Value.Id == id).Sum(i => i.Value.Quantity);
     }
 
     public int IndexOf(uint id)
     {
-        return this.FirstOrDefault(i => i.Value.ID == id).Key;
+        return this.FirstOrDefault(i => i.Value.Id == id).Key;
     }
 
     public int FirstFreeSlot()
@@ -40,11 +40,11 @@ public class Wallet : Dictionary<Currency, uint>
     MemberSerialization = MemberSerialization.Fields)]
 public class InventoryEntry
 {
-    public int quantity = 0;
-    private string type;
-    private HrtItem? hrtItem;
-    private GearItem? gearItem;
-    private HrtMateria? hrtMateria;
+    public int Quantity = 0;
+    private string _type;
+    private HrtItem? _hrtItem;
+    private GearItem? _gearItem;
+    private HrtMateria? _hrtMateria;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
     public InventoryEntry(HrtItem item)
@@ -55,7 +55,7 @@ public class InventoryEntry
 
     private InventoryEntry(string typeArg)
     {
-        type = typeArg;
+        _type = typeArg;
     }
 
     [JsonIgnore]
@@ -64,56 +64,53 @@ public class InventoryEntry
         get
         {
             if (IsGear)
-                return gearItem!;
+                return _gearItem!;
             else if (IsMateria)
-                return hrtMateria!;
+                return _hrtMateria!;
             else
-                return hrtItem!;
+                return _hrtItem!;
         }
         set
         {
-            gearItem = null;
-            hrtMateria = null;
+            _gearItem = null;
+            _hrtMateria = null;
 
             if (value is GearItem item)
             {
-                gearItem = item;
-                type = nameof(GearItem);
+                _gearItem = item;
+                _type = nameof(GearItem);
             }
             else if (value is HrtMateria mat)
             {
-                hrtMateria = mat;
-                type = nameof(HrtMateria);
+                _hrtMateria = mat;
+                _type = nameof(HrtMateria);
             }
             else
             {
-                hrtItem = value;
-                type = nameof(HrtItem);
+                _hrtItem = value;
+                _type = nameof(HrtItem);
             }
         }
     }
 
-    public bool IsGear => type == nameof(GearItem);
-    public bool IsMateria => type == nameof(HrtMateria);
+    public bool IsGear => _type == nameof(GearItem);
+    public bool IsMateria => _type == nameof(HrtMateria);
 
-    public uint ID
+    public uint Id
     {
         get
         {
-            return type switch
+            return _type switch
             {
-                nameof(GearItem) => gearItem!.ID,
-                nameof(HrtMateria) => hrtMateria!.ID,
-                nameof(HrtItem) => hrtItem!.ID,
+                nameof(GearItem) => _gearItem!.Id,
+                nameof(HrtMateria) => _hrtMateria!.Id,
+                nameof(HrtItem) => _hrtItem!.Id,
                 _ => 0,
             };
         }
     }
 
-    public static implicit operator InventoryEntry(HrtItem item)
-    {
-        return new InventoryEntry(item);
-    }
+    public static implicit operator InventoryEntry(HrtItem item) => new(item);
 }
 
 public enum Currency : uint
@@ -126,7 +123,7 @@ public enum Currency : uint
     TomestoneOfSoldiery = 26,
     AlliedSeal = 27,
     TomestoneOfPoetics = 28,
-    MGP = 29,
+    Mgp = 29,
     TomestoneOfLaw = 30,
     TomestoneOfAstronomy = 43,
     TomestoneOfCausality = 44,

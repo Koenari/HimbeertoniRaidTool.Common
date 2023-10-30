@@ -30,21 +30,18 @@ public class RaidTier
     public readonly uint WeaponItemLevel;
     public readonly uint ArmorItemLevel;
     public readonly string Name;
-    private readonly List<uint> BossIDs;
-    public List<InstanceWithLoot> Bosses => BossIDs.ConvertAll(id => ServiceManager.GameInfo.GetInstance(id));
+    private readonly List<uint> _bossIDs;
+    public List<InstanceWithLoot> Bosses => _bossIDs.ConvertAll(id => ServiceManager.GameInfo.GetInstance(id));
 
     public RaidTier(EncounterDifficulty difficulty, uint weaponItemLevel, uint armorItemLevel, string name,
-        IEnumerable<uint> bossIDS)
+        IEnumerable<uint> bossIds)
     {
         Difficulty = difficulty;
         WeaponItemLevel = weaponItemLevel;
         ArmorItemLevel = armorItemLevel;
         Name = name;
-        BossIDs = new List<uint>(bossIDS);
+        _bossIDs = new List<uint>(bossIds);
     }
 
-    public uint ItemLevel(GearSetSlot slot)
-    {
-        return slot == GearSetSlot.MainHand ? WeaponItemLevel : ArmorItemLevel;
-    }
+    public uint ItemLevel(GearSetSlot slot) => slot == GearSetSlot.MainHand ? WeaponItemLevel : ArmorItemLevel;
 }
