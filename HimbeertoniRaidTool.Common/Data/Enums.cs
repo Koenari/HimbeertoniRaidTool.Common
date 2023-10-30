@@ -8,7 +8,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public enum ItemSource
 {
-    undefined = 0,
+    Undefined = 0,
 
     Raid = 1,
     Dungeon = 2,
@@ -309,15 +309,9 @@ public static class EnumExtensions
         return (Role)cj.Role;
     }
 
-    public static bool IsCombatRole(this Role role)
-    {
-        return role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
-    }
+    public static bool IsCombatRole(this Role role) => role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
 
-    public static StatType MainStat(this Job job)
-    {
-        return (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
-    }
+    public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
 
     public static int GroupSize(this GroupType groupType)
     {
@@ -330,25 +324,13 @@ public static class EnumExtensions
         };
     }
 
-    public static bool CanHaveShield(this Job job)
-    {
-        return job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
-    }
+    public static bool CanHaveShield(this Job job) => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
 
-    public static bool IsCombatJob(this Job j)
-    {
-        return !(Job.CRP <= j && j <= Job.FSH);
-    }
+    public static bool IsCombatJob(this Job j) => !(Job.CRP <= j && j <= Job.FSH);
 
-    public static bool IsDoH(this Job j)
-    {
-        return Job.MIN <= j && j <= Job.FSH;
-    }
+    public static bool IsDoH(this Job j) => Job.MIN <= j && j <= Job.FSH;
 
-    public static bool IsDoL(this Job j)
-    {
-        return Job.CRP <= j && j <= Job.CUL;
-    }
+    public static bool IsDoL(this Job j) => Job.CRP <= j && j <= Job.CUL;
 
     public static StatType GetStatType(this MateriaCategory materiaCategory)
     {
@@ -378,7 +360,7 @@ public static class EnumExtensions
             InstanceType.Raid => ItemSource.Raid,
             InstanceType.Trial => ItemSource.Trial,
             InstanceType.Dungeon => ItemSource.Dungeon,
-            _ => ItemSource.undefined,
+            _ => ItemSource.Undefined,
         };
     }
 

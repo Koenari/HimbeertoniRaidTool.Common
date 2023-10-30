@@ -1,24 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Security;
+
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
+public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
 {
-    public readonly static HrtID Empty = new(0, IDType.None, 0);
-    public static HrtID FromString(string id)
+    public static readonly HrtId Empty = new(0, IdType.None, 0);
+    public static HrtId FromString(string id)
     {
         string[] parts = id.Split('-');
-        if (parts.Length != 5 || parts[0] != "HRT" || parts[1] != "1")
+        if (parts is not ["HRT", "1", _, _, _])
             return Empty;
         try
         {
             uint authority = uint.Parse(parts[2], System.Globalization.NumberStyles.HexNumber);
-            IDType type = Enum.Parse<IDType>(parts[3]);
+            var type = Enum.Parse<IdType>(parts[3]);
             ulong sequence = ulong.Parse(parts[4], System.Globalization.NumberStyles.HexNumber);
-            return new(authority, type, sequence);
+            return new HrtId(authority, type, sequence);
         }
-        catch { }
+        catch (Exception e) when (e is ArgumentException or OverflowException or ArgumentNullException
+                                      or FormatException) { }
         return Empty;
     }
     [JsonProperty]
@@ -35,7 +38,7 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
         0 => AuthorityLevel.None,
     };
     [JsonProperty]
-    public readonly IDType Type;
+    public readonly IdType Type;
     [JsonProperty]
     public readonly ulong Sequence;
     [JsonProperty]
@@ -43,34 +46,36 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
     [JsonIgnore] public bool IsSigned => Signature.Length > 0;
     [JsonIgnore] public bool IsEmpty => Sequence == 0;
 
-    public HrtID(uint authority, IDType type, ulong sequence)
+    public HrtId(uint authority, IdType type, ulong sequence)
     {
         Authority = authority;
         Type = type;
         Sequence = sequence;
     }
     public override string ToString() => $"HRT-{Revision:D}-{Authority:X}-" +
-        $"{Type:D}-{Sequence:X}";
-    public bool Equals(HrtID? other) =>
+                                         $"{Type:D}-{Sequence:X}";
+    public bool Equals(HrtId? other) =>
         other is not null && Type == other.Type && Authority == other.Authority && Sequence == other.Sequence && Revision == other.Revision;
 
-    public int CompareTo(HrtID? other)
+    public int CompareTo(HrtId? other)
     {
         if (other is null) return 1;
         if (Authority != other.Authority)
-            return (Authority > other.Authority) ? 1 : -1;
+            return Authority > other.Authority ? 1 : -1;
         if (Sequence != other.Sequence)
-            return (Sequence > other.Sequence) ? 1 : -1;
+            return Sequence > other.Sequence ? 1 : -1;
         return 0;
     }
 
-    public enum IDType : byte
+    public enum IdType : byte
     {
         None = 0,
         Player = 1,
         Character = 2,
         Gear = 3,
+        Group = 4,
     }
+
     public enum AuthorityLevel
     {
         None = 0,
@@ -79,13 +84,21 @@ public class HrtID : IEquatable<HrtID>, IComparable<HrtID>
         Remote = 5,
         Local = 10,
     }
+
     public override int GetHashCode() => (int)(Sequence & int.MaxValue);
-    public override bool Equals(object? obj) => Equals(obj as HrtID);
-    public static bool operator ==(HrtID left, HrtID right) => left.Equals(right);
-    public static bool operator !=(HrtID left, HrtID right) => !(left == right);
-    public static bool operator <(HrtID left, HrtID right) => left.CompareTo(right) < 0;
-    public static bool operator <=(HrtID left, HrtID right) => left.CompareTo(right) <= 0;
-    public static bool operator >(HrtID left, HrtID right) => left.CompareTo(right) > 0;
-    public static bool operator >=(HrtID left, HrtID right) => left.CompareTo(right) >= 0;
-    public static explicit operator HrtID(string id) => FromString(id);
+    public override bool Equals(object? obj) => Equals(obj as HrtId);
+    public static bool operator ==(HrtId left, HrtId right) => left.Equals(right);
+    public static bool operator !=(HrtId left, HrtId right) => !(left == right);
+    public static bool operator <(HrtId left, HrtId right) => left.CompareTo(right) < 0;
+    public static bool operator <=(HrtId left, HrtId right) => left.CompareTo(right) <= 0;
+    public static bool operator >(HrtId left, HrtId right) => left.CompareTo(right) > 0;
+    public static bool operator >=(HrtId left, HrtId right) => left.CompareTo(right) >= 0;
+    public static explicit operator HrtId(string id) => FromString(id);
+}
+
+public interface IHasHrtId
+{
+    public HrtId.IdType IdType { get; }
+    public HrtId LocalId { get; }
+    public IEnumerable<HrtId> RemoteIds { get; }
 }

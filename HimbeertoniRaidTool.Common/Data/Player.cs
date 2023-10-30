@@ -1,11 +1,24 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using HimbeertoniRaidTool.Common.Security;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player
+public class Player : IHasHrtId
 {
+    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Player;
+
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+
+    /// <summary>
+    /// HRT specific unique IDs used for remote storage and lookup.
+    /// </summary>
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+
+    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+
     [JsonProperty("NickName")]
     public string NickName = "";
     [JsonProperty("AdditionalData", ObjectCreationHandling = ObjectCreationHandling.Replace)]
@@ -19,7 +32,7 @@ public class Player
         {
             Chars.RemoveAll(x => x is null);
             if (Chars.Count == 0)
-                Chars.Insert(0, new());
+                Chars.Insert(0, new Character());
             return Chars[0];
         }
         set
@@ -37,6 +50,7 @@ public class Player
         Chars.Clear();
     }
 }
+
 [JsonObject(MemberSerialization.OptIn)]
 public class AdditionalPlayerData
 {

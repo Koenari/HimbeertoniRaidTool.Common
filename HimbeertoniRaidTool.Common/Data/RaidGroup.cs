@@ -1,13 +1,25 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using HimbeertoniRaidTool.Common.Security;
 using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidGroup : IEnumerable<Player>
+public class RaidGroup : IEnumerable<Player>, IHasHrtId
 {
+    public HrtId.IdType IdType => HrtId.IdType.Group;
+
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+
+    /// <summary>
+    /// HRT specific unique IDs used for remote storage and lookup.
+    /// </summary>
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+
+    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     [JsonProperty("TimeStamp")] public DateTime TimeStamp;
     [JsonProperty("Name")] public string Name;
     [JsonProperty("Members")] private readonly Player[] _players;
@@ -65,15 +77,9 @@ public class RaidGroup : IEnumerable<Player>
         }
     }
 
-    public IEnumerator<Player> GetEnumerator()
-    {
-        return Players.GetEnumerator();
-    }
+    public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return Players.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
 }
 
 [JsonObject(MemberSerialization.OptIn)]

@@ -14,17 +14,19 @@ public interface IReadOnlyGearSet
 }
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 {
     private const int NumSlots = 12;
 
+    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
     //IDs
     [JsonProperty("HrtID")] [Obsolete] public string OldHrtID = "";
 
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtID LocalID = HrtID.Empty;
+    public HrtId LocalId { get; set; } = HrtId.Empty;
 
-    [JsonProperty("RemoteIDs")] public List<HrtID> RemoteIDs = new();
+    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
+    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
 
     [JsonProperty("EtroID")] public string EtroID = "";
 
@@ -251,15 +253,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet
         }
     }
 
-    public IEnumerator<GearItem> GetEnumerator()
-    {
-        return ((IEnumerable<GearItem>)Items).GetEnumerator();
-    }
+    public IEnumerator<GearItem> GetEnumerator() => ((IEnumerable<GearItem>)Items).GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return Items.GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => Items.GetEnumerator();
 }
 
 internal class GearSetOverride : IReadOnlyGearSet

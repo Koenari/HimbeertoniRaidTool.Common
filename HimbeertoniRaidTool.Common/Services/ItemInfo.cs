@@ -68,10 +68,7 @@ public class ItemInfo
             _lootSources[itemID].Add(instanceID);
     }
 
-    public bool CanBeLooted(uint itemID)
-    {
-        return _lootSources.ContainsKey(itemID);
-    }
+    public bool CanBeLooted(uint itemID) => _lootSources.ContainsKey(itemID);
 
     public IEnumerable<InstanceWithLoot> GetLootSources(uint itemID)
     {
@@ -80,40 +77,19 @@ public class ItemInfo
                 yield return _gameInfo.GetInstance(instanceID);
     }
 
-    public bool IsItemContainer(uint itemID)
-    {
-        return _itemContainerDb.ContainsKey(itemID);
-    }
+    public bool IsItemContainer(uint itemID) => _itemContainerDb.ContainsKey(itemID);
 
-    public static bool IsCurrency(uint itemId)
-    {
-        return Enum.IsDefined((Currency)itemId);
-    }
+    public static bool IsCurrency(uint itemId) => Enum.IsDefined((Currency)itemId);
 
-    public bool UsedAsShopCurrency(uint itemID)
-    {
-        return _usedAsCurrency.ContainsKey(itemID);
-    }
+    public bool UsedAsShopCurrency(uint itemID) => _usedAsCurrency.ContainsKey(itemID);
 
-    public bool CanBePurchased(uint itemID)
-    {
-        return _shopIndex.ContainsKey(itemID);
-    }
+    public bool CanBePurchased(uint itemID) => _shopIndex.ContainsKey(itemID);
 
-    public bool CanBeCrafted(uint itemID)
-    {
-        return _recipeLookupSheet.GetRow(itemID) != null;
-    }
+    public bool CanBeCrafted(uint itemID) => _recipeLookupSheet.GetRow(itemID) != null;
 
-    public ItemIDCollection GetPossiblePurchases(uint itemID)
-    {
-        return new ItemIDList(_usedAsCurrency.GetValueOrDefault(itemID) ?? Enumerable.Empty<uint>());
-    }
+    public ItemIDCollection GetPossiblePurchases(uint itemID) => new ItemIDList(_usedAsCurrency.GetValueOrDefault(itemID) ?? Enumerable.Empty<uint>());
 
-    public ItemIDCollection GetContainerContents(uint itemID)
-    {
-        return _itemContainerDb.GetValueOrDefault(itemID, ItemIDCollection.Empty);
-    }
+    public ItemIDCollection GetContainerContents(uint itemID) => _itemContainerDb.GetValueOrDefault(itemID, ItemIDCollection.Empty);
 
     public IEnumerable<(string shopName, SpecialShop.ShopEntry entry)> GetShopEntriesForItem(uint itemID)
     {
@@ -144,8 +120,8 @@ public class ItemInfo
         uint itemID = item.ID;
         maxDepth--;
         if (itemID == 0)
-            return ItemSource.undefined;
-        if (maxDepth < 0) return ItemSource.undefined;
+            return ItemSource.Undefined;
+        if (maxDepth < 0) return ItemSource.Undefined;
         if (item.Rarity == Rarity.Relic)
             return ItemSource.Relic;
         if (_lootSources.TryGetValue(itemID, out var instanceID))
@@ -168,6 +144,6 @@ public class ItemInfo
             return ItemSource.Shop;
         }
 
-        return ItemSource.undefined;
+        return ItemSource.Undefined;
     }
 }

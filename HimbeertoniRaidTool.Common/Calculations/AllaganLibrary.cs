@@ -6,13 +6,11 @@ namespace HimbeertoniRaidTool.Common.Calculations;
 public static class AllaganLibrary
 {
     /// <summary>
-    /// This function evaluates a stat to it's respective effective used effect.
-    /// Only works for level 90/80/70
+    /// Formats the mathematically correct value according to it's type
     /// </summary>
     /// <param name="type">Type of stat that should be evaluated</param>
-    /// <param name="curClass">The job/class to evaluate for</param>
-    /// <param name="bis">If true evaluates for BiS gear else for current</param>
-    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
+    /// <param name="evaluatedValue">value to be formatted</param>
+    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
     /// <returns>Evaluated value including unit</returns>
     public static (string Val, string Unit) FormatStatValue(double evaluatedValue, StatType type, int alternative = 0)
     {
@@ -38,19 +36,17 @@ public static class AllaganLibrary
     }
     /// <summary>
     /// This function evaluates a stat to it's respective effective used effect.
-    /// Only works for level 90/80/70 (some stats may work for aother levels too)
+    /// Only works for level 90/80/70 (some stats may work for other levels too)
     /// </summary>
     /// <param name="type">Type of stat that should be evaluated</param>
     /// <param name="curClass">The job/class to evaluate for</param>
-    /// <param name="bis">If true evaluates for BiS gear else for current</param>
-    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default furmula)</param>
-    /// /// <param name="additionalStats">pass any additional stats that are necessary to calculate given vlaue</param>
+    /// <param name="gear">current gear set to get stats</param>
+    /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
     public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, int alternative = 0)
     {
         int totalStat = curClass.GetStat(type, gear);
         int level = curClass.Level;
-        var job = curClass.Job;
         return (type, alternative) switch
         {
             (StatType.CriticalHit, 1) => StatEquations.CalcCritDamage(totalStat, level),
