@@ -22,7 +22,7 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
     [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     [JsonProperty("TimeStamp")] public DateTime TimeStamp;
     [JsonProperty("Name")] public string Name;
-    [JsonProperty("Members")] private readonly Player[] _players;
+    [JsonProperty("Members")] private readonly Player?[] _players;
     [JsonProperty("Type")] public GroupType Type;
     [JsonProperty("TypeLocked")] public bool TypeLocked;
 
@@ -62,15 +62,15 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
         get
         {
             if (idx >= Count)
-                throw new IndexOutOfRangeException($"Raidgroup of type {Type} has no member at index {idx}");
+                throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            return _players[idx];
+            return _players[idx] ??= new Player();
         }
         set
         {
             if (idx >= Count)
-                throw new IndexOutOfRangeException($"Raidgroup of type {Type} has no member at index {idx}");
+                throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
             _players[idx] = value;

@@ -99,6 +99,6 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
 public interface IHasHrtId
 {
     public HrtId.IdType IdType { get; }
-    public HrtId LocalId { get; }
+    public HrtId LocalId { get; set; }
     public IEnumerable<HrtId> RemoteIds { get; }
 }
