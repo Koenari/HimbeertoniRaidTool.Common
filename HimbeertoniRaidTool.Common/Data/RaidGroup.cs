@@ -77,6 +77,15 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
         }
     }
 
+    public void SwapPlayers(int idx1, int idx2)
+    {
+        if (idx1 >= Count || idx2 >= Count)
+            throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {Math.Max(idx1, idx2)}");
+        if (Type == GroupType.Group)
+            (idx1, idx2) = (idx1 * 2, idx2 * 2);
+        (_players[idx1], _players[idx2]) = (_players[idx2], _players[idx1]);
+    }
+
     public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
