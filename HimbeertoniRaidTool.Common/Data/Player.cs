@@ -30,7 +30,6 @@ public class Player : IHasHrtId
     {
         get
         {
-            Chars.RemoveAll(x => x is null);
             if (Chars.Count == 0)
                 Chars.Insert(0, new Character());
             return Chars[0];

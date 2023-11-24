@@ -61,7 +61,7 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
     {
         get
         {
-            if (idx >= Count)
+            if (idx < 0 || idx >= Count)
                 throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
@@ -69,7 +69,7 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
         }
         set
         {
-            if (idx >= Count)
+            if (idx < 0 || idx >= Count)
                 throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
@@ -79,6 +79,8 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
 
     public void SwapPlayers(int idx1, int idx2)
     {
+        if (idx1 < 0 || idx2 < 0)
+            throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {Math.Min(idx1, idx2)}");
         if (idx1 >= Count || idx2 >= Count)
             throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {Math.Max(idx1, idx2)}");
         if (Type == GroupType.Group)
