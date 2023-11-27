@@ -75,7 +75,7 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
         set => HomeWorldId = value?.RowId ?? 0;
     }
 
-    public bool Filled => Name != "";
+    public bool Filled => !LocalId.IsEmpty;
 
     public Character(string name = "", uint worldId = 0)
     {

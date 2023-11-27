@@ -31,7 +31,7 @@ public static class AllaganLibrary
             (StatType.Defense, _) or (StatType.MagicDefense, _) => ($"{evaluatedValue * 100:N1}", "%%"),
             (StatType.Vitality, _) => ($"{evaluatedValue:N0}", "HP"),
             (StatType.MagicalDamage, _) or (StatType.PhysicalDamage, _) => ($"{evaluatedValue * 100:N0}", "Dmg/100"),
-            _ => notAvail
+            _ => notAvail,
         };
     }
     /// <summary>
@@ -66,7 +66,7 @@ public static class AllaganLibrary
             //ToDO: Still rounding issues
             (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
             (StatType.PhysicalDamage, _)
-                => StatEquations.CalcAvarageDamage(
+                => StatEquations.CalcAverageDamagePer100(
                     curClass.GetStat(StatType.PhysicalDamage, gear),
                     curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
                     curClass.GetStat(StatType.CriticalHit, gear),
@@ -74,9 +74,9 @@ public static class AllaganLibrary
                     curClass.GetStat(StatType.Determination, gear),
                     curClass.GetStat(StatType.Tenacity, gear),
                     level, curClass.ClassJob) *
-                    2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear), level),
+                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear), level),
             (StatType.MagicalDamage, _)
-                => StatEquations.CalcAvarageDamage(
+                => StatEquations.CalcAverageDamagePer100(
                     curClass.GetStat(StatType.PhysicalDamage, gear),
                     curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
                     curClass.GetStat(StatType.CriticalHit, gear),
@@ -84,8 +84,8 @@ public static class AllaganLibrary
                     curClass.GetStat(StatType.Determination, gear),
                     curClass.GetStat(StatType.Tenacity, gear),
                     level, curClass.ClassJob) *
-                    2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear), level),
-            _ => float.NaN
+                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear), level),
+            _ => float.NaN,
         };
     }
 }

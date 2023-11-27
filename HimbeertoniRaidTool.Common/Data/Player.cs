@@ -25,11 +25,15 @@ public class Player : IHasHrtId
     public readonly AdditionalPlayerData AdditionalData = new();
     [JsonProperty("Chars")]
     public List<Character> Chars { get; set; } = new();
-    public bool Filled => NickName != "" || Chars.Count > 0 && Chars[0].Filled;
+    public bool Filled => !LocalId.IsEmpty;
     public Character MainChar
     {
         get
         {
+
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            // Deserialization Problems
+            Chars.RemoveAll(c => c is null);
             if (Chars.Count == 0)
                 Chars.Insert(0, new Character());
             return Chars[0];
