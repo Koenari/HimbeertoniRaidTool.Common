@@ -18,7 +18,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 
     [JsonProperty] public bool IsHq { get; init; } = false;
 
-    [JsonIgnore] public List<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? new List<Job>();
+    [JsonIgnore] public IEnumerable<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? Enumerable.Empty<Job>();
 
     [JsonIgnore] public EquipSlotCategory EquipSlotCategory => Item?.EquipSlotCategory.Value ?? new EquipSlotCategory();
 

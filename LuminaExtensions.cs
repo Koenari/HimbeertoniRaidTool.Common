@@ -67,13 +67,11 @@ namespace HimbeertoniRaidTool.Common
 
     public static class ClassJobCategoryExtensions
     {
-        public static List<Job> ToJob(this ClassJobCategory self)
+        public static IEnumerable<Job> ToJob(this ClassJobCategory self)
         {
-            List<Job> jobs = new();
             for (int i = 0; i < (int)Job.Count; i++)
                 if (self.Contains((Job)i))
-                    jobs.Add((Job)i);
-            return jobs;
+                    yield return (Job)i;
         }
 
         public static bool Contains(this ClassJobCategory? cat, Job job)

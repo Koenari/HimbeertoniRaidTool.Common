@@ -91,6 +91,8 @@ public class RaidGroup : IEnumerable<Player>, IHasHrtId
     public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
+
+    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 }
 
 [JsonObject(MemberSerialization.OptIn)]

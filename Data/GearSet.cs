@@ -20,8 +20,6 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
     //IDs
-    [JsonProperty("HrtID")] [Obsolete] public string OldHrtId = "";
-
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
 
@@ -39,91 +37,6 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     //Actual Gear data
     [JsonProperty("Items")] private readonly GearItem[] _items = new GearItem[NUM_SLOTS];
-
-    //Abstractions for Deserialization of Versions older than 1.2.0
-    [JsonProperty]
-    [Obsolete]
-    private GearItem MainHand
-    {
-        set => this[0] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Head
-    {
-        set => this[1] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Body
-    {
-        set => this[2] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Hands
-    {
-        set => this[3] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Legs
-    {
-        set => this[4] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Feet
-    {
-        set => this[5] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Ear
-    {
-        set => this[6] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Neck
-    {
-        set => this[7] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Wrist
-    {
-        set => this[8] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Ring1
-    {
-        set => this[9] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem Ring2
-    {
-        set => this[10] = value;
-    }
-
-    [JsonProperty]
-    [Obsolete]
-    private GearItem OffHand
-    {
-        set => this[11] = value;
-    }
 
     //Runtime only properties
     public bool IsEmpty => Array.TrueForAll(_items, x => x.Id == 0);
@@ -177,19 +90,18 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     {
         uint itemLevel = 0;
         for (int i = 0; i < NUM_SLOTS; i++)
-            if (_items[i] != null && _items[i].ItemLevel > 0)
-            {
+        {
+            itemLevel += _items[i].ItemLevel;
+            if (_items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
                 itemLevel += _items[i].ItemLevel;
-                if (_items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
-                    itemLevel += _items[i].ItemLevel;
-            }
+        }
 
         return (int)((float)itemLevel / NUM_SLOTS);
     }
 
     public int Count(HrtItem item)
     {
-        return Array.FindAll(_items, x => x.Equals(item)).Count();
+        return Array.FindAll(_items, x => x.Equals(item)).Length;
     }
 
     public bool Contains(HrtItem item)
@@ -256,6 +168,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     public IEnumerator<GearItem> GetEnumerator() => ((IEnumerable<GearItem>)_items).GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 }
 
 internal class GearSetOverride : IReadOnlyGearSet

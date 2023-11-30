@@ -12,7 +12,7 @@ using System.Security.Cryptography;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHasHrtId
+public class Character : IEnumerable<PlayableClass>, IHasHrtId
 {
     private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
@@ -125,16 +125,11 @@ public class Character : IEquatable<Character>, IEnumerable<PlayableClass>, IHas
         (_classes[idx], _classes[idx + 1]) = (_classes[idx + 1], _classes[idx]);
     }
 
-    public bool Equals(Character? other)
-    {
-        if (other == null)
-            return false;
-        return Name.Equals(other.Name) && HomeWorldId == other.HomeWorldId;
-    }
+    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 
-    public override int GetHashCode() => Name.GetHashCode();
+    public override int GetHashCode() => LocalId.GetHashCode();
 
     public static ulong CalcCharId(long contentId)
     {

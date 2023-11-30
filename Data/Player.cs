@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using HimbeertoniRaidTool.Common.Security;
 
@@ -24,34 +25,47 @@ public class Player : IHasHrtId
     [JsonProperty("AdditionalData", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public readonly AdditionalPlayerData AdditionalData = new();
     [JsonProperty("Chars")]
-    public List<Character> Chars { get; set; } = new();
+    private readonly List<Character> _characters = new();
+    [JsonProperty("MainCharIndex")]
+    private int _mainCharIndex = 0;
+    public IEnumerable<Character> Characters => _characters;
+
     public bool Filled => !LocalId.IsEmpty;
     public Character MainChar
     {
         get
         {
-
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             // Deserialization Problems
-            Chars.RemoveAll(c => c is null);
-            if (Chars.Count == 0)
-                Chars.Insert(0, new Character());
-            return Chars[0];
+            _characters.RemoveAll(c => c is null);
+            if (_characters.Count == 0)
+                _characters.Add(new Character());
+            _mainCharIndex = Math.Clamp(_mainCharIndex, 0, _characters.Count - 1);
+            return _characters[_mainCharIndex];
         }
         set
         {
-            Chars.Remove(value);
-            Chars.Insert(0, value);
+            if (value.Equals(_characters[_mainCharIndex])) return;
+            _mainCharIndex = _characters.FindIndex(c => c.Equals(value));
+            if (_mainCharIndex >= 0)
+                return;
+            _characters.Add(value);
+            _mainCharIndex = _characters.Count - 1;
         }
     }
     public PlayableClass? CurJob => MainChar.MainClass;
     [JsonConstructor]
     public Player() { }
-    public void Reset()
+
+
+    public void RemoveCharacter(Character character)
     {
-        NickName = "";
-        Chars.Clear();
+        Character mainChar = MainChar;
+        _characters.Remove(character);
+        MainChar = mainChar;
     }
+    public void AddCharacter(Character character) => _characters.Add(character);
+    public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
 }
 
 [JsonObject(MemberSerialization.OptIn)]

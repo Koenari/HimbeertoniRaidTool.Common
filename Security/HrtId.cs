@@ -96,7 +96,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public static explicit operator HrtId(string id) => FromString(id);
 }
 
-public interface IHasHrtId
+public interface IHasHrtId : IEquatable<IHasHrtId>
 {
     public HrtId.IdType IdType { get; }
     public HrtId LocalId { get; set; }
