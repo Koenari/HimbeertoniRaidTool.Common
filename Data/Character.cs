@@ -59,14 +59,15 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
     {
         get
         {
-            if (_mainJob == null && Classes.Any())
-                _mainJob = Classes.First().Job;
+            if (_classes.All(c => c.Job != _mainJob))
+                _mainJob = null;
+            _mainJob ??= _classes.FirstOrDefault()?.Job;
             return _mainJob;
         }
         set => _mainJob = value;
     }
 
-    public PlayableClass? MainClass => MainJob.HasValue ? this[MainJob.Value] : null;
+    public PlayableClass? MainClass => this[MainJob];
     public Tribe? Tribe => _tribeSheet?.GetRow(TribeId);
 
     public World? HomeWorld
@@ -92,7 +93,7 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
         return classToAdd;
     }
 
-    public PlayableClass? this[Job type] => _classes.Find(x => x.Job == type);
+    public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
 
     public bool RemoveClass(Job type)
     {
