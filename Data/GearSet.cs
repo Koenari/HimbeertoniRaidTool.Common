@@ -16,7 +16,7 @@ public interface IReadOnlyGearSet
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
 public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 {
-    private const int NUM_SLOTS = 12;
+    public const int NUM_SLOTS = 12;
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
     //IDs
@@ -29,7 +29,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonProperty("EtroID")] public string EtroId = "";
 
     //Properties
-    [JsonProperty("TimeStamp")] public DateTime? TimeStamp;
+    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
     [JsonProperty("LastEtroFetched")] public DateTime EtroFetchDate;
     [JsonProperty("Name")] public string Name = "";
 
@@ -46,23 +46,17 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     //Caches
     [JsonIgnore] private int? _levelCache = null;
 
-    public GearSet()
-    {
-        ManagedBy = GearSetManager.Hrt;
-        Clear();
-    }
-
-    public GearSet(GearSetManager manager, string name = "HrtCurrent")
+    [JsonConstructor]
+    public GearSet(GearSetManager manager = GearSetManager.Hrt, string name = "")
     {
         ManagedBy = manager;
         Name = name;
-        Clear();
+        _items.Initialize();
     }
 
-    public void Clear()
+    public GearSet(GearSet copyFrom)
     {
-        for (int i = 0; i < NUM_SLOTS; i++) this[i] = new GearItem(0);
-        InvalidateCaches();
+        CopyFrom(copyFrom);
     }
 
     public GearItem this[GearSetSlot slot]

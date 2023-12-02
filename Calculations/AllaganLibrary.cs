@@ -1,4 +1,5 @@
 ﻿using HimbeertoniRaidTool.Common.Data;
+using Lumina.Excel.GeneratedSheets;
 using XIVCalc.Calculations;
 
 namespace HimbeertoniRaidTool.Common.Calculations;
@@ -43,9 +44,10 @@ public static class AllaganLibrary
     /// <param name="gear">current gear set to get stats</param>
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
-    public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, int alternative = 0)
+    public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, Tribe? tribe,
+        int alternative = 0)
     {
-        int totalStat = curClass.GetStat(type, gear);
+        int totalStat = curClass.GetStat(type, gear, tribe);
         int level = curClass.Level;
         return (type, alternative) switch
         {
@@ -67,24 +69,24 @@ public static class AllaganLibrary
             (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
             (StatType.PhysicalDamage, _)
                 => StatEquations.CalcAverageDamagePer100(
-                    curClass.GetStat(StatType.PhysicalDamage, gear),
-                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
-                    curClass.GetStat(StatType.CriticalHit, gear),
-                    curClass.GetStat(StatType.DirectHitRate, gear),
-                    curClass.GetStat(StatType.Determination, gear),
-                    curClass.GetStat(StatType.Tenacity, gear),
+                    curClass.GetStat(StatType.PhysicalDamage, gear, tribe),
+                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear, tribe),
+                    curClass.GetStat(StatType.CriticalHit, gear, tribe),
+                    curClass.GetStat(StatType.DirectHitRate, gear, tribe),
+                    curClass.GetStat(StatType.Determination, gear, tribe),
+                    curClass.GetStat(StatType.Tenacity, gear, tribe),
                     level, curClass.ClassJob) *
-                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear), level),
+                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear, tribe), level),
             (StatType.MagicalDamage, _)
                 => StatEquations.CalcAverageDamagePer100(
-                    curClass.GetStat(StatType.PhysicalDamage, gear),
-                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear),
-                    curClass.GetStat(StatType.CriticalHit, gear),
-                    curClass.GetStat(StatType.DirectHitRate, gear),
-                    curClass.GetStat(StatType.Determination, gear),
-                    curClass.GetStat(StatType.Tenacity, gear),
+                    curClass.GetStat(StatType.PhysicalDamage, gear, tribe),
+                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear, tribe),
+                    curClass.GetStat(StatType.CriticalHit, gear, tribe),
+                    curClass.GetStat(StatType.DirectHitRate, gear, tribe),
+                    curClass.GetStat(StatType.Determination, gear, tribe),
+                    curClass.GetStat(StatType.Tenacity, gear, tribe),
                     level, curClass.ClassJob) *
-                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear), level),
+                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear, tribe), level),
             _ => float.NaN,
         };
     }
