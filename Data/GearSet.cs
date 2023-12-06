@@ -51,7 +51,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     {
         ManagedBy = manager;
         Name = name;
-        _items.Initialize();
+        for (int i = 0; i < NUM_SLOTS; i++) this[i] = new GearItem(0);
     }
 
     public GearSet(GearSet copyFrom)
