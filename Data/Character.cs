@@ -88,7 +88,7 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
 
     public PlayableClass AddClass(Job job)
     {
-        PlayableClass classToAdd = new(job, this);
+        PlayableClass classToAdd = new(job);
         _classes.Add(classToAdd);
         return classToAdd;
     }
@@ -132,7 +132,7 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
 
     public override int GetHashCode() => LocalId.GetHashCode();
 
-    public static ulong CalcCharId(long contentId)
+    public static ulong CalcCharId(ulong contentId)
     {
         if (contentId == 0)
             return 0;

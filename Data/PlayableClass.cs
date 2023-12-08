@@ -24,7 +24,7 @@ public class PlayableClass
     public GearSet Gear;
     [JsonProperty("BIS")]
     public GearSet Bis;
-    public PlayableClass(Job job, Character c)
+    public PlayableClass(Job job)
     {
         Job = job;
         Gear = new GearSet(GearSetManager.Hrt, "Current");
