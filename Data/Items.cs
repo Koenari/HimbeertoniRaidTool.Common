@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using Lumina.Data;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -15,12 +16,32 @@ namespace HimbeertoniRaidTool.Common.Data;
 public class GearItem : HrtItem, IEquatable<GearItem>
 {
     [JsonIgnore] public static readonly GearItem Empty = new();
+    [JsonIgnore] private static readonly EquipSlotCategory _emptyEquipSlotCategory = new()
+    {
+        RowId = 0,
+        SubRowId = 0,
+        SheetLanguage = Language.None,
+        MainHand = 0,
+        OffHand = 0,
+        Head = 0,
+        Body = 0,
+        Gloves = 0,
+        Waist = 0,
+        Legs = 0,
+        Feet = 0,
+        Ears = 0,
+        Neck = 0,
+        Wrists = 0,
+        FingerL = 0,
+        FingerR = 0,
+        SoulCrystal = 0,
+    };
 
     [JsonProperty] public bool IsHq { get; init; } = false;
 
     [JsonIgnore] public IEnumerable<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? Enumerable.Empty<Job>();
 
-    [JsonIgnore] public EquipSlotCategory EquipSlotCategory => Item?.EquipSlotCategory.Value ?? new EquipSlotCategory();
+    [JsonIgnore] public EquipSlotCategory EquipSlotCategory => Item?.EquipSlotCategory.Value ?? _emptyEquipSlotCategory;
 
     [JsonIgnore] public IEnumerable<GearSetSlot> Slots => EquipSlotCategory.AvailableSlots();
 
@@ -146,7 +167,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         InvalidateCache();
     }
 
-    public void ReplacecMateria(int index, HrtMateria newMat)
+    public void ReplaceMateria(int index, HrtMateria newMat)
     {
         if (index >= _materia.Count) return;
         _materia[index] = newMat;
@@ -214,18 +235,6 @@ public class HrtItem : IEquatable<HrtItem>
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
     public bool Filled => Id > 0;
-
-    /*
-    public string SourceShortName
-    {
-        get
-        {
-            if (Source == ItemSource.Loot && (ServiceManager.ItemInfo?.CanBeLooted(ID) ?? false))
-                return ServiceManager.ItemInfo.GetLootSources(ID).First().InstanceType.FriendlyName();
-            return Source.FriendlyName();
-        }
-    }
-    */
     public bool IsExchangableItem => ServiceManager.ItemInfo.UsedAsShopCurrency(Id);
     public bool IsContainerItem => ServiceManager.ItemInfo.IsItemContainer(Id);
 
@@ -242,14 +251,14 @@ public class HrtItem : IEquatable<HrtItem>
         }
     }
 
-    [JsonIgnore] protected static readonly ExcelSheet<Item>? ItemSheet = ServiceManager.ExcelModule?.GetSheet<Item>();
+    [JsonIgnore] protected static readonly ExcelSheet<Item>? ItemSheet = ServiceManager.ExcelModule.GetSheet<Item>();
 
     public HrtItem(uint id)
     {
         _id = id;
         LevelCache = new Lazy<uint>(() => Item?.LevelItem.Row ?? 0);
     }
-
+    public override bool Equals(object? obj) => Equals(obj as HrtItem);
     public bool Equals(HrtItem? obj) => Id == obj?.Id;
 
     public override int GetHashCode() => Id.GetHashCode();

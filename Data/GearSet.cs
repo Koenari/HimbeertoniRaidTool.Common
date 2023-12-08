@@ -36,10 +36,10 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
 
     //Actual Gear data
-    [JsonProperty("Items")] private readonly GearItem[] _items = new GearItem[NUM_SLOTS];
+    [JsonProperty("Items")] private readonly GearItem?[] _items = new GearItem?[NUM_SLOTS];
 
     //Runtime only properties
-    public bool IsEmpty => Array.TrueForAll(_items, x => x.Id == 0);
+    public bool IsEmpty => this.All(x => x is { Id: 0 });
 
     public int ItemLevel => _levelCache ??= CalcItemLevel();
 
@@ -67,7 +67,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     private GearItem this[int idx]
     {
-        get => _items[idx];
+        get => _items[idx] ??= new GearItem();
         set
         {
             _items[idx] = value;
@@ -85,27 +85,12 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         uint itemLevel = 0;
         for (int i = 0; i < NUM_SLOTS; i++)
         {
-            itemLevel += _items[i].ItemLevel;
-            if (_items[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
-                itemLevel += _items[i].ItemLevel;
+            itemLevel += this[i].ItemLevel;
+            if (this[i].EquipSlotCategory.Disallows(GearSetSlot.OffHand))
+                itemLevel += this[i].ItemLevel;
         }
 
         return (int)((float)itemLevel / NUM_SLOTS);
-    }
-
-    public int Count(HrtItem item)
-    {
-        return Array.FindAll(_items, x => x.Equals(item)).Length;
-    }
-
-    public bool Contains(HrtItem item)
-    {
-        return Array.Exists(_items, x => x.Equals(item));
-    }
-
-    public bool ContainsExact(GearItem item)
-    {
-        return Array.Exists(_items, x => x.Equals(item, ItemComparisonMode.Full));
     }
 
     /*
@@ -113,9 +98,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
      */
     public int GetStat(StatType type)
     {
-        int result = 0;
-        Array.ForEach(_items, x => result += x.GetStat(type));
-        return result;
+        return this.Sum(x => x.GetStat(type));
     }
 
     private static int ToIndex(GearSetSlot slot)
@@ -159,9 +142,13 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         }
     }
 
-    public IEnumerator<GearItem> GetEnumerator() => ((IEnumerable<GearItem>)_items).GetEnumerator();
+    private IEnumerable<GearItem> AsEnumerable()
+    {
+        for (int i = 0; i < NUM_SLOTS; ++i) yield return this[i];
+    }
+    public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 
-    IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 }
 
