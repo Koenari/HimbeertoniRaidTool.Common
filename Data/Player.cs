@@ -45,7 +45,7 @@ public class Player : IHasHrtId
         }
         set
         {
-            if (value.Equals(_characters[_mainCharIndex])) return;
+            if (_characters.Count > 0 && value.Equals(_characters[_mainCharIndex])) return;
             _mainCharIndex = _characters.FindIndex(c => c.Equals(value));
             if (_mainCharIndex >= 0)
                 return;

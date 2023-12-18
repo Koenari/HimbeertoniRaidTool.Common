@@ -297,8 +297,7 @@ public static class EnumExtensions
 
     private static ClassJob? GetClassJob(Job j)
     {
-        if (!_jobCache.ContainsKey(j))
-            _jobCache[j] = null;
+        _jobCache.TryAdd(j, null);
         return _jobCache[j] ??= JobSheet?.GetRow((uint)j);
     }
 
@@ -312,77 +311,66 @@ public static class EnumExtensions
         return (Role)cj.Role;
     }
 
-    public static bool IsCombatRole(this Role role) => role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
+    public static bool IsCombatRole(this Role role) =>
+        role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
 
     public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
 
-    public static int GroupSize(this GroupType groupType)
+    public static int GroupSize(this GroupType groupType) => groupType switch
     {
-        return groupType switch
-        {
-            GroupType.Solo => 1,
-            GroupType.Group => 4,
-            GroupType.Raid => 8,
-            _ => 0,
-        };
-    }
+        GroupType.Solo => 1,
+        GroupType.Group => 4,
+        GroupType.Raid => 8,
+        _ => 0,
+    };
 
     public static bool CanHaveShield(this Job job) => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
 
-    public static bool IsCombatJob(this Job j) => !(Job.CRP <= j && j <= Job.FSH);
+    public static bool IsCombatJob(this Job j) => j is < Job.CRP or > Job.FSH;
 
-    public static bool IsDoH(this Job j) => Job.MIN <= j && j <= Job.FSH;
+    public static bool IsDoH(this Job j) => j is >= Job.MIN and <= Job.FSH;
 
-    public static bool IsDoL(this Job j) => Job.CRP <= j && j <= Job.CUL;
+    public static bool IsDoL(this Job j) => j is >= Job.CRP and <= Job.CUL;
 
-    public static StatType GetStatType(this MateriaCategory materiaCategory)
+    public static StatType GetStatType(this MateriaCategory materiaCategory) => materiaCategory switch
     {
-        return materiaCategory switch
-        {
-            MateriaCategory.Piety => StatType.Piety,
-            MateriaCategory.DirectHit => StatType.DirectHitRate,
-            MateriaCategory.CriticalHit => StatType.CriticalHit,
-            MateriaCategory.Determination => StatType.Determination,
-            MateriaCategory.Tenacity => StatType.Tenacity,
-            MateriaCategory.Gathering => StatType.Gathering,
-            MateriaCategory.Perception => StatType.Perception,
-            MateriaCategory.Gp => StatType.Gp,
-            MateriaCategory.Craftsmanship => StatType.Craftsmanship,
-            MateriaCategory.Cp => StatType.Cp,
-            MateriaCategory.Control => StatType.Control,
-            MateriaCategory.SkillSpeed => StatType.SkillSpeed,
-            MateriaCategory.SpellSpeed => StatType.SpellSpeed,
-            _ => StatType.None,
-        };
-    }
+        MateriaCategory.Piety => StatType.Piety,
+        MateriaCategory.DirectHit => StatType.DirectHitRate,
+        MateriaCategory.CriticalHit => StatType.CriticalHit,
+        MateriaCategory.Determination => StatType.Determination,
+        MateriaCategory.Tenacity => StatType.Tenacity,
+        MateriaCategory.Gathering => StatType.Gathering,
+        MateriaCategory.Perception => StatType.Perception,
+        MateriaCategory.Gp => StatType.Gp,
+        MateriaCategory.Craftsmanship => StatType.Craftsmanship,
+        MateriaCategory.Cp => StatType.Cp,
+        MateriaCategory.Control => StatType.Control,
+        MateriaCategory.SkillSpeed => StatType.SkillSpeed,
+        MateriaCategory.SpellSpeed => StatType.SpellSpeed,
+        _ => StatType.None,
+    };
 
-    public static ItemSource ToItemSource(this InstanceType contentType)
+    public static ItemSource ToItemSource(this InstanceType contentType) => contentType switch
     {
-        return contentType switch
-        {
-            InstanceType.Raid => ItemSource.Raid,
-            InstanceType.Trial => ItemSource.Trial,
-            InstanceType.Dungeon => ItemSource.Dungeon,
-            _ => ItemSource.Undefined,
-        };
-    }
+        InstanceType.Raid => ItemSource.Raid,
+        InstanceType.Trial => ItemSource.Trial,
+        InstanceType.Dungeon => ItemSource.Dungeon,
+        _ => ItemSource.Undefined,
+    };
 
-    public static bool IsSecondary(this StatType statType)
+    public static bool IsSecondary(this StatType statType) => statType switch
     {
-        return statType switch
-        {
-            StatType.CriticalHit => true,
-            StatType.Determination => true,
-            StatType.DirectHitRate => true,
-            StatType.SpellSpeed => true,
-            StatType.SkillSpeed => true,
-            StatType.Piety => true,
-            StatType.Tenacity => true,
-            StatType.Craftsmanship => true,
-            StatType.Control => true,
-            StatType.Gathering => true,
-            StatType.Perception => true,
-            _ => false,
-        };
-    }
+        StatType.CriticalHit => true,
+        StatType.Determination => true,
+        StatType.DirectHitRate => true,
+        StatType.SpellSpeed => true,
+        StatType.SkillSpeed => true,
+        StatType.Piety => true,
+        StatType.Tenacity => true,
+        StatType.Craftsmanship => true,
+        StatType.Control => true,
+        StatType.Gathering => true,
+        StatType.Perception => true,
+        _ => false,
+    };
 }
