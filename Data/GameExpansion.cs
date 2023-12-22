@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HimbeertoniRaidTool.Common.Services;
 using Newtonsoft.Json;
 
@@ -9,12 +10,12 @@ public class GameExpansion
     [JsonProperty] public readonly byte GameVersion;
     [JsonProperty] public readonly MateriaLevel MaxMateriaLevel;
     [JsonProperty] public readonly int MaxLevel;
-    public readonly RaidTier[] SavageRaidTiers;
-    public readonly RaidTier[] NormalRaidTiers;
+    public RaidTier[] SavageRaidTiers { get; init; }
+    public RaidTier[] NormalRaidTiers { get; init; }
 
-    public RaidTier CurrentSavage => SavageRaidTiers[^1];
+    public RaidTier? CurrentSavage => SavageRaidTiers.Any() ? SavageRaidTiers[^1] : null;
 
-    public GameExpansion(byte v, MateriaLevel maxMatLevel, int maxLvl, int unlockedRaidTiers)
+    public GameExpansion(byte v, MateriaLevel maxMatLevel, int maxLvl, int unlockedRaidTiers = 0)
     {
         GameVersion = v;
         MaxMateriaLevel = maxMatLevel;
