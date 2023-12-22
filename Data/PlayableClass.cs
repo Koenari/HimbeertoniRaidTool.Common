@@ -20,15 +20,87 @@ public class PlayableClass
     public Role Role => Job.GetRole();
     [JsonProperty("Level")]
     public int Level = 1;
-    [JsonProperty("Gear")]
-    public GearSet Gear;
-    [JsonProperty("BIS")]
-    public GearSet Bis;
+    [JsonProperty("Gear")] [Obsolete("Use CurGear", true)]
+    private GearSet GearMigration
+    {
+        set
+        {
+            value.MarkAsSystemManaged();
+            _gearSets.Insert(0, value);
+        }
+    }
+    [JsonProperty("ActiveGearIndex")] private int _curGearIdx = 0;
+
+    [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = new();
+    [JsonIgnore] public IEnumerable<GearSet> GearSets => _gearSets;
+    public GearSet CurGear
+    {
+        get
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            //I HATE JSON
+            _gearSets.RemoveAll(s => s is null);
+            if (_gearSets.Count == 0)
+                _gearSets.Add(new GearSet(GearSetManager.Hrt, "Current"));
+            _curGearIdx = Math.Clamp(_curGearIdx, 0, _gearSets.Count - 1);
+            return _gearSets[_curGearIdx];
+        }
+        set
+        {
+            if (_gearSets.Count > 0 && value.Equals(_gearSets[_curBisIdx])) return;
+            _curGearIdx = _gearSets.FindIndex(s => s.Equals(value));
+            if (_curGearIdx > 0) return;
+            _gearSets.Add(value);
+            _curGearIdx = _gearSets.Count - 1;
+        }
+    }
+
+    public GearSet AutoUpdatedGearSet
+    {
+        get
+        {
+            if (_gearSets.Any(set => set.IsSystemManaged))
+                return _gearSets.First(set => set.IsSystemManaged);
+            var sysManaged = new GearSet(GearSetManager.Hrt, "Current");
+            sysManaged.MarkAsSystemManaged();
+            _gearSets.Add(sysManaged);
+            return sysManaged;
+        }
+    }
+
+    [JsonProperty("BIS")] [Obsolete("Use CurBis", true)]
+    private GearSet BisMigration { set => _bis.Insert(0, value); }
+
+    [JsonProperty("BisSets")] private readonly List<GearSet> _bis = new();
+
+    [JsonIgnore] public IEnumerable<GearSet> BisSets => _bis;
+
+    [JsonProperty("ActiveBiSIdx")] private int _curBisIdx = 0;
+
+    [JsonIgnore] public GearSet CurBis
+    {
+        get
+        {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            //I HATE JSON
+            _bis.RemoveAll(s => s is null);
+            if (_bis.Count == 0)
+                _bis.Add(new GearSet(GearSetManager.Hrt, "BiS"));
+            _curBisIdx = Math.Clamp(_curBisIdx, 0, _bis.Count - 1);
+            return _bis[_curBisIdx];
+        }
+        set
+        {
+            if (_bis.Count > 0 && value.Equals(_bis[_curBisIdx])) return;
+            _curBisIdx = _bis.FindIndex(s => s.Equals(value));
+            if (_curBisIdx > 0) return;
+            _bis.Add(value);
+            _curBisIdx = _bis.Count - 1;
+        }
+    }
     public PlayableClass(Job job)
     {
         Job = job;
-        Gear = new GearSet(GearSetManager.Hrt, "Current");
-        Bis = new GearSet(GearSetManager.Hrt, "BIS");
     }
     public (GearItem, GearItem) this[GearSetSlot slot]
     {
@@ -36,17 +108,17 @@ public class PlayableClass
         {
             GearSetSlot slot2 = slot;
             if (slot is not (GearSetSlot.Ring1 or GearSetSlot.Ring2))
-                return (Gear[slot], Bis[slot2]);
-            if (Gear[GearSetSlot.Ring2].Equals(Bis[GearSetSlot.Ring1], ItemComparisonMode.IdOnly)
-                || Gear[GearSetSlot.Ring1].Equals(Bis[GearSetSlot.Ring2], ItemComparisonMode.IdOnly))
+                return (CurGear[slot], CurBis[slot2]);
+            if (CurGear[GearSetSlot.Ring2].Equals(CurBis[GearSetSlot.Ring1], ItemComparisonMode.IdOnly)
+                || CurGear[GearSetSlot.Ring1].Equals(CurBis[GearSetSlot.Ring2], ItemComparisonMode.IdOnly))
                 slot2 = slot == GearSetSlot.Ring1 ? GearSetSlot.Ring2 : GearSetSlot.Ring1;
-            return (Gear[slot], Bis[slot2]);
+            return (CurGear[slot], CurBis[slot2]);
         }
     }
     public IEnumerable<(GearSetSlot, (GearItem, GearItem))> ItemTuples =>
         GearSet.Slots.Select(slot => (slot, this[slot]));
     /// <summary>
-    /// Evaluates if all of the given slots have BiS item or an item with higher or euqla item level as given item
+    /// Evaluates if all of the given slots have BiS item or an item with higher or equal item level as given item
     /// </summary>
     /// <param name="slots">List of slots to evaluate</param>
     /// <param name="toCompare">Item to compare to items in slots</param>
@@ -76,23 +148,23 @@ public class PlayableClass
         bool ringsSwapped = false)
     {
         if (slot != GearSetSlot.Ring1 && slot != GearSetSlot.Ring2)
-            return comparer(Gear[slot], Bis[slot]);
+            return comparer(CurGear[slot], CurBis[slot]);
         return explicitSwaps switch
         {
-            true when !ringsSwapped => comparer(Gear[slot], Bis[slot]),
-            true when slot == GearSetSlot.Ring1 => comparer(Gear[slot], Bis[GearSetSlot.Ring2]),
-            true => comparer(Gear[slot], Bis[GearSetSlot.Ring1]),
-            false => comparer(Gear[slot], Bis[slot])
-                     || slot == GearSetSlot.Ring1 && comparer(Gear[slot], Bis[GearSetSlot.Ring2])
-                     || slot == GearSetSlot.Ring2 && comparer(Gear[slot], Bis[GearSetSlot.Ring1]),
+            true when !ringsSwapped => comparer(CurGear[slot], CurBis[slot]),
+            true when slot == GearSetSlot.Ring1 => comparer(CurGear[slot], CurBis[GearSetSlot.Ring2]),
+            true => comparer(CurGear[slot], CurBis[GearSetSlot.Ring1]),
+            false => comparer(CurGear[slot], CurBis[slot])
+                     || slot == GearSetSlot.Ring1 && comparer(CurGear[slot], CurBis[GearSetSlot.Ring2])
+                     || slot == GearSetSlot.Ring2 && comparer(CurGear[slot], CurBis[GearSetSlot.Ring1]),
         };
     }
     private static bool BisOrBetterComparer(GearItem item, GearItem bis, GearItem comp) =>
         BisComparer(item, bis) || HigherILvlComparer(item, comp);
     private static bool HigherILvlComparer(GearItem item, GearItem comp) => item.ItemLevel >= comp.ItemLevel;
     private static bool BisComparer(GearItem item, GearItem bis) => item.Id == bis.Id;
-    public int GetCurrentStat(StatType type, Tribe? tribe) => GetStat(type, Gear, tribe);
-    public int GetBiSStat(StatType type, Tribe? tribe) => GetStat(type, Bis, tribe);
+    public int GetCurrentStat(StatType type, Tribe? tribe) => GetStat(type, CurGear, tribe);
+    public int GetBiSStat(StatType type, Tribe? tribe) => GetStat(type, CurBis, tribe);
     public int GetStat(StatType type, IReadOnlyGearSet set, Tribe? tribe)
     {
         type = type switch
@@ -107,7 +179,7 @@ public class PlayableClass
                                  * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
                + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
     }
-    public bool IsEmpty => Level == 1 && Gear.IsEmpty && Bis.IsEmpty;
+    public bool IsEmpty => Level == 1 && CurGear.IsEmpty && CurBis.IsEmpty;
 
     public bool Equals(PlayableClass? other)
     {

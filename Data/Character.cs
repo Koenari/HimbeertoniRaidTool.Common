@@ -95,10 +95,7 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
 
     public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
 
-    public bool RemoveClass(Job type)
-    {
-        return _classes.RemoveAll(job => job.Job == type) > 0;
-    }
+    public bool RemoveClass(Job type) => _classes.RemoveAll(job => job.Job == type) > 0;
 
     public bool CanMoveUp(PlayableClass c)
     {
@@ -162,10 +159,10 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
             if (jobToMerge == null)
                 continue;
             job.Level = Math.Max(job.Level, jobToMerge.Level);
-            if (jobToMerge.Gear.TimeStamp > job.Gear.TimeStamp)
-                job.Gear.CopyFrom(jobToMerge.Gear);
-            if (jobToMerge.Bis.TimeStamp > job.Bis.TimeStamp)
-                job.Bis.CopyFrom(jobToMerge.Bis);
+            if (jobToMerge.CurGear.TimeStamp > job.CurGear.TimeStamp)
+                job.CurGear.CopyFrom(jobToMerge.CurGear);
+            if (jobToMerge.CurBis.TimeStamp > job.CurBis.TimeStamp)
+                job.CurBis.CopyFrom(jobToMerge.CurBis);
             toMerge._classes.Remove(jobToMerge);
         }
 
