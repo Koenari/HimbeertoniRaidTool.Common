@@ -64,10 +64,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     //This holds the total stats of this gear item (including materia)
     [JsonIgnore] private readonly Dictionary<StatType, int> _statCache = new();
 
-    private void InvalidateCache()
-    {
-        _statCache.Clear();
-    }
+    private void InvalidateCache() => _statCache.Clear();
 
     public int GetStat(StatType type, bool includeMateria = true)
     {
@@ -93,10 +90,14 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                 if (IsHq)
                     foreach (Item.ItemUnkData73Obj? param in
                              Item.UnkData73.Where(x => x.BaseParamSpecial == (byte)type))
+                    {
                         result += param.BaseParamValueSpecial;
+                    }
 
                 foreach (Item.ItemUnkData59Obj? param in Item.UnkData59.Where(x => x.BaseParam == (byte)type))
+                {
                     result += param.BaseParamValue;
+                }
                 break;
         }
 
@@ -136,15 +137,19 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         if (_materia.Count != other._materia.Count) return false;
         Dictionary<HrtMateria, int> cnt = new();
         foreach (HrtMateria s in _materia)
+        {
             if (cnt.ContainsKey(s))
                 cnt[s]++;
             else
                 cnt.Add(s, 1);
+        }
         foreach (HrtMateria s in other._materia)
+        {
             if (cnt.ContainsKey(s))
                 cnt[s]--;
             else
                 return false;
+        }
 
         return cnt.Values.All(s => s == 0);
     }
@@ -178,7 +183,8 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     public MateriaLevel MaxAffixableMateriaLevel()
     {
         if (!CanAffixMateria()) return 0;
-        var maxAllowed = MateriaLevel.X;
+        MateriaLevel maxAllowed = ServiceManager.GameInfo
+            .GetExpansionByLevel(Item?.LevelEquip ?? ServiceManager.GameInfo.CurrentExpansion.MaxLevel).MaxMateriaLevel;
         if (_materia.Count >= Item?.MateriaSlotCount)
             maxAllowed--;
 
@@ -244,10 +250,14 @@ public class HrtItem : IEquatable<HrtItem>
         {
             if (IsExchangableItem)
                 foreach (uint canBuy in ServiceManager.ItemInfo.GetPossiblePurchases(Id))
+                {
                     yield return new GearItem(canBuy);
+                }
             if (IsContainerItem)
                 foreach (uint id in ServiceManager.ItemInfo.GetContainerContents(Id))
+                {
                     yield return new GearItem(id);
+                }
         }
     }
 

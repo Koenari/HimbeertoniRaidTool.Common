@@ -9,22 +9,33 @@ namespace HimbeertoniRaidTool.Common.Services;
 /// </summary>
 internal class CuratedData
 {
-    internal CuratedData()
+    internal readonly GameExpansion[] Expansions = new GameExpansion[6]
     {
-        CurrentExpansion = new GameExpansion(6, MateriaLevel.X, 90, 3);
-        CurrentExpansion.SavageRaidTiers[0] = new RaidTier(Savage, 605, 600,
-            "Asphodelos Savage", new uint[] { 30112, 30114, 30110, 30108 });
-        CurrentExpansion.SavageRaidTiers[1] = new RaidTier(Savage, 635, 630,
-            "Abyssos Savage", new uint[] { 30117, 30121, 30119, 30123 });
-        CurrentExpansion.SavageRaidTiers[2] = new RaidTier(Savage, 665, 660,
-            "Anabaseios Savage", new uint[] { 30127, 30129, 30131, 30133 });
-        CurrentExpansion.NormalRaidTiers[0] = new RaidTier(Normal, 590, 580, "Asphodelos", System.Array.Empty<uint>());
-        CurrentExpansion.NormalRaidTiers[1] = new RaidTier(Normal, 620, 610, "Abyssos", System.Array.Empty<uint>());
-        CurrentExpansion.NormalRaidTiers[2] =
-            new RaidTier(Normal, 650, 640, "Anabaseios", new uint[] { 30126, 30128, 30130, 30132 });
-    }
+        new(1, MateriaLevel.None, 0),
+        new(2, MateriaLevel.II, 50),
+        new(3, MateriaLevel.IV, 60),
+        new(4, MateriaLevel.VI, 70),
+        new(5, MateriaLevel.VIII, 80),
+        new(6, MateriaLevel.X, 90)
+        {
+            NormalRaidTiers = new RaidTier[]
+            {
+                new(Normal, 590, 580, "Asphodelos", System.Array.Empty<uint>()),
+                new(Normal, 620, 610, "Abyssos", System.Array.Empty<uint>()),
+                new(Normal, 650, 640, "Anabaseios", new uint[] { 30126, 30128, 30130, 30132 }),
+            },
+            SavageRaidTiers = new RaidTier[]
+            {
+                new(Savage, 605, 600,
+                    "Asphodelos Savage", new uint[] { 30112, 30114, 30110, 30108 }),
+                new(Savage, 635, 630,
+                    "Abyssos Savage", new uint[] { 30117, 30121, 30119, 30123 }),
+                new(Savage, 665, 660,
+                    "Anabaseios Savage", new uint[] { 30127, 30129, 30131, 30133 }),
+            },
+        },
+    };
 
-    internal readonly GameExpansion CurrentExpansion;
 
     internal readonly Dictionary<uint, ItemIdCollection> ItemContainerDb = new()
     {

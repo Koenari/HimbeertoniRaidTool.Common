@@ -34,7 +34,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonProperty("Name")] public string Name = "";
 
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
-
+    [JsonProperty("IsManaged")] public bool IsSystemManaged { get; private set; } = false;
     //Actual Gear data
     [JsonProperty("Items")] private readonly GearItem?[] _items = new GearItem?[NUM_SLOTS];
 
@@ -51,7 +51,11 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     {
         ManagedBy = manager;
         Name = name;
-        for (int i = 0; i < NUM_SLOTS; i++) this[i] = new GearItem(0);
+        for (int i = 0; i < NUM_SLOTS; i++)
+        {
+            this[i] = new GearItem();
+        }
+        IsSystemManaged = manager == GearSetManager.Etro;
     }
 
     public GearSet(GearSet copyFrom)
@@ -75,10 +79,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         }
     }
 
-    private void InvalidateCaches()
-    {
-        _levelCache = null;
-    }
+    public void MarkAsSystemManaged() => IsSystemManaged = true;
+
+    private void InvalidateCaches() => _levelCache = null;
 
     private int CalcItemLevel()
     {
@@ -96,30 +99,24 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     /*
      * Caching stats is a problem since this needs to be invalidated when changing materia
      */
-    public int GetStat(StatType type)
-    {
-        return this.Sum(x => x.GetStat(type));
-    }
+    public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
 
-    private static int ToIndex(GearSetSlot slot)
+    private static int ToIndex(GearSetSlot slot) => slot switch
     {
-        return slot switch
-        {
-            GearSetSlot.MainHand => 0,
-            GearSetSlot.OffHand => 11,
-            GearSetSlot.Head => 1,
-            GearSetSlot.Body => 2,
-            GearSetSlot.Hands => 3,
-            GearSetSlot.Legs => 4,
-            GearSetSlot.Feet => 5,
-            GearSetSlot.Ear => 6,
-            GearSetSlot.Neck => 7,
-            GearSetSlot.Wrist => 8,
-            GearSetSlot.Ring1 => 9,
-            GearSetSlot.Ring2 => 10,
-            _ => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
-        };
-    }
+        GearSetSlot.MainHand => 0,
+        GearSetSlot.OffHand => 11,
+        GearSetSlot.Head => 1,
+        GearSetSlot.Body => 2,
+        GearSetSlot.Hands => 3,
+        GearSetSlot.Legs => 4,
+        GearSetSlot.Feet => 5,
+        GearSetSlot.Ear => 6,
+        GearSetSlot.Neck => 7,
+        GearSetSlot.Wrist => 8,
+        GearSetSlot.Ring1 => 9,
+        GearSetSlot.Ring2 => 10,
+        _ => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
+    };
 
     public void CopyFrom(GearSet gearSet)
     {
@@ -129,27 +126,27 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         ManagedBy = gearSet.ManagedBy;
         //Do an actual copy of the item
         for (int i = 0; i < _items.Length; i++)
+        {
             _items[i] = gearSet._items[i].Clone();
+        }
         InvalidateCaches();
     }
 
-    public static IEnumerable<GearSetSlot> Slots
-    {
-        get
-        {
-            return Enum.GetValues<GearSetSlot>()
-                .Where(slot => slot < GearSetSlot.SoulCrystal && slot != GearSetSlot.Waist);
-        }
-    }
+    public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
+        .Where(slot => slot < GearSetSlot.SoulCrystal && slot != GearSetSlot.Waist);
 
     private IEnumerable<GearItem> AsEnumerable()
     {
-        for (int i = 0; i < NUM_SLOTS; ++i) yield return this[i];
+        for (int i = 0; i < NUM_SLOTS; ++i)
+        {
+            yield return this[i];
+        }
     }
     public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+    public override string ToString() => $"{Name} ({ItemLevel})";
 }
 
 internal class GearSetOverride : IReadOnlyGearSet
