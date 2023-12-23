@@ -26,6 +26,8 @@ public class PlayableClass
         set
         {
             value.MarkAsSystemManaged();
+            if (value.Name.Equals("HrtCurrent"))
+                value.Name = "Current";
             _gearSets.Insert(0, value);
         }
     }
@@ -33,7 +35,7 @@ public class PlayableClass
 
     [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = new();
     [JsonIgnore] public IEnumerable<GearSet> GearSets => _gearSets;
-    public GearSet CurGear
+    [JsonIgnore] public GearSet CurGear
     {
         get
         {
@@ -41,15 +43,19 @@ public class PlayableClass
             //I HATE JSON
             _gearSets.RemoveAll(s => s is null);
             if (_gearSets.Count == 0)
-                _gearSets.Add(new GearSet(GearSetManager.Hrt, "Current"));
+            {
+                var toAdd = new GearSet(GearSetManager.Hrt, "Current");
+                toAdd.MarkAsSystemManaged();
+                _gearSets.Add(toAdd);
+            }
             _curGearIdx = Math.Clamp(_curGearIdx, 0, _gearSets.Count - 1);
             return _gearSets[_curGearIdx];
         }
         set
         {
-            if (_gearSets.Count > 0 && value.Equals(_gearSets[_curBisIdx])) return;
+            if (_gearSets.Count > 0 && value.Equals(_gearSets[_curGearIdx])) return;
             _curGearIdx = _gearSets.FindIndex(s => s.Equals(value));
-            if (_curGearIdx > 0) return;
+            if (_curGearIdx >= 0) return;
             _gearSets.Add(value);
             _curGearIdx = _gearSets.Count - 1;
         }
@@ -93,7 +99,7 @@ public class PlayableClass
         {
             if (_bis.Count > 0 && value.Equals(_bis[_curBisIdx])) return;
             _curBisIdx = _bis.FindIndex(s => s.Equals(value));
-            if (_curBisIdx > 0) return;
+            if (_curBisIdx >= 0) return;
             _bis.Add(value);
             _curBisIdx = _bis.Count - 1;
         }
@@ -175,7 +181,7 @@ public class PlayableClass
             _ => type,
         };
         return set.GetStat(type) //Gear Stats
-               + (int)Math.Round(LevelTable.GetBaseStat((byte)type, Level)
+               + (int)Math.Floor(LevelTable.GetBaseStat((byte)type, Level)
                                  * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
                + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
     }

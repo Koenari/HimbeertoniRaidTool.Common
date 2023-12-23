@@ -53,7 +53,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         Name = name;
         for (int i = 0; i < NUM_SLOTS; i++)
         {
-            this[i] = new GearItem(0);
+            this[i] = new GearItem();
         }
         IsSystemManaged = manager == GearSetManager.Etro;
     }
@@ -146,6 +146,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+    public override string ToString() => $"{Name} ({ItemLevel})";
 }
 
 internal class GearSetOverride : IReadOnlyGearSet
