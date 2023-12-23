@@ -18,8 +18,8 @@ public class PlayableClass
     [JsonIgnore]
     public ClassJob ClassJob => _classJobSheet?.GetRow((uint)Job)!;
     public Role Role => Job.GetRole();
-    [JsonProperty("Level")]
-    public int Level = 1;
+    [JsonProperty("Level")] public int Level = 1;
+    [JsonProperty("Hide")] public bool HideInUi = false;
     [JsonProperty("Gear")] [Obsolete("Use CurGear", true)]
     private GearSet GearMigration
     {
