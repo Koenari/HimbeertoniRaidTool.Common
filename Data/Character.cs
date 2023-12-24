@@ -77,8 +77,8 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
     }
 
     public bool Filled => !LocalId.IsEmpty;
-
-    public Character(string name = "", uint worldId = 0)
+    public Character() : this("", 0) { }
+    public Character(string name, uint worldId)
     {
         Name = name;
         HomeWorldId = worldId;

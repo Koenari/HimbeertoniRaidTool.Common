@@ -47,7 +47,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     [JsonIgnore] private int? _levelCache = null;
 
     [JsonConstructor]
-    public GearSet(GearSetManager manager = GearSetManager.Hrt, string name = "")
+    public GearSet() : this(GearSetManager.Hrt, "") { }
+    public GearSet(GearSetManager manager, string name = "")
     {
         ManagedBy = manager;
         Name = name;
