@@ -194,4 +194,9 @@ public class PlayableClass
         return Job == other.Job;
     }
     public override string ToString() => $"{Job} ({Level})";
+    public void RemoveEmptySets()
+    {
+        _gearSets.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
+        _bis.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
+    }
 }
