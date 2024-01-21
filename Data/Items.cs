@@ -51,7 +51,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
 
     [JsonProperty("RelicParams", NullValueHandling = NullValueHandling.Ignore)]
-    private Dictionary<StatType, int>? _relicStats;
+    public Dictionary<StatType, int>? RelicStats;
 
     [JsonIgnore] public IEnumerable<HrtMateria> Materia => _materia;
 
@@ -104,7 +104,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                 }
                 break;
         }
-        if (IsRelic() && (_relicStats?.TryGetValue(type, out int val) ?? false))
+        if (IsRelic() && (RelicStats?.TryGetValue(type, out int val) ?? false))
             result += val;
         if (!includeMateria)
             return result;
@@ -198,9 +198,6 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         return maxAllowed;
     }
 
-    public void SetRelicStats(Dictionary<StatType, int> stats) =>
-        _relicStats = stats.Count > 0 ? stats : null;
-
     public IEnumerable<StatType> StatTypesAffected
     {
         get
@@ -212,11 +209,12 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                 var type = (StatType)stat.BaseParam;
                 done.Add(type);
             }
-            if (IsRelic() && _relicStats is not null)
+            if (IsRelic() && RelicStats is not null)
             {
-                foreach (StatType type in _relicStats.Keys)
+                foreach ((StatType type, int value) in RelicStats)
                 {
-                    done.Add(type);
+                    if (value > 0)
+                        done.Add(type);
                 }
             }
             foreach (HrtMateria mat in Materia)
