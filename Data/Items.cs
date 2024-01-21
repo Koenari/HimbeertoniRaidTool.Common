@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using HimbeertoniRaidTool.Common.GameData;
 using Lumina.Data;
 
 namespace HimbeertoniRaidTool.Common.Data;
@@ -48,6 +49,9 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonIgnore] public bool IsUnique => Item?.IsUnique ?? true;
 
     [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
+
+    [JsonProperty("RelicParams", NullValueHandling = NullValueHandling.Ignore)]
+    private Dictionary<StatType, int>? _relicStats;
 
     [JsonIgnore] public IEnumerable<HrtMateria> Materia => _materia;
 
@@ -100,7 +104,8 @@ public class GearItem : HrtItem, IEquatable<GearItem>
                 }
                 break;
         }
-
+        if (IsRelic() && (_relicStats?.TryGetValue(type, out int val) ?? false))
+            result += val;
         if (!includeMateria)
             return result;
         result += _materia.Where(x => x.StatType == type).Sum(materia => materia.GetStat());
@@ -116,6 +121,8 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         {
             //Fail in a safe way and do not cap values
             if (Item is null) return int.MaxValue;
+            //ToDo: Do actual Cap
+            if (Item.Rarity == (byte)Rarity.Relic) return int.MaxValue;
             int maxVal = int.Max(Item.UnkData59[2].BaseParamValue, Item.UnkData59[3].BaseParamValue);
             if (IsHq)
                 maxVal += int.Max(Item.UnkData73[2].BaseParamValueSpecial, Item.UnkData73[3].BaseParamValueSpecial);
@@ -153,7 +160,7 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 
         return cnt.Values.All(s => s == 0);
     }
-
+    public bool IsRelic() => GameItem?.Rarity == Rarity.Relic;
     public bool CanAffixMateria() => _materia.Count < MaxMateriaSlots;
 
     public void AddMateria(HrtMateria materia)
@@ -191,26 +198,32 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         return maxAllowed;
     }
 
+    public void SetRelicStats(Dictionary<StatType, int> stats) =>
+        _relicStats = stats.Count > 0 ? stats : null;
+
     public IEnumerable<StatType> StatTypesAffected
     {
         get
         {
-            HashSet<StatType> done = new();
-            if (Item is null) yield break;
+            SortedSet<StatType> done = new();
+            if (Item is null) return Enumerable.Empty<StatType>();
             foreach (Item.ItemUnkData59Obj? stat in Item.UnkData59)
             {
                 var type = (StatType)stat.BaseParam;
                 done.Add(type);
-                yield return type;
             }
-
+            if (IsRelic() && _relicStats is not null)
+            {
+                foreach (StatType type in _relicStats.Keys)
+                {
+                    done.Add(type);
+                }
+            }
             foreach (HrtMateria mat in Materia)
             {
-                if (done.Contains(mat.StatType))
-                    continue;
                 done.Add(mat.StatType);
-                yield return mat.StatType;
             }
+            return done;
         }
     }
 }
@@ -224,10 +237,13 @@ public class HrtItem : IEquatable<HrtItem>
     public virtual uint Id => _id;
 
     private Item? _itemCache = null;
+    private LuminaItem? _luminaItemCache = null;
 
     [JsonIgnore] public Rarity Rarity => (Rarity)(Item?.Rarity ?? 0);
 
     [JsonIgnore] public ushort Icon => Item?.Icon ?? 0;
+
+    protected LuminaItem? GameItem => _luminaItemCache ??= Item is null ? null : new LuminaItem(Item);
 
     protected Item? Item => _itemCache ??= ItemSheet?.GetRow(Id);
 
