@@ -31,4 +31,19 @@
     </PackageReference>
     <PackageReference Include="XIVCalc" Version="0.1.3" />
   </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Localization\CommonLoc.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CommonLoc.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Localization\CommonLoc.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CommonLoc.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
