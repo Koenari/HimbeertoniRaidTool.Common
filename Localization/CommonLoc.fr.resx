@@ -30,216 +30,216 @@
     <value>DH</value>
   </data>
   <data name="StatType_Direct Hit">
-    <value>Direct Hit</value>
+    <value>Coup net</value>
   </data>
   <data name="StatType_Defense">
-    <value>Defense</value>
+    <value>Défense</value>
   </data>
   <data name="StatType_Dexterity">
-    <value>Dexterity</value>
+    <value>Dextérité</value>
   </data>
   <data name="StatType_HP">
-    <value>HP</value>
+    <value>PV</value>
   </data>
   <data name="StatTypeAbbrev_Intelligence">
     <value>INT</value>
   </data>
   <data name="StatType_Mind">
-    <value>Mind</value>
+    <value>Esprit</value>
   </data>
   <data name="StatTypeAbbrev_Mind">
-    <value>MND</value>
+    <value>ESP</value>
   </data>
   <data name="StatType_MP">
-    <value>MP</value>
+    <value>PM</value>
   </data>
   <data name="StatTypeAbbrev_Piety">
     <value>PIE</value>
   </data>
   <data name="StatType_Piety">
-    <value>Piety</value>
+    <value>Piété</value>
   </data>
   <data name="StatType_Skill Speed">
-    <value>Skill Speed</value>
+    <value>Vivacité</value>
   </data>
   <data name="StatTypeAbbrev_SkillSpeed">
     <value>SKS</value>
   </data>
   <data name="StatType_SpellSpeed">
-    <value>Spell Speed</value>
+    <value>Célérité</value>
   </data>
   <data name="StatTypeAbbrev_SpellSpeed">
     <value>SPS</value>
   </data>
   <data name="StatTypeAbbrev_Strength">
-    <value>STR</value>
+    <value>FOR</value>
   </data>
   <data name="StatType_Strength">
-    <value>Strength</value>
+    <value>Force</value>
   </data>
   <data name="StatTypeAbbrev_Tenacity">
     <value>TEN</value>
   </data>
   <data name="StatType_Tenacity">
-    <value>Tenacity</value>
+    <value>Ténacité</value>
   </data>
   <data name="StatTypeAbbrev_Vitality">
     <value>VIT</value>
   </data>
   <data name="StatType_Vitality">
-    <value>Vitality</value>
+    <value>Vitalité</value>
   </data>
   <data name="StatType_MagicalDefense">
-    <value>Magical Defense</value>
+    <value>Défense magique</value>
   </data>
   <data name="StatType_MagicDamage">
-    <value>Magic Damage</value>
+    <value>Dégâts magiques</value>
   </data>
   <data name="GearSlot_Necklace">
-    <value>Necklace</value>
+    <value>Collier</value>
   </data>
   <data name="StatType_None">
-    <value>None</value>
+    <value>Aucune</value>
   </data>
   <data name="GearSlot_Belt">
     <value>Belt</value>
   </data>
   <data name="StatType_PhysicalDamage">
-    <value>Physical Damage</value>
+    <value>Dégâts physiques</value>
   </data>
   <data name="StatType_PhysicalDefense">
-    <value>Defense</value>
+    <value>Défense</value>
   </data>
   <data name="GearSlot_Ring">
-    <value>Ring</value>
+    <value>Anneau</value>
   </data>
   <data name="GearSlot_Ring_L">
-    <value>Ring (L)</value>
+    <value>Bague (G)</value>
   </data>
   <data name="GearSlot_Ring_R">
-    <value>Ring (R)</value>
+    <value>Bague (D)</value>
   </data>
   <data name="GearSlot_Shield">
-    <value>Shield</value>
+    <value>Bouclier</value>
   </data>
   <data name="GearSlot_Shoes">
-    <value>Shoes</value>
+    <value>Chaussures</value>
   </data>
   <data name="GearSlot_SoulCrystal">
-    <value>Soul Crystal</value>
+    <value>Cristal d’âme</value>
   </data>
   <data name="StatType_AttackMagicPotency">
-    <value>Attack Magic Potency</value>
+    <value>Puissance d'attaque magique</value>
   </data>
   <data name="StatType_AttackPower">
-    <value>AttackPower</value>
+    <value>Puissance d'attaque</value>
   </data>
   <data name="StatType_CriticalDamage">
-    <value>Critical Damage</value>
+    <value>Dégâts critiques</value>
   </data>
   <data name="StatType_Critical Hit">
-    <value>Critical Hit</value>
+    <value>Coup critique</value>
   </data>
   <data name="StatType_Critical Hit Power">
-    <value>Critical Hit Power</value>
+    <value>Puissance des dégâts critiques</value>
   </data>
   <data name="GearSlot_Earrings">
-    <value>Earrings</value>
+    <value>Boucle d'oreille</value>
   </data>
   <data name="GearSlot_Gloves">
-    <value>Gloves</value>
+    <value>Mains</value>
   </data>
   <data name="StatType_MagicDefense">
-    <value>Magic Defense</value>
+    <value>Défense magique</value>
   </data>
   <data name="StatType_MagicalDamage">
-    <value>Magical Damage</value>
+    <value>Dégâts magiques</value>
   </data>
   <data name="GearSlot_Trousers">
-    <value>Trousers</value>
+    <value>Pantalon</value>
   </data>
   <data name="GearSlot_Body">
-    <value>Body</value>
+    <value>Torse</value>
   </data>
   <data name="GearSlot_Bracelet">
     <value>Bracelet</value>
   </data>
   <data name="Role_Caster">
-    <value>Caster</value>
+    <value>DPS Magique </value>
   </data>
   <data name="StatType_Intelligence">
     <value>Intelligence</value>
   </data>
   <data name="ItemSource_Dungeon">
-    <value>Dungeon</value>
+    <value>Donjon</value>
   </data>
   <data name="Role_Healer">
-    <value>Healer</value>
+    <value>Soigneur</value>
   </data>
   <data name="StatType_HealingMagicPotency">
-    <value>Healing Magic Potency</value>
+    <value>Puissance de magie curative</value>
   </data>
   <data name="GearSlot_Head">
-    <value>Head</value>
+    <value>Tête</value>
   </data>
   <data name="Role_Melee">
-    <value>Melee</value>
+    <value>DPS Mêlée</value>
   </data>
   <data name="ItemSource_Raid">
     <value>Raid</value>
   </data>
   <data name="Role_Ranged">
-    <value>Ranged</value>
+    <value>DPS Distance</value>
   </data>
   <data name="Role_Tank">
     <value>Tank</value>
   </data>
   <data name="StatType_Determination">
-    <value>Determination</value>
+    <value>Détermination</value>
   </data>
   <data name="GroupType_Solo">
     <value>Solo</value>
   </data>
   <data name="GroupType_Group">
-    <value>Group</value>
+    <value>Groupe</value>
   </data>
   <data name="GroupType_FullGroup">
-    <value>Full Group</value>
+    <value>Équipe complète</value>
   </data>
   <data name="undefined" xml:space="preserve">
-        <value>undefined</value>
+        <value>non défini</value>
     </data>
   <data name="GearSlot_Weapon">
-    <value>Weapon</value>
+    <value>Arme</value>
   </data>
   <data name="GearSource_Trial">
-    <value>Trial</value>
+    <value>Défi</value>
   </data>
   <data name="GearSource_Tome">
-    <value>Tome</value>
+    <value>Mémo</value>
   </data>
   <data name="ItemSource_Shop">
-    <value>Shop</value>
+    <value>Boutique</value>
   </data>
   <data name="ItemSource_Crafted">
-    <value>Crafted</value>
+    <value>Crafté</value>
   </data>
   <data name="GearSource_Alliance">
     <value>Alliance</value>
   </data>
   <data name="ItemSource_Quest">
-    <value>Quest</value>
+    <value>Quête</value>
   </data>
   <data name="ItemSource_Relic">
-    <value>Relic</value>
+    <value>Relique</value>
   </data>
   <data name="ItemSource_Loot">
-    <value>Looted</value>
+    <value>Looté</value>
   </data>
   <data name="GearManager_etro.gg">
     <value>etro.gg</value>
   </data>
   <data name="GearManager_HimbeerToniRaidTool">
-    <value>HimbeerToni Raid Tool</value>
+    <value>HimbeerToni, outil de raid</value>
   </data>
 </root>
