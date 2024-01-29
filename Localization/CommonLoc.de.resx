@@ -1,236 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
 <root>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>1.3</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-    </resheader>
-    <data name="StatTypeAbbrev_Determination">
-        <value>ENT</value>
-    </data>
-    <data name="StatTypeAbbrev_CriticalHit">
-        <value>KRT</value>
-    </data>
-    <data name="StatTypeAbbrev_Dexterity">
-        <value>GES</value>
-    </data>
-    <data name="StatTypeAbbrev_DirectHit">
-        <value>DT</value>
-    </data>
-    <data name="StatType_Direct Hit">
-        <value>Direkter Treffer</value>
-    </data>
-    <data name="StatType_Defense">
-        <value>Verteidigung</value>
-    </data>
-    <data name="StatType_Dexterity">
-        <value>Geschick</value>
-    </data>
-    <data name="StatType_HP">
-        <value>LP</value>
-    </data>
-    <data name="StatTypeAbbrev_Intelligence">
-        <value>INT</value>
-    </data>
-    <data name="StatType_Mind">
-        <value>Willenskraft</value>
-    </data>
-    <data name="StatTypeAbbrev_Mind">
-        <value>WIL</value>
-    </data>
-    <data name="StatType_MP">
-        <value>MP</value>
-    </data>
-    <data name="StatTypeAbbrev_Piety">
-        <value>FRM</value>
-    </data>
-    <data name="StatType_Piety">
-        <value>Frömmigkeit</value>
-    </data>
-    <data name="StatType_Skill Speed">
-        <value>Fähigkeitstempo</value>
-    </data>
-    <data name="StatTypeAbbrev_SkillSpeed">
-        <value>SCH</value>
-    </data>
-    <data name="StatType_SpellSpeed">
-        <value>Zaubertempo</value>
-    </data>
-    <data name="StatTypeAbbrev_SpellSpeed">
-        <value>ZBT</value>
-    </data>
-    <data name="StatTypeAbbrev_Strength">
-        <value>STÄ</value>
-    </data>
-    <data name="StatType_Strength">
-        <value>Stärke</value>
-    </data>
-    <data name="StatTypeAbbrev_Tenacity">
-        <value>UNB</value>
-    </data>
-    <data name="StatType_Tenacity">
-        <value>Unbeugsamkeit</value>
-    </data>
-    <data name="StatTypeAbbrev_Vitality">
-        <value>KON</value>
-    </data>
-    <data name="StatType_Vitality">
-        <value>Konstitution</value>
-    </data>
-    <data name="StatType_MagicalDefense">
-        <value>Magische Verteidigung</value>
-    </data>
-    <data name="StatType_MagicDamage">
-        <value>Magischer Schaden</value>
-    </data>
-    <data name="GearSlot_Necklace">
-        <value>Halskette</value>
-    </data>
-    <data name="StatType_None">
-        <value>Nichts</value>
-    </data>
-    <data name="GearSlot_Belt">
-        <value>Gürtel</value>
-    </data>
-    <data name="StatType_PhysicalDamage">
-        <value>Physischer Schaden</value>
-    </data>
-    <data name="StatType_PhysicalDefense">
-        <value>Verteidigung</value>
-    </data>
-    <data name="GearSlot_Ring">
-        <value>Ring</value>
-    </data>
-    <data name="GearSlot_Ring_L">
-        <value>Ring (L)</value>
-    </data>
-    <data name="GearSlot_Ring_R">
-        <value>Ring (R)</value>
-    </data>
-    <data name="GearSlot_Shield">
-        <value>Schild</value>
-    </data>
-    <data name="GearSlot_Shoes">
-        <value>Füße</value>
-    </data>
-    <data name="GearSlot_SoulCrystal">
-        <value>Jobkristall</value>
-    </data>
-    <data name="StatType_AttackMagicPotency">
-        <value>Offensivmagie</value>
-    </data>
-    <data name="StatType_AttackPower">
-        <value>Stärke der Attacke</value>
-    </data>
-    <data name="StatType_CriticalDamage">
-        <value>Kritischer Schaden</value>
-    </data>
-    <data name="StatType_Critical Hit">
-        <value>Kritischer Treffer</value>
-    </data>
-    <data name="StatType_Critical Hit Power">
-        <value>Kritische Trefferstärke</value>
-    </data>
-    <data name="GearSlot_Earrings">
-        <value>Ohrring</value>
-    </data>
-    <data name="GearSlot_Gloves">
-        <value>Hände</value>
-    </data>
-    <data name="StatType_MagicDefense">
-        <value>Magieabwehr</value>
-    </data>
-    <data name="StatType_MagicalDamage">
-        <value>Mag. Basiswert</value>
-    </data>
-    <data name="GearSlot_Trousers">
-        <value>Beine</value>
-    </data>
-    <data name="GearSlot_Body">
-        <value>Rumpf</value>
-    </data>
-    <data name="GearSlot_Bracelet">
-        <value>Armreif</value>
-    </data>
-    <data name="StatType_Intelligence">
-        <value>Intelligenz</value>
-    </data>
-    <data name="ItemSource_Dungeon">
-        <value>Dungeon</value>
-    </data>
-    <data name="Role_Healer">
-        <value>Heiler</value>
-    </data>
-    <data name="StatType_HealingMagicPotency">
-        <value>Heilmagie</value>
-    </data>
-    <data name="GearSlot_Head">
-        <value>Kopf</value>
-    </data>
-    <data name="Role_Melee">
-        <value>Nahkämpfer</value>
-    </data>
-    <data name="ItemSource_Raid">
-        <value>Raid</value>
-    </data>
-    <data name="Role_Ranged">
-        <value>Fernkämpfer</value>
-    </data>
-    <data name="Role_Tank">
-        <value>Tank</value>
-    </data>
-    <data name="StatType_Determination">
-        <value>Entschlossenheit</value>
-    </data>
-    <data name="GroupType_Solo">
-        <value>Solo</value>
-    </data>
-    <data name="GroupType_Group">
-        <value>Gruppe</value>
-    </data>
-    <data name="GroupType_FullGroup">
-        <value>Volle Gruppe</value>
-    </data>
-    <data name="undefined" xml:space="preserve">
-        <value>unbekannt</value>
-    </data>
-    <data name="GearSlot_Weapon">
-        <value>Waffe</value>
-    </data>
-    <data name="GearSource_Trial">
-        <value>Prüfung</value>
-    </data>
-    <data name="GearSource_Tome">
-        <value>Stein</value>
-    </data>
-    <data name="ItemSource_Shop">
-        <value>Händler</value>
-    </data>
-    <data name="ItemSource_Crafted">
-        <value>Hergestellt</value>
-    </data>
-    <data name="GearSource_Alliance">
-        <value>Allianz</value>
-    </data>
-    <data name="ItemSource_Quest">
-        <value>Quest</value>
-    </data>
-    <data name="ItemSource_Relic">
-        <value>Relikt</value>
-    </data>
-    <data name="ItemSource_Loot">
-        <value>Geplündert</value>
-    </data>
-    <data name="GearManager_HimbeerToniRaidTool" xml:space="preserve">
-        <value>HimbeerToni Raid Tool</value>
-    </data>
-    <data name="GearManager_etro.gg" xml:space="preserve">
-        <value>etro.gg</value>
-    </data>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="StatTypeAbbrev_Determination">
+    <value>DET</value>
+  </data>
+  <data name="StatTypeAbbrev_CriticalHit">
+    <value>CRT</value>
+  </data>
+  <data name="StatTypeAbbrev_Dexterity">
+    <value>DEX</value>
+  </data>
+  <data name="StatTypeAbbrev_DirectHit">
+    <value>DH</value>
+  </data>
+  <data name="StatType_Direct Hit">
+    <value>Direct Hit</value>
+  </data>
+  <data name="StatType_Defense">
+    <value>Defense</value>
+  </data>
+  <data name="StatType_Dexterity">
+    <value>Dexterity</value>
+  </data>
+  <data name="StatType_HP">
+    <value>HP</value>
+  </data>
+  <data name="StatTypeAbbrev_Intelligence">
+    <value>INT</value>
+  </data>
+  <data name="StatType_Mind">
+    <value>Mind</value>
+  </data>
+  <data name="StatTypeAbbrev_Mind">
+    <value>MND</value>
+  </data>
+  <data name="StatType_MP">
+    <value>MP</value>
+  </data>
+  <data name="StatTypeAbbrev_Piety">
+    <value>PIE</value>
+  </data>
+  <data name="StatType_Piety">
+    <value>Piety</value>
+  </data>
+  <data name="StatType_Skill Speed">
+    <value>Skill Speed</value>
+  </data>
+  <data name="StatTypeAbbrev_SkillSpeed">
+    <value>SKS</value>
+  </data>
+  <data name="StatType_SpellSpeed">
+    <value>Spell Speed</value>
+  </data>
+  <data name="StatTypeAbbrev_SpellSpeed">
+    <value>SPS</value>
+  </data>
+  <data name="StatTypeAbbrev_Strength">
+    <value>STR</value>
+  </data>
+  <data name="StatType_Strength">
+    <value>Strength</value>
+  </data>
+  <data name="StatTypeAbbrev_Tenacity">
+    <value>TEN</value>
+  </data>
+  <data name="StatType_Tenacity">
+    <value>Tenacity</value>
+  </data>
+  <data name="StatTypeAbbrev_Vitality">
+    <value>VIT</value>
+  </data>
+  <data name="StatType_Vitality">
+    <value>Vitality</value>
+  </data>
+  <data name="StatType_MagicalDefense">
+    <value>Magical Defense</value>
+  </data>
+  <data name="StatType_MagicDamage">
+    <value>Magic Damage</value>
+  </data>
+  <data name="GearSlot_Necklace">
+    <value>Necklace</value>
+  </data>
+  <data name="StatType_None">
+    <value>None</value>
+  </data>
+  <data name="GearSlot_Belt">
+    <value>Belt</value>
+  </data>
+  <data name="StatType_PhysicalDamage">
+    <value>Physical Damage</value>
+  </data>
+  <data name="StatType_PhysicalDefense">
+    <value>Defense</value>
+  </data>
+  <data name="GearSlot_Ring">
+    <value>Ring</value>
+  </data>
+  <data name="GearSlot_Ring_L">
+    <value>Ring (L)</value>
+  </data>
+  <data name="GearSlot_Ring_R">
+    <value>Ring (R)</value>
+  </data>
+  <data name="GearSlot_Shield">
+    <value>Shield</value>
+  </data>
+  <data name="GearSlot_Shoes">
+    <value>Shoes</value>
+  </data>
+  <data name="GearSlot_SoulCrystal">
+    <value>Soul Crystal</value>
+  </data>
+  <data name="StatType_AttackMagicPotency">
+    <value>Attack Magic Potency</value>
+  </data>
+  <data name="StatType_AttackPower">
+    <value>AttackPower</value>
+  </data>
+  <data name="StatType_CriticalDamage">
+    <value>Critical Damage</value>
+  </data>
+  <data name="StatType_Critical Hit">
+    <value>Critical Hit</value>
+  </data>
+  <data name="StatType_Critical Hit Power">
+    <value>Critical Hit Power</value>
+  </data>
+  <data name="GearSlot_Earrings">
+    <value>Earrings</value>
+  </data>
+  <data name="GearSlot_Gloves">
+    <value>Gloves</value>
+  </data>
+  <data name="StatType_MagicDefense">
+    <value>Magic Defense</value>
+  </data>
+  <data name="StatType_MagicalDamage">
+    <value>Magical Damage</value>
+  </data>
+  <data name="GearSlot_Trousers">
+    <value>Trousers</value>
+  </data>
+  <data name="GearSlot_Body">
+    <value>Body</value>
+  </data>
+  <data name="GearSlot_Bracelet">
+    <value>Bracelet</value>
+  </data>
+  <data name="Role_Caster">
+    <value>Caster</value>
+  </data>
+  <data name="StatType_Intelligence">
+    <value>Intelligence</value>
+  </data>
+  <data name="ItemSource_Dungeon">
+    <value>Dungeon</value>
+  </data>
+  <data name="Role_Healer">
+    <value>Healer</value>
+  </data>
+  <data name="StatType_HealingMagicPotency">
+    <value>Healing Magic Potency</value>
+  </data>
+  <data name="GearSlot_Head">
+    <value>Head</value>
+  </data>
+  <data name="Role_Melee">
+    <value>Melee</value>
+  </data>
+  <data name="ItemSource_Raid">
+    <value>Raid</value>
+  </data>
+  <data name="Role_Ranged">
+    <value>Ranged</value>
+  </data>
+  <data name="Role_Tank">
+    <value>Tank</value>
+  </data>
+  <data name="StatType_Determination">
+    <value>Determination</value>
+  </data>
+  <data name="GroupType_Solo">
+    <value>Solo</value>
+  </data>
+  <data name="GroupType_Group">
+    <value>Group</value>
+  </data>
+  <data name="GroupType_FullGroup">
+    <value>Full Group</value>
+  </data>
+  <data name="undefined" xml:space="preserve">
+        <value>undefined</value>
+    </data>
+  <data name="GearSlot_Weapon">
+    <value>Weapon</value>
+  </data>
+  <data name="GearSource_Trial">
+    <value>Trial</value>
+  </data>
+  <data name="GearSource_Tome">
+    <value>Tome</value>
+  </data>
+  <data name="ItemSource_Shop">
+    <value>Shop</value>
+  </data>
+  <data name="ItemSource_Crafted">
+    <value>Crafted</value>
+  </data>
+  <data name="GearSource_Alliance">
+    <value>Alliance</value>
+  </data>
+  <data name="ItemSource_Quest">
+    <value>Quest</value>
+  </data>
+  <data name="ItemSource_Relic">
+    <value>Relic</value>
+  </data>
+  <data name="ItemSource_Loot">
+    <value>Looted</value>
+  </data>
+  <data name="GearManager_etro.gg">
+    <value>etro.gg</value>
+  </data>
+  <data name="GearManager_HimbeerToniRaidTool">
+    <value>HimbeerToni Raid Tool</value>
+  </data>
 </root>
