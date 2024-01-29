@@ -30,7 +30,7 @@
     <value>DH</value>
   </data>
   <data name="StatType_Direct Hit">
-    <value>Direct Hit</value>
+    <value>Golpe directo</value>
   </data>
   <data name="StatType_Defense">
     <value>Defense</value>
@@ -60,13 +60,13 @@
     <value>Piety</value>
   </data>
   <data name="StatType_Skill Speed">
-    <value>Skill Speed</value>
+    <value>Velocidad de Habilidades</value>
   </data>
   <data name="StatTypeAbbrev_SkillSpeed">
     <value>SKS</value>
   </data>
   <data name="StatType_SpellSpeed">
-    <value>Spell Speed</value>
+    <value>Velocidad de hechizos</value>
   </data>
   <data name="StatTypeAbbrev_SpellSpeed">
     <value>SPS</value>
@@ -90,28 +90,28 @@
     <value>Vitality</value>
   </data>
   <data name="StatType_MagicalDefense">
-    <value>Magical Defense</value>
+    <value>Defensa mágica</value>
   </data>
   <data name="StatType_MagicDamage">
-    <value>Magic Damage</value>
+    <value>Daño mágico</value>
   </data>
   <data name="GearSlot_Necklace">
-    <value>Necklace</value>
+    <value>Collar</value>
   </data>
   <data name="StatType_None">
-    <value>None</value>
+    <value>Ninguno</value>
   </data>
   <data name="GearSlot_Belt">
     <value>Belt</value>
   </data>
   <data name="StatType_PhysicalDamage">
-    <value>Physical Damage</value>
+    <value>Daño físico</value>
   </data>
   <data name="StatType_PhysicalDefense">
-    <value>Defense</value>
+    <value>Defensa física</value>
   </data>
   <data name="GearSlot_Ring">
-    <value>Ring</value>
+    <value>Anillo</value>
   </data>
   <data name="GearSlot_Ring_L">
     <value>Ring (L)</value>
@@ -120,13 +120,13 @@
     <value>Ring (R)</value>
   </data>
   <data name="GearSlot_Shield">
-    <value>Shield</value>
+    <value>Escudo</value>
   </data>
   <data name="GearSlot_Shoes">
-    <value>Shoes</value>
+    <value>Pies</value>
   </data>
   <data name="GearSlot_SoulCrystal">
-    <value>Soul Crystal</value>
+    <value>Cristal de Alma</value>
   </data>
   <data name="StatType_AttackMagicPotency">
     <value>Attack Magic Potency</value>
@@ -138,31 +138,31 @@
     <value>Critical Damage</value>
   </data>
   <data name="StatType_Critical Hit">
-    <value>Critical Hit</value>
+    <value>Golpe crítico</value>
   </data>
   <data name="StatType_Critical Hit Power">
     <value>Critical Hit Power</value>
   </data>
   <data name="GearSlot_Earrings">
-    <value>Earrings</value>
+    <value>Pendiente</value>
   </data>
   <data name="GearSlot_Gloves">
-    <value>Gloves</value>
+    <value>Guantes</value>
   </data>
   <data name="StatType_MagicDefense">
-    <value>Magic Defense</value>
+    <value>Defensa mágica</value>
   </data>
   <data name="StatType_MagicalDamage">
-    <value>Magical Damage</value>
+    <value>Daño mágico</value>
   </data>
   <data name="GearSlot_Trousers">
-    <value>Trousers</value>
+    <value>Piernas</value>
   </data>
   <data name="GearSlot_Body">
-    <value>Body</value>
+    <value>Cuerpo</value>
   </data>
   <data name="GearSlot_Bracelet">
-    <value>Bracelet</value>
+    <value>Brazalete</value>
   </data>
   <data name="Role_Caster">
     <value>Caster</value>
@@ -171,7 +171,7 @@
     <value>Intelligence</value>
   </data>
   <data name="ItemSource_Dungeon">
-    <value>Dungeon</value>
+    <value>Mazmorra</value>
   </data>
   <data name="Role_Healer">
     <value>Healer</value>
@@ -180,7 +180,7 @@
     <value>Healing Magic Potency</value>
   </data>
   <data name="GearSlot_Head">
-    <value>Head</value>
+    <value>Cabeza</value>
   </data>
   <data name="Role_Melee">
     <value>Melee</value>
@@ -201,22 +201,22 @@
     <value>Solo</value>
   </data>
   <data name="GroupType_Group">
-    <value>Group</value>
+    <value>Grupo</value>
   </data>
   <data name="GroupType_FullGroup">
-    <value>Full Group</value>
+    <value>Grupo completo</value>
   </data>
   <data name="undefined" xml:space="preserve">
-        <value>undefined</value>
+        <value>indefinido</value>
     </data>
   <data name="GearSlot_Weapon">
-    <value>Weapon</value>
+    <value>Arma</value>
   </data>
   <data name="GearSource_Trial">
-    <value>Trial</value>
+    <value>Trials</value>
   </data>
   <data name="GearSource_Tome">
-    <value>Tome</value>
+    <value>Tomos</value>
   </data>
   <data name="ItemSource_Shop">
     <value>Shop</value>
@@ -225,7 +225,7 @@
     <value>Crafted</value>
   </data>
   <data name="GearSource_Alliance">
-    <value>Alliance</value>
+    <value>Alianzas</value>
   </data>
   <data name="ItemSource_Quest">
     <value>Quest</value>
