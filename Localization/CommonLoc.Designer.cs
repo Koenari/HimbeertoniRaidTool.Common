@@ -61,6 +61,60 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A Realm Reborn.
+        /// </summary>
+        internal static string Expansion_ARR {
+            get {
+                return ResourceManager.GetString("Expansion_ARR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dawntrail.
+        /// </summary>
+        internal static string Expansion_DT {
+            get {
+                return ResourceManager.GetString("Expansion_DT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Endwalker.
+        /// </summary>
+        internal static string Expansion_EW {
+            get {
+                return ResourceManager.GetString("Expansion_EW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heavensward.
+        /// </summary>
+        internal static string Expansion_HW {
+            get {
+                return ResourceManager.GetString("Expansion_HW", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stormblood.
+        /// </summary>
+        internal static string Expansion_SB {
+            get {
+                return ResourceManager.GetString("Expansion_SB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shadowbringers.
+        /// </summary>
+        internal static string Expansion_ShB {
+            get {
+                return ResourceManager.GetString("Expansion_ShB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to etro.gg.
         /// </summary>
         internal static string GearManager_etro_gg {
@@ -732,6 +786,15 @@ namespace HimbeertoniRaidTool.Common.Localization {
         internal static string undefined {
             get {
                 return ResourceManager.GetString("undefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        internal static string Unknown {
+            get {
+                return ResourceManager.GetString("Unknown", resourceCulture);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Newtonsoft.Json;
 
@@ -23,6 +24,16 @@ public class GameExpansion
         NormalRaidTiers = new RaidTier[unlockedRaidTiers];
         SavageRaidTiers = new RaidTier[unlockedRaidTiers];
     }
+    public string Name => GameVersion switch
+        {
+            2 => CommonLoc.Expansion_ARR,
+            3 => CommonLoc.Expansion_HW,
+            4 => CommonLoc.Expansion_SB,
+            5 => CommonLoc.Expansion_ShB,
+            6 => CommonLoc.Expansion_EW,
+            7 => CommonLoc.Expansion_DT,
+            _ => CommonLoc.Unknown,
+        };
 }
 
 public class RaidTier

@@ -243,4 +243,25 @@
     <data name="GearManager_HimbeerToniRaidTool">
         <value>HimbeerToni Raid Tool</value>
     </data>
+    <data name="Expansion_ARR" xml:space="preserve">
+		<value>A Realm Reborn</value>
+	</data>
+    <data name="Expansion_HW" xml:space="preserve">
+        <value>Heavensward</value>
+    </data>
+    <data name="Expansion_SB" xml:space="preserve">
+        <value>Stormblood</value>
+    </data>
+    <data name="Expansion_ShB" xml:space="preserve">
+        <value>Shadowbringers</value>
+    </data>
+    <data name="Expansion_EW" xml:space="preserve">
+        <value>Endwalker</value>
+    </data>
+    <data name="Unknown" xml:space="preserve">
+        <value>Unknown</value>
+    </data>
+    <data name="Expansion_DT" xml:space="preserve">
+        <value>Dawntrail</value>
+    </data>
 </root>
