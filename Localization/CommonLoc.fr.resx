@@ -242,4 +242,7 @@
   <data name="GearManager_HimbeerToniRaidTool">
     <value>HimbeerToni, outil de raid</value>
   </data>
+  <data name="StatType_SpsSksMultiplier">
+    <value>Multiplicateur d'AAs / de DoTs</value>
+  </data>
 </root>

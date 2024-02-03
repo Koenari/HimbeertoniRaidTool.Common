@@ -17,7 +17,7 @@ public static class ServiceManager
         _curatedData = new CuratedData();
         GameInfo = new GameInfo(_curatedData);
         ItemInfo = new ItemInfo(module, _curatedData, GameInfo);
-        if(language is not null)
+        if (language is not null)
             SetLanguage(language);
     }
 
@@ -27,7 +27,7 @@ public static class ServiceManager
         {
             CommonLoc.Culture = new CultureInfo(langCode);
         }
-        catch (Exception _) {}
+        catch (Exception) { }
     }
 }
 #pragma warning restore CS8618

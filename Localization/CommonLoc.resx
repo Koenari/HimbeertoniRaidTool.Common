@@ -264,4 +264,7 @@
     <data name="Expansion_DT" xml:space="preserve">
         <value>Dawntrail</value>
     </data>
+    <data name="StatType_SpsSksMultiplier">
+        <value>AA / DoT multiplier</value>
+    </data>
 </root>
