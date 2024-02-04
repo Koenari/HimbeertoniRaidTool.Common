@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+  <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns="" id="root">
     <xsd:element name="root" msdata:IsDataSet="true">
-            
+
         </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
@@ -12,10 +12,14 @@
     <value>1.3</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        </value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0,
+            Culture=neutral, PublicKeyToken=b77a5c561934e089
+        </value>
   </resheader>
   <data name="StatTypeAbbrev_Determination">
     <value>ENT</value>
@@ -242,7 +246,40 @@
   <data name="GearManager_HimbeerToniRaidTool">
     <value>HimbeerToni Raid Tool</value>
   </data>
+  <data name="Expansion_ARR" xml:space="preserve">
+		<value>A Realm Reborn</value>
+	</data>
+  <data name="Expansion_HW" xml:space="preserve">
+        <value>Heavensward</value>
+    </data>
+  <data name="Expansion_SB" xml:space="preserve">
+        <value>Stormblood</value>
+    </data>
+  <data name="Expansion_ShB" xml:space="preserve">
+        <value>Shadowbringers</value>
+    </data>
+  <data name="Expansion_EW" xml:space="preserve">
+        <value>Endwalker</value>
+    </data>
+  <data name="Unknown" xml:space="preserve">
+        <value>Unbekannt</value>
+    </data>
+  <data name="Expansion_DT" xml:space="preserve">
+        <value>Dawntrail</value>
+    </data>
   <data name="StatType_SpsSksMultiplier">
     <value>AA/DoT Multiplikator</value>
   </data>
+  <data name="DataType_Character" xml:space="preserve">
+        <value>Charakter</value>
+    </data>
+  <data name="DataTypeName_GearSet" xml:space="preserve">
+        <value>Ausrüstungsset</value>
+    </data>
+  <data name="DataTypeName_Player" xml:space="preserve">
+        <value>Spieler</value>
+    </data>
+  <data name="DataTypeName_RaidGroup" xml:space="preserve">
+        <value>Raid-Gruppe</value>
+    </data>
 </root>
