@@ -1,9 +1,10 @@
-﻿using HimbeertoniRaidTool.Common.Security;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Security;
+using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -14,40 +15,28 @@ public interface IReadOnlyGearSet
 }
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataType
 {
     public const int NUM_SLOTS = 12;
-
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
-    //IDs
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
-
-    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
-
-    [JsonProperty("EtroID")] public string EtroId = "";
-
-    //Properties
-    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
-    [JsonProperty("LastEtroFetched")] public DateTime EtroFetchDate;
-    [JsonProperty("Name")] public string Name = "";
-
-    [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
-    [JsonProperty("IsManaged")] public bool IsSystemManaged { get; private set; } = false;
     //Actual Gear data
     [JsonProperty("Items")] private readonly GearItem?[] _items = new GearItem?[NUM_SLOTS];
 
-    //Runtime only properties
-    public bool IsEmpty => this.All(x => x is { Id: 0 });
-
-    public int ItemLevel => _levelCache ??= CalcItemLevel();
-
     //Caches
-    [JsonIgnore] private int? _levelCache = null;
+    [JsonIgnore] private int? _levelCache;
+    [JsonProperty("LastEtroFetched")] public DateTime EtroFetchDate;
+
+    [JsonProperty("EtroID")] public string EtroId = "";
+
+    [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
+    [JsonProperty("Name")] public string Name = "";
+
+    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
+
+    //Properties
+    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
 
     [JsonConstructor]
-    public GearSet() : this(GearSetManager.Hrt, "") { }
+    public GearSet() : this(GearSetManager.Hrt) { }
     public GearSet(GearSetManager manager, string name = "")
     {
         ManagedBy = manager;
@@ -63,12 +52,12 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
     {
         CopyFrom(copyFrom);
     }
+    [JsonProperty("IsManaged")] public bool IsSystemManaged { get; private set; }
 
-    public GearItem this[GearSetSlot slot]
-    {
-        get => this[ToIndex(slot)];
-        set => this[ToIndex(slot)] = value;
-    }
+    //Runtime only properties
+    public bool IsEmpty => this.All(x => x is { Id: 0 });
+
+    public int ItemLevel => _levelCache ??= CalcItemLevel();
 
     private GearItem this[int idx]
     {
@@ -79,6 +68,32 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
             InvalidateCaches();
         }
     }
+
+    public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
+                                                        .Where(slot => slot < GearSetSlot.SoulCrystal
+                                                                    && slot != GearSetSlot.Waist);
+    public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
+    [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_GearSet;
+    //IDs
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
+    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+
+    public GearItem this[GearSetSlot slot]
+    {
+        get => this[ToIndex(slot)];
+        set => this[ToIndex(slot)] = value;
+    }
+
+    /*
+     * Caching stats is a problem since this needs to be invalidated when changing materia
+     */
+    public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
 
     public void MarkAsSystemManaged() => IsSystemManaged = true;
 
@@ -97,26 +112,21 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         return (int)((float)itemLevel / NUM_SLOTS);
     }
 
-    /*
-     * Caching stats is a problem since this needs to be invalidated when changing materia
-     */
-    public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
-
     private static int ToIndex(GearSetSlot slot) => slot switch
     {
         GearSetSlot.MainHand => 0,
-        GearSetSlot.OffHand => 11,
-        GearSetSlot.Head => 1,
-        GearSetSlot.Body => 2,
-        GearSetSlot.Hands => 3,
-        GearSetSlot.Legs => 4,
-        GearSetSlot.Feet => 5,
-        GearSetSlot.Ear => 6,
-        GearSetSlot.Neck => 7,
-        GearSetSlot.Wrist => 8,
-        GearSetSlot.Ring1 => 9,
-        GearSetSlot.Ring2 => 10,
-        _ => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
+        GearSetSlot.OffHand  => 11,
+        GearSetSlot.Head     => 1,
+        GearSetSlot.Body     => 2,
+        GearSetSlot.Hands    => 3,
+        GearSetSlot.Legs     => 4,
+        GearSetSlot.Feet     => 5,
+        GearSetSlot.Ear      => 6,
+        GearSetSlot.Neck     => 7,
+        GearSetSlot.Wrist    => 8,
+        GearSetSlot.Ring1    => 9,
+        GearSetSlot.Ring2    => 10,
+        _                    => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
     };
 
     public void CopyFrom(GearSet gearSet)
@@ -133,9 +143,6 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
         InvalidateCaches();
     }
 
-    public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
-        .Where(slot => slot < GearSetSlot.SoulCrystal && slot != GearSetSlot.Waist);
-
     private IEnumerable<GearItem> AsEnumerable()
     {
         for (int i = 0; i < NUM_SLOTS; ++i)
@@ -143,18 +150,14 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHasHrtId
             yield return this[i];
         }
     }
-    public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
     public override string ToString() => $"{Name} ({ItemLevel})";
 }
 
 internal class GearSetOverride : IReadOnlyGearSet
 {
     private readonly IReadOnlyGearSet _base;
-    private readonly GearSetSlot _slot;
     private readonly GearItem _override;
+    private readonly GearSetSlot _slot;
 
     public GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item)
     {
@@ -177,7 +180,7 @@ internal class GearSetOverride : IReadOnlyGearSet
 public static class GearSetExtensions
 {
     public static IReadOnlyGearSet With(this IReadOnlyGearSet baseSet, GearItem item,
-        GearSetSlot slot = GearSetSlot.None)
+                                        GearSetSlot slot = GearSetSlot.None)
     {
         if (slot is GearSetSlot.None)
             slot = item.Slots.First();

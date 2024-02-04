@@ -1,58 +1,57 @@
-﻿using HimbeertoniRaidTool.Common.Security;
-using HimbeertoniRaidTool.Common.Services;
-using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
+using Lumina.Excel;
+using Lumina.Excel.GeneratedSheets;
+using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHasHrtId
+public class Character : IEnumerable<PlayableClass>, IHrtDataType
 {
     private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
     private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
 
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Character;
-    //Identifiers
-    [JsonProperty("WorldID")] public uint HomeWorldId;
-    [JsonProperty("Name")] public string Name;
-
-    /// <summary>
-    /// Character unique ID calculated from characters ContentID.
-    /// </summary>
-    [JsonProperty("HrtCharID")] public ulong CharId = 0;
-
-    /// <summary>
-    /// Unique character identifier for Lodestone. Maps 1:1 to ContentID (but not calculable).
-    /// </summary>
-    [JsonProperty("LodestoneID")] public int LodestoneId = 0;
-
-    /// <summary>
-    /// HRT specific unique ID used for local storage.
-    /// </summary>
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
-
-    /// <summary>
-    /// HRT specific unique IDs used for remote storage and lookup.
-    /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
-
     //Properties
     [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
-    [JsonProperty("MainJob")] private Job? _mainJob;
-    [JsonProperty("Tribe")] public uint TribeId = 0;
-    [JsonProperty("Gender")] public Gender Gender = Gender.Unknown;
-    [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
 
     [JsonProperty("MainInventory")] public readonly Inventory MainInventory = new();
+
+    /// <summary>
+    ///     HRT specific unique IDs used for remote storage and lookup.
+    /// </summary>
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
+    [JsonProperty("MainJob")] private Job? _mainJob;
+
+    /// <summary>
+    ///     Character unique ID calculated from characters ContentID.
+    /// </summary>
+    [JsonProperty("HrtCharID")] public ulong CharId;
+    [JsonProperty("Gender")] public Gender Gender = Gender.Unknown;
+
+    //Identifiers
+    [JsonProperty("WorldID")] public uint HomeWorldId;
+
+    /// <summary>
+    ///     Unique character identifier for Lodestone. Maps 1:1 to ContentID (but not calculable).
+    /// </summary>
+    [JsonProperty("LodestoneID")] public int LodestoneId;
+    [JsonProperty("Name")] public string Name;
+    [JsonProperty("Tribe")] public uint TribeId;
+    public Character() : this("", 0) { }
+    public Character(string name, uint worldId)
+    {
+        Name = name;
+        HomeWorldId = worldId;
+    }
 
     //Runtime only Properties
     public Job? MainJob
@@ -77,14 +76,26 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
     }
 
     public bool Filled => !LocalId.IsEmpty;
-    public Character() : this("", 0) { }
-    public Character(string name, uint worldId)
-    {
-        Name = name;
-        HomeWorldId = worldId;
-    }
 
     public IEnumerable<PlayableClass> Classes => _classes;
+
+    public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
+
+    public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
+
+    IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
+
+    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Character;
+    [JsonIgnore] public string DataTypeName => CommonLoc.DataType_Character;
+
+    /// <summary>
+    ///     HRT specific unique ID used for local storage.
+    /// </summary>
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+
+    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
     public PlayableClass AddClass(Job job)
     {
@@ -92,8 +103,6 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
         _classes.Add(classToAdd);
         return classToAdd;
     }
-
-    public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
 
     public bool RemoveClass(Job type) => _classes.RemoveAll(job => job.Job == type) > 0;
 
@@ -123,8 +132,6 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
         (_classes[idx], _classes[idx + 1]) = (_classes[idx + 1], _classes[idx]);
     }
 
-    public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
-
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 
     public override int GetHashCode() => LocalId.GetHashCode();
@@ -140,10 +147,6 @@ public class Character : IEnumerable<PlayableClass>, IHasHrtId
 #pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
         return BitConverter.ToUInt64(hash);
     }
-
-    public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
 
     public void MergeInfos(Character toMerge)
     {

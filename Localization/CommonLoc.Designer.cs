@@ -60,6 +60,42 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Character.
+        /// </summary>
+        internal static string DataType_Character {
+            get {
+                return ResourceManager.GetString("DataType_Character", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gear set.
+        /// </summary>
+        internal static string DataTypeName_GearSet {
+            get {
+                return ResourceManager.GetString("DataTypeName_GearSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Player.
+        /// </summary>
+        internal static string DataTypeName_Player {
+            get {
+                return ResourceManager.GetString("DataTypeName_Player", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Raid group.
+        /// </summary>
+        internal static string DataTypeName_RaidGroup {
+            get {
+                return ResourceManager.GetString("DataTypeName_RaidGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A Realm Reborn.
         /// </summary>
         internal static string Expansion_ARR {
