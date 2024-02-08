@@ -26,7 +26,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
     [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
     [JsonProperty("MainJob")] private Job? _mainJob;
 
