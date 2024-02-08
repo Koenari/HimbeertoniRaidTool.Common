@@ -13,12 +13,11 @@ using Newtonsoft.Json;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataType
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
 {
     private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
     private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
-
     //Properties
     [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
 
@@ -27,7 +26,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataType
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
     [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
     [JsonProperty("MainJob")] private Job? _mainJob;
 
@@ -80,13 +79,15 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataType
     public IEnumerable<PlayableClass> Classes => _classes;
 
     public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
+    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataType_Character;
 
     public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
+    [JsonIgnore] string IHrtDataType.Name => Name;
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Character;
-    [JsonIgnore] public string DataTypeName => CommonLoc.DataType_Character;
+    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
 
     /// <summary>
     ///     HRT specific unique ID used for local storage.

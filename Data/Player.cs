@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player : IHrtDataType
+public class Player : IHrtDataTypeWithId
 {
     [JsonProperty("Chars")]
     private readonly List<Character> _characters = new();
@@ -51,8 +51,10 @@ public class Player : IHrtDataType
         }
     }
     public PlayableClass? CurJob => MainChar.MainClass;
+    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_Player;
+    public string Name => NickName;
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Player;
-    [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_Player;
+    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
 
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;

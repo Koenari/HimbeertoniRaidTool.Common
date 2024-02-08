@@ -8,10 +8,9 @@ using Newtonsoft.Json;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidGroup : IEnumerable<Player>, IHrtDataType
+public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
 {
     [JsonProperty("Members")] private readonly Player?[] _players;
-
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
@@ -76,13 +75,14 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataType
             _players[idx] = value;
         }
     }
+    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_RaidGroup;
 
     public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
+    string IHrtDataType.Name => Name;
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Group;
-    [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_RaidGroup;
-
+    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
 

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
                 xmlns="">
         <xsd:element name="root" msdata:IsDataSet="true">
 
@@ -245,8 +246,8 @@
     <data name="GearManager_etro.gg">
         <value>etro.gg</value>
     </data>
-    <data name="GearManager_HimbeerToniRaidTool">
-        <value>HimbeerToni Raid Tool</value>
+    <data name="GearManager_HrtLocal">
+        <value>local database</value>
     </data>
     <data name="Expansion_ARR" xml:space="preserve">
 		<value>A Realm Reborn</value>
@@ -276,12 +277,24 @@
         <value>Character</value>
     </data>
     <data name="DataTypeName_GearSet" xml:space="preserve">
-        <value>Gear set</value>
+        <value>gear set</value>
     </data>
     <data name="DataTypeName_Player" xml:space="preserve">
-        <value>Player</value>
+        <value>player</value>
     </data>
     <data name="DataTypeName_RaidGroup" xml:space="preserve">
-        <value>Raid group</value>
+        <value>raid group</value>
+    </data>
+    <data name="DataTypeName_item_gear" xml:space="preserve">
+        <value>item (gear)</value>
+    </data>
+    <data name="DataTypeName_item" xml:space="preserve">
+        <value>item</value>
+    </data>
+    <data name="DataTypeName_materia" xml:space="preserve">
+        <value>materia</value>
+    </data>
+    <data name="DataTypeName_Job" xml:space="preserve">
+        <value>Job</value>
     </data>
 </root>

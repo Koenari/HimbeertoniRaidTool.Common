@@ -69,7 +69,7 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gear set.
+        ///   Looks up a localized string similar to gear set.
         /// </summary>
         internal static string DataTypeName_GearSet {
             get {
@@ -78,7 +78,43 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Player.
+        ///   Looks up a localized string similar to item.
+        /// </summary>
+        internal static string DataTypeName_item {
+            get {
+                return ResourceManager.GetString("DataTypeName_item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to item (gear).
+        /// </summary>
+        internal static string DataTypeName_item_gear {
+            get {
+                return ResourceManager.GetString("DataTypeName_item_gear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Job.
+        /// </summary>
+        internal static string DataTypeName_Job {
+            get {
+                return ResourceManager.GetString("DataTypeName_Job", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to materia.
+        /// </summary>
+        internal static string DataTypeName_materia {
+            get {
+                return ResourceManager.GetString("DataTypeName_materia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to player.
         /// </summary>
         internal static string DataTypeName_Player {
             get {
@@ -87,7 +123,7 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Raid group.
+        ///   Looks up a localized string similar to raid group.
         /// </summary>
         internal static string DataTypeName_RaidGroup {
             get {
@@ -159,11 +195,11 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to HimbeerToni Raid Tool.
+        ///   Looks up a localized string similar to local database.
         /// </summary>
-        internal static string GearManager_HimbeerToniRaidTool {
+        internal static string GearManager_HrtLocal {
             get {
-                return ResourceManager.GetString("GearManager_HimbeerToniRaidTool", resourceCulture);
+                return ResourceManager.GetString("GearManager_HrtLocal", resourceCulture);
             }
         }
         

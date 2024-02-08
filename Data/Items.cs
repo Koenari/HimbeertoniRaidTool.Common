@@ -1,15 +1,16 @@
-﻿using HimbeertoniRaidTool.Common.Services;
-using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using HimbeertoniRaidTool.Common.GameData;
+using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Data;
+using Lumina.Excel;
+using Lumina.Excel.GeneratedSheets;
+using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -38,7 +39,33 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         SoulCrystal = 0,
     };
 
-    [JsonProperty] public bool IsHq { get; init; } = false;
+    [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
+
+    //This holds the total stats of this gear item (including materia)
+    [JsonIgnore] private readonly Dictionary<StatType, int> _statCache = new();
+
+    [JsonIgnore] private readonly Lazy<int> _statCapImpl;
+
+    [JsonProperty("RelicParams", NullValueHandling = NullValueHandling.Ignore)]
+    public Dictionary<StatType, int>? RelicStats;
+
+    public GearItem(uint id = 0) : base(id)
+    {
+        _statCapImpl = new Lazy<int>(() =>
+        {
+            //Fail in a safe way and do not cap values
+            if (Item is null) return int.MaxValue;
+            //ToDo: Do actual Cap
+            if (Item.Rarity == (byte)Rarity.Relic) return int.MaxValue;
+            int maxVal = int.Max(Item.UnkData59[2].BaseParamValue, Item.UnkData59[3].BaseParamValue);
+            if (IsHq)
+                maxVal += int.Max(Item.UnkData73[2].BaseParamValueSpecial, Item.UnkData73[3].BaseParamValueSpecial);
+            return maxVal;
+        });
+    }
+    [JsonIgnore] public new string DataTypeName => CommonLoc.DataTypeName_item_gear;
+
+    [JsonProperty] public bool IsHq { get; init; }
 
     [JsonIgnore] public IEnumerable<Job> Jobs => Item?.ClassJobCategory.Value?.ToJob() ?? Enumerable.Empty<Job>();
 
@@ -47,11 +74,6 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     [JsonIgnore] public IEnumerable<GearSetSlot> Slots => EquipSlotCategory.AvailableSlots();
 
     [JsonIgnore] public bool IsUnique => Item?.IsUnique ?? true;
-
-    [JsonProperty("Materia")] private readonly List<HrtMateria> _materia = new();
-
-    [JsonProperty("RelicParams", NullValueHandling = NullValueHandling.Ignore)]
-    public Dictionary<StatType, int>? RelicStats;
 
     [JsonIgnore] public IEnumerable<HrtMateria> Materia => _materia;
 
@@ -63,10 +85,33 @@ public class GearItem : HrtItem, IEquatable<GearItem>
 
     [JsonIgnore] public int StatCap => _statCapImpl.Value;
 
-    [JsonIgnore] private readonly Lazy<int> _statCapImpl;
-
-    //This holds the total stats of this gear item (including materia)
-    [JsonIgnore] private readonly Dictionary<StatType, int> _statCache = new();
+    public IEnumerable<StatType> StatTypesAffected
+    {
+        get
+        {
+            SortedSet<StatType> done = new();
+            if (Item is null) return Enumerable.Empty<StatType>();
+            foreach (Item.ItemUnkData59Obj? stat in Item.UnkData59)
+            {
+                var type = (StatType)stat.BaseParam;
+                done.Add(type);
+            }
+            if (IsRelic() && RelicStats is not null)
+            {
+                foreach ((StatType type, int value) in RelicStats)
+                {
+                    if (value > 0)
+                        done.Add(type);
+                }
+            }
+            foreach (HrtMateria mat in Materia)
+            {
+                done.Add(mat.StatType);
+            }
+            return done;
+        }
+    }
+    public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
 
     private void InvalidateCache() => _statCache.Clear();
 
@@ -114,23 +159,6 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         _statCache.TryAdd(type, result);
         return result;
     }
-
-    public GearItem(uint id = 0) : base(id)
-    {
-        _statCapImpl = new Lazy<int>(() =>
-        {
-            //Fail in a safe way and do not cap values
-            if (Item is null) return int.MaxValue;
-            //ToDo: Do actual Cap
-            if (Item.Rarity == (byte)Rarity.Relic) return int.MaxValue;
-            int maxVal = int.Max(Item.UnkData59[2].BaseParamValue, Item.UnkData59[3].BaseParamValue);
-            if (IsHq)
-                maxVal += int.Max(Item.UnkData73[2].BaseParamValueSpecial, Item.UnkData73[3].BaseParamValueSpecial);
-            return maxVal;
-        });
-    }
-
-    public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
 
     public bool Equals(GearItem? other, ItemComparisonMode mode)
     {
@@ -191,51 +219,36 @@ public class GearItem : HrtItem, IEquatable<GearItem>
     {
         if (!CanAffixMateria()) return 0;
         MateriaLevel maxAllowed = ServiceManager.GameInfo
-            .GetExpansionByLevel(Item?.LevelEquip ?? ServiceManager.GameInfo.CurrentExpansion.MaxLevel).MaxMateriaLevel;
+                                                .GetExpansionByLevel(
+                                                    Item?.LevelEquip ?? ServiceManager.GameInfo.CurrentExpansion
+                                                        .MaxLevel).MaxMateriaLevel;
         if (_materia.Count >= Item?.MateriaSlotCount)
             maxAllowed--;
 
         return maxAllowed;
     }
-
-    public IEnumerable<StatType> StatTypesAffected
-    {
-        get
-        {
-            SortedSet<StatType> done = new();
-            if (Item is null) return Enumerable.Empty<StatType>();
-            foreach (Item.ItemUnkData59Obj? stat in Item.UnkData59)
-            {
-                var type = (StatType)stat.BaseParam;
-                done.Add(type);
-            }
-            if (IsRelic() && RelicStats is not null)
-            {
-                foreach ((StatType type, int value) in RelicStats)
-                {
-                    if (value > 0)
-                        done.Add(type);
-                }
-            }
-            foreach (HrtMateria mat in Materia)
-            {
-                done.Add(mat.StatType);
-            }
-            return done;
-        }
-    }
 }
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class HrtItem : IEquatable<HrtItem>
+public class HrtItem : IEquatable<HrtItem>, IHrtDataType
 {
+
+    [JsonIgnore] protected static readonly ExcelSheet<Item>? ItemSheet = ServiceManager.ExcelModule.GetSheet<Item>();
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
-    private readonly uint _id = 0;
+    private readonly uint _id;
+
+    private Item? _itemCache;
+    private LuminaItem? _luminaItemCache;
+
+    [JsonIgnore] public Lazy<uint> LevelCache;
+
+    public HrtItem(uint id)
+    {
+        _id = id;
+        LevelCache = new Lazy<uint>(() => Item?.LevelItem.Row ?? 0);
+    }
 
     public virtual uint Id => _id;
-
-    private Item? _itemCache = null;
-    private LuminaItem? _luminaItemCache = null;
 
     [JsonIgnore] public Rarity Rarity => (Rarity)(Item?.Rarity ?? 0);
 
@@ -245,12 +258,8 @@ public class HrtItem : IEquatable<HrtItem>
 
     protected Item? Item => _itemCache ??= ItemSheet?.GetRow(Id);
 
-    public string Name => Item?.Name.RawString ?? "";
-
     public bool IsGear => this is GearItem || (Item?.ClassJobCategory.Row ?? 0) != 0;
     public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
-
-    [JsonIgnore] public Lazy<uint> LevelCache;
 
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
@@ -274,16 +283,11 @@ public class HrtItem : IEquatable<HrtItem>
                 }
         }
     }
-
-    [JsonIgnore] protected static readonly ExcelSheet<Item>? ItemSheet = ServiceManager.ExcelModule.GetSheet<Item>();
-
-    public HrtItem(uint id)
-    {
-        _id = id;
-        LevelCache = new Lazy<uint>(() => Item?.LevelItem.Row ?? 0);
-    }
-    public override bool Equals(object? obj) => Equals(obj as HrtItem);
     public bool Equals(HrtItem? obj) => Id == obj?.Id;
+
+    public string Name => Item?.Name.RawString ?? "";
+    [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_item;
+    public override bool Equals(object? obj) => Equals(obj as HrtItem);
 
     public override int GetHashCode() => Id.GetHashCode();
 }
@@ -292,18 +296,13 @@ public class HrtItem : IEquatable<HrtItem>
 [ImmutableObject(true)]
 public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
-    //Begin Object
-    [JsonProperty("Category")] public readonly MateriaCategory Category;
-    [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;
-    [JsonIgnore] public MateriaLevel Level => (MateriaLevel)_materiaLevel;
-
     [JsonIgnore]
     private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule?.GetSheet<Materia>();
 
     [JsonIgnore] private readonly Lazy<uint> _idCache;
-    [JsonIgnore] public override uint Id => _idCache.Value;
-    public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
-    public StatType StatType => Category.GetStatType();
+    [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;
+    //Begin Object
+    [JsonProperty("Category")] public readonly MateriaCategory Category;
 
     public HrtMateria() : this(0, 0)
     {
@@ -320,23 +319,28 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
         _materiaLevel = (byte)lvl;
         _idCache = new Lazy<uint>(() => Materia?.Item[_materiaLevel].Row ?? 0);
     }
-
-    public int GetStat() => Materia?.Value[_materiaLevel] ?? 0;
+    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_materia;
+    [JsonIgnore] public new string DataTypeName => DataTypeNameStatic;
+    [JsonIgnore] public MateriaLevel Level => (MateriaLevel)_materiaLevel;
+    [JsonIgnore] public override uint Id => _idCache.Value;
+    public Materia? Materia => _materiaSheet?.GetRow((ushort)Category);
+    public StatType StatType => Category.GetStatType();
 
     public bool Equals(HrtMateria? other) => base.Equals(other);
+
+    public int GetStat() => Materia?.Value[_materiaLevel] ?? 0;
 }
 
 public class ItemIdRange : ItemIdCollection
 {
     public ItemIdRange(uint start, uint end) : base(Enumerable.Range((int)start, Math.Max(0, (int)end - (int)start + 1))
-        .ToList().ConvertAll(x => (uint)x))
+                                                              .ToList().ConvertAll(x => (uint)x))
     {
     }
 }
 
 public class ItemIdList : ItemIdCollection
 {
-    public static implicit operator ItemIdList(uint[] ids) => new(ids);
 
     public ItemIdList(params uint[] ids) : base(ids)
     {
@@ -349,18 +353,19 @@ public class ItemIdList : ItemIdCollection
     public ItemIdList(IEnumerable<uint> ids) : base(ids)
     {
     }
+    public static implicit operator ItemIdList(uint[] ids) => new(ids);
 }
 
 public abstract class ItemIdCollection : IEnumerable<uint>
 {
     public static readonly ItemIdCollection Empty = new ItemIdList();
     private readonly ReadOnlyCollection<uint> _iDs;
-    public int Count => _iDs.Count;
 
     protected ItemIdCollection(IEnumerable<uint> ids)
     {
         _iDs = new ReadOnlyCollection<uint>(ids.ToList());
     }
+    public int Count => _iDs.Count;
 
     public IEnumerator<uint> GetEnumerator() => _iDs.GetEnumerator();
 
@@ -374,17 +379,17 @@ public abstract class ItemIdCollection : IEnumerable<uint>
 public enum ItemComparisonMode
 {
     /// <summary>
-    /// Ignores everything besides the item ID
+    ///     Ignores everything besides the item ID
     /// </summary>
     IdOnly,
 
     /// <summary>
-    /// Ignores affixed materia when comparing
+    ///     Ignores affixed materia when comparing
     /// </summary>
     IgnoreMateria,
 
     /// <summary>
-    /// Compares all aspects of the item
+    ///     Compares all aspects of the item
     /// </summary>
     Full,
 }

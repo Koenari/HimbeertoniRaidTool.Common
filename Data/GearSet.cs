@@ -15,7 +15,7 @@ public interface IReadOnlyGearSet
 }
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataType
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId
 {
     public const int NUM_SLOTS = 12;
     //Actual Gear data
@@ -72,12 +72,14 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataType
     public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
                                                         .Where(slot => slot < GearSetSlot.SoulCrystal
                                                                     && slot != GearSetSlot.Waist);
+    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_GearSet;
     public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    string IHrtDataType.Name => Name;
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
-    [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_GearSet;
+    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
     //IDs
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;

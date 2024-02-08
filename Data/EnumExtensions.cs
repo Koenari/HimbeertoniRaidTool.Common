@@ -155,7 +155,7 @@ public static class EnumExtensions
 
     public static string FriendlyName(this GearSetManager manager) => manager switch
     {
-        GearSetManager.Hrt  => CommonLoc.GearManager_HimbeerToniRaidTool,
+        GearSetManager.Hrt  => CommonLoc.GearManager_HrtLocal,
         GearSetManager.Etro => CommonLoc.GearManager_etro_gg,
         _                   => CommonLoc.undefined,
     };
