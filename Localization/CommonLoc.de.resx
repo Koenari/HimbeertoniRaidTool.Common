@@ -243,9 +243,6 @@
   <data name="GearManager_etro.gg">
     <value>etro.gg</value>
   </data>
-  <data name="GearManager_HimbeerToniRaidTool">
-    <value>HimbeerToni Raid Tool</value>
-  </data>
   <data name="Expansion_ARR" xml:space="preserve">
 		<value>A Realm Reborn</value>
 	</data>
@@ -272,14 +269,5 @@
   </data>
   <data name="DataType_Character" xml:space="preserve">
         <value>Charakter</value>
-    </data>
-  <data name="DataTypeName_GearSet" xml:space="preserve">
-        <value>Ausrüstungsset</value>
-    </data>
-  <data name="DataTypeName_Player" xml:space="preserve">
-        <value>Spieler</value>
-    </data>
-  <data name="DataTypeName_RaidGroup" xml:space="preserve">
-        <value>Raid-Gruppe</value>
     </data>
 </root>
