@@ -48,9 +48,6 @@
   <data name="StatTypeAbbrev_Intelligence">
     <value>INT</value>
   </data>
-  <data name="StatType_Mind">
-    <value>Mind</value>
-  </data>
   <data name="StatTypeAbbrev_Mind">
     <value>MND</value>
   </data>
@@ -105,9 +102,6 @@
   <data name="StatType_None">
     <value>無し</value>
   </data>
-  <data name="GearSlot_Belt">
-    <value>Belt</value>
-  </data>
   <data name="StatType_PhysicalDamage">
     <value>物理攻撃力</value>
   </data>
@@ -116,12 +110,6 @@
   </data>
   <data name="GearSlot_Ring">
     <value>リング</value>
-  </data>
-  <data name="GearSlot_Ring_L">
-    <value>Ring (L)</value>
-  </data>
-  <data name="GearSlot_Ring_R">
-    <value>Ring (R)</value>
   </data>
   <data name="GearSlot_Shield">
     <value>盾</value>
@@ -171,9 +159,6 @@
   <data name="Role_Caster">
     <value>キャスター</value>
   </data>
-  <data name="StatType_Intelligence">
-    <value>Intelligence</value>
-  </data>
   <data name="ItemSource_Dungeon">
     <value>ダンジョン</value>
   </data>
@@ -200,9 +185,6 @@
   </data>
   <data name="StatType_Determination">
     <value>意志力</value>
-  </data>
-  <data name="GroupType_Solo">
-    <value>Solo</value>
   </data>
   <data name="GroupType_Group">
     <value>グループ</value>
@@ -240,15 +222,6 @@
   <data name="ItemSource_Loot">
     <value>獲得済</value>
   </data>
-  <data name="GearManager_etro.gg">
-    <value>etro.gg</value>
-  </data>
-  <data name="GearManager_HimbeerToniRaidTool">
-    <value>HimbeerToni Raid Tool</value>
-  </data>
-  <data name="Expansion_ARR" xml:space="preserve">
-		<value>A Realm Reborn</value>
-	</data>
   <data name="Expansion_HW" xml:space="preserve">
         <value>蒼天</value>
     </data>
@@ -264,22 +237,7 @@
   <data name="Unknown" xml:space="preserve">
         <value>不明</value>
     </data>
-  <data name="Expansion_DT" xml:space="preserve">
-        <value>Dawntrail</value>
-    </data>
   <data name="StatType_SpsSksMultiplier">
     <value>AA / DoT倍率</value>
   </data>
-  <data name="DataType_Character" xml:space="preserve">
-        <value>Character</value>
-    </data>
-  <data name="DataTypeName_GearSet" xml:space="preserve">
-        <value>Gear set</value>
-    </data>
-  <data name="DataTypeName_Player" xml:space="preserve">
-        <value>プレイヤー</value>
-    </data>
-  <data name="DataTypeName_RaidGroup" xml:space="preserve">
-        <value>Raid group</value>
-    </data>
 </root>
