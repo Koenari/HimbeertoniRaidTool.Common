@@ -105,9 +105,6 @@
   <data name="StatType_None">
     <value>Aucune</value>
   </data>
-  <data name="GearSlot_Belt">
-    <value>Belt</value>
-  </data>
   <data name="StatType_PhysicalDamage">
     <value>Dégâts physiques</value>
   </data>
@@ -243,9 +240,6 @@
   <data name="GearManager_etro.gg">
     <value>etro.gg</value>
   </data>
-  <data name="GearManager_HimbeerToniRaidTool">
-    <value>HimbeerToni, outil de raid</value>
-  </data>
   <data name="Expansion_ARR" xml:space="preserve">
 		<value>A Realm Reborn</value>
 	</data>
@@ -270,16 +264,4 @@
   <data name="StatType_SpsSksMultiplier">
     <value>Multiplicateur d'AAs / de DoTs</value>
   </data>
-  <data name="DataType_Character" xml:space="preserve">
-        <value>Character</value>
-    </data>
-  <data name="DataTypeName_GearSet" xml:space="preserve">
-        <value>Gear set</value>
-    </data>
-  <data name="DataTypeName_Player" xml:space="preserve">
-        <value>Player</value>
-    </data>
-  <data name="DataTypeName_RaidGroup" xml:space="preserve">
-        <value>Raid group</value>
-    </data>
 </root>
