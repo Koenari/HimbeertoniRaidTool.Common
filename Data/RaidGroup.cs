@@ -85,10 +85,10 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
     [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
-
     [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+    public override string ToString() => Name;
 
     public void SwapPlayers(int idx1, int idx2)
     {

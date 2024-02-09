@@ -287,6 +287,7 @@ public class HrtItem : IEquatable<HrtItem>, IHrtDataType
 
     public string Name => Item?.Name.RawString ?? "";
     [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_item;
+    public override string ToString() => Name;
     public override bool Equals(object? obj) => Equals(obj as HrtItem);
 
     public override int GetHashCode() => Id.GetHashCode();

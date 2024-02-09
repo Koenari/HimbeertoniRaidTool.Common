@@ -50,7 +50,7 @@ public class Player : IHrtDataTypeWithId
             _mainCharIndex = _characters.Count - 1;
         }
     }
-    public PlayableClass? CurJob => MainChar.MainClass;
+    [Obsolete("Use: MainChar.MainClass")] public PlayableClass? CurJob => MainChar.MainClass;
     [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_Player;
     public string Name => NickName;
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Player;
@@ -61,7 +61,7 @@ public class Player : IHrtDataTypeWithId
 
     [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
-
+    public override string ToString() => Name;
 
     public void RemoveCharacter(Character character)
     {
