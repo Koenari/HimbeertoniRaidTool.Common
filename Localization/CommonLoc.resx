@@ -297,4 +297,7 @@
     <data name="DataTypeName_Job" xml:space="preserve">
         <value>Job</value>
     </data>
+    <data name="NotAvail_Abbrev">
+        <value>n.A.</value>
+    </data>
 </root>

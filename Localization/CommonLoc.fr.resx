@@ -268,4 +268,7 @@
     <data name="StatType_SpsSksMultiplier">
         <value>Multiplicateur d'AAs / de DoTs</value>
     </data>
+    <data name="NotAvail_Abbrev">
+        <value>N/A</value>
+    </data>
 </root>

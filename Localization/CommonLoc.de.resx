@@ -283,4 +283,7 @@
     <data name="GearManager_HrtLocal" xml:space="preserve">
     <value>Lokale Datenbank</value>
   </data>
+    <data name="NotAvail_Abbrev">
+        <value>n.V.</value>
+    </data>
 </root>

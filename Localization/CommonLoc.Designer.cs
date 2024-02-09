@@ -456,6 +456,15 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to n.A..
+        /// </summary>
+        internal static string NotAvail_Abbrev {
+            get {
+                return ResourceManager.GetString("NotAvail_Abbrev", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Caster.
         /// </summary>
         internal static string Role_Caster {

@@ -105,6 +105,8 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
         return classToAdd;
     }
 
+    public override string ToString() => $"{Name} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
+
     public bool RemoveClass(Job type) => _classes.RemoveAll(job => job.Job == type) > 0;
 
     public bool CanMoveUp(PlayableClass c)
