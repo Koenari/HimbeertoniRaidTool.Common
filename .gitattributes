@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+**/Localization/*.resx linguist-generated
+**/Localization/*.Designer.cs linguist-generated 
