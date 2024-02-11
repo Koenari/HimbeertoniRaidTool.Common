@@ -243,6 +243,9 @@
   <data name="GearManager_etro.gg">
     <value>etro.gg</value>
   </data>
+  <data name="GearManager_HrtLocal">
+    <value>Lokale Datenbank</value>
+  </data>
   <data name="Expansion_ARR" xml:space="preserve">
 		<value>A Realm Reborn</value>
 	</data>
@@ -270,4 +273,28 @@
   <data name="DataType_Character" xml:space="preserve">
         <value>Charakter</value>
     </data>
+  <data name="DataTypeName_GearSet" xml:space="preserve">
+        <value>Ausrüstungsset</value>
+    </data>
+  <data name="DataTypeName_Player" xml:space="preserve">
+        <value>Spieler</value>
+    </data>
+  <data name="DataTypeName_RaidGroup" xml:space="preserve">
+        <value>Raid-Gruppe</value>
+    </data>
+  <data name="DataTypeName_item_gear" xml:space="preserve">
+        <value>Item (Ausrüstung)</value>
+    </data>
+  <data name="DataTypeName_item" xml:space="preserve">
+        <value>Item</value>
+    </data>
+  <data name="DataTypeName_materia" xml:space="preserve">
+        <value>Materia</value>
+    </data>
+  <data name="DataTypeName_Job" xml:space="preserve">
+        <value>Job</value>
+    </data>
+  <data name="NotAvail_Abbrev">
+    <value>n.V.</value>
+  </data>
 </root>
