@@ -11,18 +11,15 @@ namespace HimbeertoniRaidTool.Common;
 
 public static class TribeExtensions
 {
-    public static int GetRacialModifier(this Tribe t, StatType type)
+    public static int GetRacialModifier(this Tribe t, StatType type) => type switch
     {
-        return type switch
-        {
-            StatType.Strength     => t.STR,
-            StatType.Dexterity    => t.DEX,
-            StatType.Vitality     => t.VIT,
-            StatType.Intelligence => t.INT,
-            StatType.Mind         => t.MND,
-            _                     => 0,
-        };
-    }
+        StatType.Strength     => t.STR,
+        StatType.Dexterity    => t.DEX,
+        StatType.Vitality     => t.VIT,
+        StatType.Intelligence => t.INT,
+        StatType.Mind         => t.MND,
+        _                     => 0,
+    };
 }
 
 public static class EquipSlotCategoryExtensions
@@ -58,60 +55,51 @@ public static class EquipSlotCategoryExtensions
     public static IEnumerable<GearSetSlot> AvailableSlots(this EquipSlotCategory? self)
     {
         for (int i = 0; i < (int)GearSetSlot.SoulCrystal; i++)
+        {
             if (self?.Contains((GearSetSlot)i) ?? false)
                 yield return (GearSetSlot)i;
+        }
     }
-
-    [Obsolete("Evaluate for all available slots")]
-    public static GearSetSlot ToSlot(this EquipSlotCategory? self) => self.AvailableSlots().FirstOrDefault(GearSetSlot.None);
 }
 
 public static class ClassJobCategoryExtensions
 {
-    public static IEnumerable<Job> ToJob(this ClassJobCategory self)
-    {
-        for (int i = 0; i < (int)Job.Count; i++)
-            if (self.Contains((Job)i))
-                yield return (Job)i;
-    }
+    public static IEnumerable<Job> ToJob(this ClassJobCategory self) => Enum.GetValues<Job>().Where(self.Contains);
 
-    public static bool Contains(this ClassJobCategory? cat, Job job)
+    public static bool Contains(this ClassJobCategory? cat, Job job) => cat is not null && job switch
     {
-        return cat is not null && job switch
-        {
-            Job.ADV => cat.ADV,
-            Job.AST => cat.AST,
-            Job.BLM => cat.BLM,
-            Job.BLU => cat.BLU,
-            Job.BRD => cat.BRD,
-            Job.DNC => cat.DNC,
-            Job.DRG => cat.DRG,
-            Job.DRK => cat.DRK,
-            Job.GNB => cat.GNB,
-            Job.MCH => cat.MCH,
-            Job.MNK => cat.MNK,
-            Job.NIN => cat.NIN,
-            Job.PLD => cat.PLD,
-            Job.RDM => cat.RDM,
-            Job.RPR => cat.RPR,
-            Job.SAM => cat.SAM,
-            Job.SCH => cat.SCH,
-            Job.SGE => cat.SGE,
-            Job.SMN => cat.SMN,
-            Job.WAR => cat.WAR,
-            Job.WHM => cat.WHM,
-            Job.GLA => cat.GLA,
-            Job.MRD => cat.MRD,
-            Job.LNC => cat.LNC,
-            Job.PGL => cat.PGL,
-            Job.ARC => cat.ARC,
-            Job.THM => cat.THM,
-            Job.ACN => cat.ACN,
-            Job.CNJ => cat.CNJ,
-            Job.ROG => cat.ROG,
-            _       => false,
-        };
-    }
+        Job.ADV => cat.ADV,
+        Job.AST => cat.AST,
+        Job.BLM => cat.BLM,
+        Job.BLU => cat.BLU,
+        Job.BRD => cat.BRD,
+        Job.DNC => cat.DNC,
+        Job.DRG => cat.DRG,
+        Job.DRK => cat.DRK,
+        Job.GNB => cat.GNB,
+        Job.MCH => cat.MCH,
+        Job.MNK => cat.MNK,
+        Job.NIN => cat.NIN,
+        Job.PLD => cat.PLD,
+        Job.RDM => cat.RDM,
+        Job.RPR => cat.RPR,
+        Job.SAM => cat.SAM,
+        Job.SCH => cat.SCH,
+        Job.SGE => cat.SGE,
+        Job.SMN => cat.SMN,
+        Job.WAR => cat.WAR,
+        Job.WHM => cat.WHM,
+        Job.GLA => cat.GLA,
+        Job.MRD => cat.MRD,
+        Job.LNC => cat.LNC,
+        Job.PGL => cat.PGL,
+        Job.ARC => cat.ARC,
+        Job.THM => cat.THM,
+        Job.ACN => cat.ACN,
+        Job.CNJ => cat.CNJ,
+        Job.ROG => cat.ROG,
+        _       => false,
+    };
 }
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
@@ -190,26 +178,32 @@ public class SpecialShop : ExcelRow
             ShopEntries[i] = new ShopEntry();
             //Receives
             for (int j = 0; j < NUM_RECEIVE; j++)
+            {
                 ShopEntries[i].ItemReceiveEntries[j] = new ItemReceiveEntry
                 {
                     Item = new LazyRow<Item>(gameData,
-                                             parser.ReadColumn<int>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE + 0 * NUM_ENTRIES +
+                                             parser.ReadColumn<int>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE
+                                                                  + 0 * NUM_ENTRIES +
                                                                     i), language),
                     Count = parser.ReadColumn<uint>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE +
                                                     1 * NUM_ENTRIES + i),
                     SpecialShopItemCategory =
                         new LazyRow<SpecialShopItemCategory>(gameData,
-                                                             parser.ReadColumn<int>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE +
+                                                             parser.ReadColumn<int>(
+                                                                 GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE +
                                                                  2 * NUM_ENTRIES + i), language),
                     Hq = parser.ReadColumn<bool>(GLOBAL_OFFSET + j * NUM_ENTRIES * RECEIVE_SIZE + 3 * NUM_ENTRIES +
                                                  i),
                 };
+            }
             //COSTS
             for (int j = 0; j < NUM_COST; j++)
+            {
                 ShopEntries[i].ItemCostEntries[j] = new ItemCostEntry
                 {
                     Item = new LazyRow<Item>(gameData,
-                                             parser.ReadColumn<int>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 0 * NUM_ENTRIES + i),
+                                             parser.ReadColumn<int>(
+                                                 COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 0 * NUM_ENTRIES + i),
                                              language),
                     Count =
                         parser.ReadColumn<uint>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 1 * NUM_ENTRIES + i),
@@ -217,6 +211,7 @@ public class SpecialShop : ExcelRow
                     CollectabilityRatingCost =
                         parser.ReadColumn<ushort>(COST_OFFSET + j * NUM_ENTRIES * COST_SIZE + 3 * NUM_ENTRIES + i),
                 };
+            }
             ShopEntries[i].Quest =
                 new LazyRow<Quest>(gameData, parser.ReadColumn<int>(AFTER_COST_OFFSET + 0 * NUM_ENTRIES + i),
                                    language);
@@ -233,10 +228,13 @@ public class SpecialShop : ExcelRow
             if (ShopEntries[i].PatchNumber == 600)
                 foreach (ItemCostEntry? item in ShopEntries[i].ItemCostEntries)
                     //Astronomy TomeStone
+                {
                     if (item.Item.Row == 2)
                         item.Item = new LazyRow<Item>(gameData, 43, language);
+                }
             if (ShopEntries[i].PatchNumber == 620)
                 foreach (ItemCostEntry? item in ShopEntries[i].ItemCostEntries)
+                {
                     switch (item.Item.Row)
                     {
                         case 2:
@@ -247,9 +245,11 @@ public class SpecialShop : ExcelRow
                         //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
                         //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
                     }
+                }
 
             if (ShopEntries[i].PatchNumber == 640)
                 foreach (ItemCostEntry? item in ShopEntries[i].ItemCostEntries)
+                {
                     switch (item.Item.Row)
                     {
                         //case 2: item.Item = new(gameData, 25199, language); break; //White crafter scrip
@@ -260,6 +260,7 @@ public class SpecialShop : ExcelRow
                         //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
                         //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
                     }
+                }
         }
 
         UseCurrencyType = parser.ReadColumn<byte>(AFTER_ENTRIES_OFFSET);

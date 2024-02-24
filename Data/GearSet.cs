@@ -185,7 +185,7 @@ public static class GearSetExtensions
                                         GearSetSlot slot = GearSetSlot.None)
     {
         if (slot is GearSetSlot.None)
-            slot = item.Slots.First();
+            slot = item.Slots.FirstOrDefault(GearSetSlot.None);
         return new GearSetOverride(baseSet, slot, item);
     }
 }
