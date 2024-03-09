@@ -78,8 +78,6 @@ public class RaidSession : IHrtDataTypeWithId
         return _participants.Add(participant);
     }
 
-    public void Draw() => throw new NotImplementedException();
-
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
 

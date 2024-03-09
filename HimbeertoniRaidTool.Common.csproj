@@ -32,7 +32,7 @@
 
     <ItemGroup>
         <EmbeddedResource Update="Localization\CommonLoc.resx">
-            <Generator>ResXFileCodeGenerator</Generator>
+            <Generator>PublicResXFileCodeGenerator</Generator>
             <LastGenOutput>CommonLoc.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>

@@ -300,4 +300,7 @@
     <data name="NotAvail_Abbrev">
         <value>n.A.</value>
     </data>
+    <data name="Month" xml:space="preserve">
+        <value>Month</value>
+    </data>
 </root>
