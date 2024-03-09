@@ -23,8 +23,11 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
     [JsonProperty("Type")] public GroupType Type;
     [JsonProperty("TypeLocked")] public bool TypeLocked;
 
-    [JsonConstructor]
-    public RaidGroup(string name = "", GroupType type = GroupType.Raid)
+    public RaidGroup() : this("") { }
+
+    public RaidGroup(string name) : this(name, GroupType.Raid) { }
+
+    public RaidGroup(string name, GroupType type)
     {
         Type = type;
         TimeStamp = DateTime.Now;

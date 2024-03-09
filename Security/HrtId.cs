@@ -21,7 +21,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
             return new HrtId(authority, type, sequence);
         }
         catch (Exception e) when (e is ArgumentException or OverflowException or ArgumentNullException
-                                      or FormatException) { }
+                                    or FormatException) { }
         return Empty;
     }
     [JsonProperty]
@@ -32,10 +32,10 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public AuthorityLevel Level => Authority switch
     {
         > 0x7FFFFFFF => AuthorityLevel.Local,
-        > 0xFFFF => AuthorityLevel.Remote,
-        > 0x1 => AuthorityLevel.Official,
-        1 => AuthorityLevel.Global,
-        0 => AuthorityLevel.None,
+        > 0xFFFF     => AuthorityLevel.Remote,
+        > 0x1        => AuthorityLevel.Official,
+        1            => AuthorityLevel.Global,
+        0            => AuthorityLevel.None,
     };
     [JsonProperty]
     public readonly IdType Type;
@@ -55,7 +55,8 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public override string ToString() => $"HRT-{Revision:D}-{Authority:X}-" +
                                          $"{Type:D}-{Sequence:X}";
     public bool Equals(HrtId? other) =>
-        other is not null && Type == other.Type && Authority == other.Authority && Sequence == other.Sequence && Revision == other.Revision;
+        other is not null && Type == other.Type && Authority == other.Authority && Sequence == other.Sequence
+     && Revision == other.Revision;
 
     public int CompareTo(HrtId? other)
     {
@@ -74,6 +75,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
         Character = 2,
         Gear = 3,
         Group = 4,
+        RaidSession = 5,
     }
 
     public enum AuthorityLevel
@@ -100,5 +102,9 @@ public interface IHasHrtId : IEquatable<IHasHrtId>
 {
     public HrtId.IdType IdType { get; }
     public HrtId LocalId { get; set; }
+
+    /// <summary>
+    ///     XIV Raid Tool specific unique IDs used for remote storage and lookup.
+    /// </summary>
     public IEnumerable<HrtId> RemoteIds { get; }
 }

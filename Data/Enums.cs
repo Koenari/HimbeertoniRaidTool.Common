@@ -3,6 +3,43 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
+public enum Month : int
+{
+    January = 1,
+    February = 2,
+    March = 3,
+    April = 4,
+    May = 5,
+    June = 6,
+    July = 7,
+    August = 8,
+    September = 9,
+    October = 10,
+    November = 11,
+    December = 12,
+}
+
+public enum InviteStatus
+{
+    NotInvited = 0,
+    Invited = 1,
+    Declined = 2,
+    Unsure = 3,
+    Accepted = 4,
+    Revoked = 5,
+    Confirmed = 6,
+    NoStatus = -1,
+}
+
+public enum EventStatus
+{
+    Unknown = 0,
+    Scheduled = 1,
+    Canceled = 2,
+    Active = 3,
+    Finished = 4,
+}
+
 public enum ItemSource
 {
     Undefined = 0,
