@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
@@ -220,5 +221,66 @@ public static class EnumExtensions
         Role.Ranged => CommonLoc.Role_Ranged,
         Role.Caster => CommonLoc.Role_Caster,
         _           => CommonLoc.undefined,
+    };
+
+    public static string Name(this Month month) => month switch
+    {
+
+        Month.January   => CommonLoc.Month_January,
+        Month.February  => CommonLoc.Month_February,
+        Month.March     => CommonLoc.Month_March,
+        Month.April     => CommonLoc.Month_April,
+        Month.May       => CommonLoc.Month_May,
+        Month.June      => CommonLoc.Month_June,
+        Month.July      => CommonLoc.Month_July,
+        Month.August    => CommonLoc.Month_August,
+        Month.September => CommonLoc.Month_September,
+        Month.October   => CommonLoc.Month_October,
+        Month.November  => CommonLoc.Month_November,
+        Month.December  => CommonLoc.Month_December,
+        _               => CommonLoc.Unknown,
+    };
+    public static string Abrrev(this Month month) => month switch
+    {
+
+        Month.January   => CommonLoc.Month_Abrrev_January,
+        Month.February  => CommonLoc.Month_Abrrev_February,
+        Month.March     => CommonLoc.Month_Abrrev_March,
+        Month.April     => CommonLoc.Month_Abrrev_April,
+        Month.May       => CommonLoc.Month_Abrrev_May,
+        Month.June      => CommonLoc.Month_Abrrev_June,
+        Month.July      => CommonLoc.Month_Abrrev_July,
+        Month.August    => CommonLoc.Month_Abrrev_August,
+        Month.September => CommonLoc.Month_Abrrev_September,
+        Month.October   => CommonLoc.Month_Abrrev_October,
+        Month.November  => CommonLoc.Month_Abrrev_November,
+        Month.December  => CommonLoc.Month_Abrrev_December,
+        _               => throw new ArgumentOutOfRangeException(nameof(month), month, null),
+    };
+
+    public static string Name(this Weekday day) => day switch
+    {
+
+        Weekday.Monday    => CommonLoc.Weekday_Monday,
+        Weekday.Tuesday   => CommonLoc.Weekday_Tuesday,
+        Weekday.Wednesday => CommonLoc.Weekday_Wednesday,
+        Weekday.Thursday  => CommonLoc.Weekday_Thursday,
+        Weekday.Friday    => CommonLoc.Weekday_Friday,
+        Weekday.Saturday  => CommonLoc.Weekday_Saturday,
+        Weekday.Sunday    => CommonLoc.Weekday_Sunday,
+        _                 => throw new ArgumentOutOfRangeException(nameof(day), day, null),
+    };
+
+    public static string Abbrev(this Weekday day) => day switch
+    {
+
+        Weekday.Monday    => CommonLoc.Weekday_Abbrev_Monday,
+        Weekday.Tuesday   => CommonLoc.Weekday_Abbrev_Tuesday,
+        Weekday.Wednesday => CommonLoc.Weekday_Abbrev_Wednesday,
+        Weekday.Thursday  => CommonLoc.Weekday_Abbrev_Thursday,
+        Weekday.Friday    => CommonLoc.Weekday_Abbrev_Friday,
+        Weekday.Saturday  => CommonLoc.Weekday_Abbrev_Saturday,
+        Weekday.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
+        _                 => throw new ArgumentOutOfRangeException(nameof(day), day, null),
     };
 }

@@ -465,6 +465,222 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apr.
+        /// </summary>
+        public static string Month_Abrrev_April {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aug.
+        /// </summary>
+        public static string Month_Abrrev_August {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dec.
+        /// </summary>
+        public static string Month_Abrrev_December {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feb.
+        /// </summary>
+        public static string Month_Abrrev_February {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_February", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jan.
+        /// </summary>
+        public static string Month_Abrrev_January {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_January", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jul.
+        /// </summary>
+        public static string Month_Abrrev_July {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_July", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jun.
+        /// </summary>
+        public static string Month_Abrrev_June {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_June", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mar.
+        /// </summary>
+        public static string Month_Abrrev_March {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_March", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to May.
+        /// </summary>
+        public static string Month_Abrrev_May {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nov.
+        /// </summary>
+        public static string Month_Abrrev_November {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oct.
+        /// </summary>
+        public static string Month_Abrrev_October {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_October", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sep.
+        /// </summary>
+        public static string Month_Abrrev_September {
+            get {
+                return ResourceManager.GetString("Month_Abrrev_September", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to April.
+        /// </summary>
+        public static string Month_April {
+            get {
+                return ResourceManager.GetString("Month_April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to August.
+        /// </summary>
+        public static string Month_August {
+            get {
+                return ResourceManager.GetString("Month_August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to December.
+        /// </summary>
+        public static string Month_December {
+            get {
+                return ResourceManager.GetString("Month_December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to February.
+        /// </summary>
+        public static string Month_February {
+            get {
+                return ResourceManager.GetString("Month_February", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to January.
+        /// </summary>
+        public static string Month_January {
+            get {
+                return ResourceManager.GetString("Month_January", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to July.
+        /// </summary>
+        public static string Month_July {
+            get {
+                return ResourceManager.GetString("Month_July", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to June.
+        /// </summary>
+        public static string Month_June {
+            get {
+                return ResourceManager.GetString("Month_June", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to March.
+        /// </summary>
+        public static string Month_March {
+            get {
+                return ResourceManager.GetString("Month_March", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to May.
+        /// </summary>
+        public static string Month_May {
+            get {
+                return ResourceManager.GetString("Month_May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to November.
+        /// </summary>
+        public static string Month_November {
+            get {
+                return ResourceManager.GetString("Month_November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to October.
+        /// </summary>
+        public static string Month_October {
+            get {
+                return ResourceManager.GetString("Month_October", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to September.
+        /// </summary>
+        public static string Month_September {
+            get {
+                return ResourceManager.GetString("Month_September", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to n.A..
         /// </summary>
         public static string NotAvail_Abbrev {
@@ -893,6 +1109,141 @@ namespace HimbeertoniRaidTool.Common.Localization {
         public static string Unknown {
             get {
                 return ResourceManager.GetString("Unknown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fri.
+        /// </summary>
+        public static string Weekday_Abbrev_Friday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mon.
+        /// </summary>
+        public static string Weekday_Abbrev_Monday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sat.
+        /// </summary>
+        public static string Weekday_Abbrev_Saturday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Saturday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sun.
+        /// </summary>
+        public static string Weekday_Abbrev_Sunday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thu.
+        /// </summary>
+        public static string Weekday_Abbrev_Thursday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tue.
+        /// </summary>
+        public static string Weekday_Abbrev_Tuesday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wed.
+        /// </summary>
+        public static string Weekday_Abbrev_Wednesday {
+            get {
+                return ResourceManager.GetString("Weekday_Abbrev_Wednesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friday.
+        /// </summary>
+        public static string Weekday_Friday {
+            get {
+                return ResourceManager.GetString("Weekday_Friday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monday.
+        /// </summary>
+        public static string Weekday_Monday {
+            get {
+                return ResourceManager.GetString("Weekday_Monday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Saturday.
+        /// </summary>
+        public static string Weekday_Saturday {
+            get {
+                return ResourceManager.GetString("Weekday_Saturday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sunday.
+        /// </summary>
+        public static string Weekday_Sunday {
+            get {
+                return ResourceManager.GetString("Weekday_Sunday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thursday.
+        /// </summary>
+        public static string Weekday_Thursday {
+            get {
+                return ResourceManager.GetString("Weekday_Thursday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tuesday.
+        /// </summary>
+        public static string Weekday_Tuesday {
+            get {
+                return ResourceManager.GetString("Weekday_Tuesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wednesday.
+        /// </summary>
+        public static string Weekday_Wednesday {
+            get {
+                return ResourceManager.GetString("Weekday_Wednesday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Year {
+            get {
+                return ResourceManager.GetString("Year", resourceCulture);
             }
         }
     }

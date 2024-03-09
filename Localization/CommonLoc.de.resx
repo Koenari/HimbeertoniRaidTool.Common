@@ -297,4 +297,124 @@
   <data name="NotAvail_Abbrev">
     <value>n.V.</value>
   </data>
+  <data name="Month" xml:space="preserve">
+    <value>Monat</value>
+  </data>
+  <data name="Month_Abrrev_April" xml:space="preserve">
+    <value>Apr</value>
+  </data>
+  <data name="Month_Abrrev_August" xml:space="preserve">
+    <value>Aug</value>
+  </data>
+  <data name="Month_Abrrev_December" xml:space="preserve">
+    <value>Dez</value>
+  </data>
+  <data name="Month_Abrrev_February" xml:space="preserve">
+    <value>Feb</value>
+  </data>
+  <data name="Month_Abrrev_January" xml:space="preserve">
+    <value>Jan</value>
+  </data>
+  <data name="Month_Abrrev_July" xml:space="preserve">
+    <value>Jul</value>
+  </data>
+  <data name="Month_Abrrev_June" xml:space="preserve">
+    <value>Jun</value>
+  </data>
+  <data name="Month_Abrrev_March" xml:space="preserve">
+    <value>Mär</value>
+  </data>
+  <data name="Month_Abrrev_May" xml:space="preserve">
+    <value>Mai</value>
+  </data>
+  <data name="Month_Abrrev_November" xml:space="preserve">
+    <value>Nov</value>
+  </data>
+  <data name="Month_Abrrev_October" xml:space="preserve">
+    <value>Okt</value>
+  </data>
+  <data name="Month_Abrrev_September" xml:space="preserve">
+    <value>Sep</value>
+  </data>
+  <data name="Month_April" xml:space="preserve">
+    <value>April</value>
+  </data>
+  <data name="Month_August" xml:space="preserve">
+    <value>August</value>
+  </data>
+  <data name="Month_December" xml:space="preserve">
+    <value>Dezwmber</value>
+  </data>
+  <data name="Month_February" xml:space="preserve">
+    <value>Februar</value>
+  </data>
+  <data name="Month_January" xml:space="preserve">
+    <value>Januar</value>
+  </data>
+  <data name="Month_July" xml:space="preserve">
+    <value>Juli</value>
+  </data>
+  <data name="Month_June" xml:space="preserve">
+    <value>Juni</value>
+  </data>
+  <data name="Month_March" xml:space="preserve">
+    <value>März</value>
+  </data>
+  <data name="Month_May" xml:space="preserve">
+    <value>Mai</value>
+  </data>
+  <data name="Month_November" xml:space="preserve">
+    <value>November</value>
+  </data>
+  <data name="Month_October" xml:space="preserve">
+    <value>Oktober</value>
+  </data>
+  <data name="Month_September" xml:space="preserve">
+    <value>September</value>
+  </data>
+  <data name="Weekday_Abbrev_Friday" xml:space="preserve">
+    <value>Fr</value>
+  </data>
+  <data name="Weekday_Abbrev_Monday" xml:space="preserve">
+    <value>Mo</value>
+  </data>
+  <data name="Weekday_Abbrev_Saturday" xml:space="preserve">
+    <value>Sa</value>
+  </data>
+  <data name="Weekday_Abbrev_Sunday" xml:space="preserve">
+    <value>So</value>
+  </data>
+  <data name="Weekday_Abbrev_Thursday" xml:space="preserve">
+    <value>Do</value>
+  </data>
+  <data name="Weekday_Abbrev_Tuesday" xml:space="preserve">
+    <value>Di</value>
+  </data>
+  <data name="Weekday_Abbrev_Wednesday" xml:space="preserve">
+    <value>Mi</value>
+  </data>
+  <data name="Weekday_Friday" xml:space="preserve">
+    <value>Freitag</value>
+  </data>
+  <data name="Weekday_Monday" xml:space="preserve">
+    <value>Montag</value>
+  </data>
+  <data name="Weekday_Saturday" xml:space="preserve">
+    <value>Samstag</value>
+  </data>
+  <data name="Weekday_Sunday" xml:space="preserve">
+    <value>Sonntag</value>
+  </data>
+  <data name="Weekday_Thursday" xml:space="preserve">
+    <value>Donnerstag</value>
+  </data>
+  <data name="Weekday_Tuesday" xml:space="preserve">
+    <value>Dienstag</value>
+  </data>
+  <data name="Weekday_Wednesday" xml:space="preserve">
+    <value>Mittwoch</value>
+  </data>
+  <data name="Year" xml:space="preserve">
+    <value>Jahr</value>
+  </data>
 </root>
