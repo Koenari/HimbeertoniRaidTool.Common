@@ -33,12 +33,13 @@ public class RaidSession : IHrtDataTypeWithId
 
     [JsonProperty("Participants")] private readonly HashSet<Participant> _participants = new();
 
-    [JsonProperty("Owner")] public readonly Player Organizer;
+    [JsonProperty("Owner")] public Player? Organizer;
     [JsonProperty("Group")] public RaidGroup? Group;
     [JsonProperty("Status")] public EventStatus Status;
     [JsonProperty("PlannedContent")] public List<InstanceWithLoot> PlannedContent = new();
     [JsonProperty("Title")] public string Title = string.Empty;
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
+
 
     [JsonConstructor]
     private RaidSession(Player organizer)
@@ -46,29 +47,30 @@ public class RaidSession : IHrtDataTypeWithId
         Organizer = organizer;
     }
 
-    public RaidSession(Player organizer, DateTime startTime) : this(organizer, startTime, TimeSpan.FromHours(1)) { }
+    public RaidSession(DateTime startTime) : this(startTime, TimeSpan.FromHours(1)) { }
 
-    public RaidSession(Player organizer, DateTime startTime, TimeSpan duration, RaidGroup? group = null)
+    public RaidSession(DateTime startTime, TimeSpan duration, Player? organizer = null, RaidGroup? group = null)
     {
         StartTime = startTime;
         Duration = duration;
         Organizer = organizer;
-        if (Invite(organizer, out Participant? p))
+        if (Organizer is not null && Invite(Organizer, out Participant? p))
         {
             p.InvitationStatus = InviteStatus.Confirmed;
         }
         Group = group;
-        if (group != null)
-            foreach (Player player in group)
-            {
-                if (player == organizer) continue;
-                Invite(player, out _);
-            }
+        if (Group == null)
+            return;
+        foreach (Player player in Group)
+        {
+            if (player == Organizer) continue;
+            Invite(player, out _);
+        }
     }
 
     public Participant? this[Player player] => Participants.FirstOrDefault(p => player.Equals(p?.Player), null);
 
-    public bool IsOrganizer(IHasHrtId player) => player.LocalId == Organizer.LocalId;
+    public bool IsOrganizer(IHasHrtId player) => Organizer is not null && player.LocalId == Organizer.LocalId;
 
     public bool Invite(Player newParticipant, [NotNullWhen(true)] out Participant? participant)
     {
