@@ -140,7 +140,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
         //Do an actual copy of the item
         for (int i = 0; i < _items.Length; i++)
         {
-            _items[i] = gearSet._items[i].Clone();
+            _items[i] = gearSet._items[i]?.Clone();
         }
         InvalidateCaches();
     }
