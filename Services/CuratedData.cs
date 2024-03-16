@@ -9,32 +9,29 @@ namespace HimbeertoniRaidTool.Common.Services;
 /// </summary>
 internal class CuratedData
 {
-    internal readonly GameExpansion[] Expansions = new GameExpansion[6]
-    {
-        new(1, MateriaLevel.None, 0),
-        new(2, MateriaLevel.II, 50),
-        new(3, MateriaLevel.IV, 60),
-        new(4, MateriaLevel.VI, 70),
-        new(5, MateriaLevel.VIII, 80),
-        new(6, MateriaLevel.X, 90)
+    internal readonly GameExpansion[] Expansions =
+    [
+        new GameExpansion(1, MateriaLevel.None, 0),
+        new GameExpansion(2, MateriaLevel.II, 50),
+        new GameExpansion(3, MateriaLevel.IV, 60),
+        new GameExpansion(4, MateriaLevel.VI, 70),
+        new GameExpansion(5, MateriaLevel.VIII, 80),
+        new GameExpansion(6, MateriaLevel.X, 90)
         {
-            NormalRaidTiers = new RaidTier[]
-            {
-                new(Normal, 590, 580, "Asphodelos", System.Array.Empty<uint>()),
-                new(Normal, 620, 610, "Abyssos", System.Array.Empty<uint>()),
-                new(Normal, 650, 640, "Anabaseios", new uint[] { 30126, 30128, 30130, 30132 }),
-            },
-            SavageRaidTiers = new RaidTier[]
-            {
-                new(Savage, 605, 600,
-                    "Asphodelos Savage", new uint[] { 30112, 30114, 30110, 30108 }),
-                new(Savage, 635, 630,
-                    "Abyssos Savage", new uint[] { 30117, 30121, 30119, 30123 }),
-                new(Savage, 665, 660,
-                    "Anabaseios Savage", new uint[] { 30127, 30129, 30131, 30133 }),
-            },
+            NormalRaidTiers =
+            [
+                new RaidTier(Normal, 590, 580, "Asphodelos", []),
+                new RaidTier(Normal, 620, 610, "Abyssos", []),
+                new RaidTier(Normal, 650, 640, "Anabaseios", [30126, 30128, 30130, 30132]),
+            ],
+            SavageRaidTiers =
+            [
+                new RaidTier(Savage, 605, 600, "Asphodelos Savage", [30112, 30114, 30110, 30108]),
+                new RaidTier(Savage, 635, 630, "Abyssos Savage", [30117, 30121, 30119, 30123]),
+                new RaidTier(Savage, 665, 660, "Anabaseios Savage", [30127, 30129, 30131, 30133]),
+            ],
         },
-    };
+    ];
 
 
     internal readonly Dictionary<uint, ItemIdCollection> ItemContainerDb = new()
@@ -75,9 +72,8 @@ internal class CuratedData
     };
 
     //I only record Gear and items used to get gear
-    internal readonly HashSet<InstanceWithLoot> InstanceDb = new()
-    {
-        //6.0
+    internal readonly HashSet<InstanceWithLoot> InstanceDb =
+    [
         new InstanceWithLoot(78, Normal, (34155, 34229)),
         new InstanceWithLoot(79, Normal, (34830, 34849)),
         new InstanceWithLoot(80, Normal, (34305, 34379)),
@@ -144,5 +140,5 @@ internal class CuratedData
         new InstanceWithLoot(20092, Extreme, new ItemIdList((41033, 41051), 41054), 41053),
         //Alliance Raid (Thaleia)
         new InstanceWithLoot(30134, Normal, (40897, 40931)),
-    };
+    ];
 }
