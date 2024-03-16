@@ -1,5 +1,4 @@
-﻿using HimbeertoniRaidTool.Common.Data;
-using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.GeneratedSheets;
 
 namespace HimbeertoniRaidTool.Common.GameData;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using HimbeertoniRaidTool.Common.Data;
-using static HimbeertoniRaidTool.Common.Data.EncounterDifficulty;
+﻿using static HimbeertoniRaidTool.Common.Data.EncounterDifficulty;
 
 namespace HimbeertoniRaidTool.Common.Services;
 

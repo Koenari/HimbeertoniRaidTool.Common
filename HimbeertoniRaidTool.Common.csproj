@@ -19,7 +19,13 @@
         <RepositoryUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common.git</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
-
+    <ItemGroup>
+        <Using Include="HimbeertoniRaidTool.Common.Data"/>
+        <Using Include="System"/>
+        <Using Include="System.Collections.Generic"/>
+        <Using Include="System.Linq"/>
+        <Using Include="Newtonsoft.Json"/>
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Lumina.Excel" Version="6.5.2">
             <PrivateAssets>runtime</PrivateAssets>

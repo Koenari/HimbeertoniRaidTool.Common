@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Data;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -298,7 +294,7 @@ public class HrtItem : IEquatable<HrtItem>, IHrtDataType
 public class HrtMateria : HrtItem, IEquatable<HrtMateria>
 {
     [JsonIgnore]
-    private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule?.GetSheet<Materia>();
+    private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule.GetSheet<Materia>();
 
     [JsonIgnore] private readonly Lazy<uint> _idCache;
     [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;

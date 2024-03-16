@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HimbeertoniRaidTool.Common.Localization;
+﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;

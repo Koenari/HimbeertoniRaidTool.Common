@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HimbeertoniRaidTool.Common.Localization;
+﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
-using Newtonsoft.Json;
 using XIVCalc.Calculations;
 
 namespace HimbeertoniRaidTool.Common.Data;

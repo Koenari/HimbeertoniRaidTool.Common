@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-
-namespace HimbeertoniRaidTool.Common.Data;
+﻿namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonDictionary]
 public class RolePriority : Dictionary<Role, int>
@@ -37,7 +32,7 @@ public class RolePriority : Dictionary<Role, int>
 
         if (Count == 0)
             return string.Join(" = ", Enum.GetValues<Role>().Where(r => r.IsCombatRole()));
-        List<KeyValuePair<Role, int>> ordered = this.ToList();
+        var ordered = this.ToList();
         ordered.Sort((l, r) => l.Value - r.Value);
         string result = "";
         for (int i = 0; i < ordered.Count - 1; i++)
@@ -45,7 +40,7 @@ public class RolePriority : Dictionary<Role, int>
             result += $"{ordered[i].Key} {(ordered[i].Value < ordered[i + 1].Value ? ">" : "=")} ";
         }
         result += ordered[^1].Key;
-        List<Role> missing = Enum.GetValues<Role>().Where(r => !ContainsKey(r)).Where(r => r.IsCombatRole()).ToList();
+        var missing = Enum.GetValues<Role>().Where(r => !ContainsKey(r)).Where(r => r.IsCombatRole()).ToList();
         if (missing.Any())
         {
             result += " > ";
@@ -58,4 +53,3 @@ public class RolePriority : Dictionary<Role, int>
         return result;
     }
 }
-

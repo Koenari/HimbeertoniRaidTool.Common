@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Newtonsoft.Json;
+﻿using System.Globalization;
 
 namespace HimbeertoniRaidTool.Common.Security;
 
@@ -15,9 +13,9 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
             return Empty;
         try
         {
-            uint authority = uint.Parse(parts[2], System.Globalization.NumberStyles.HexNumber);
+            uint authority = uint.Parse(parts[2], NumberStyles.HexNumber);
             var type = Enum.Parse<IdType>(parts[3]);
-            ulong sequence = ulong.Parse(parts[4], System.Globalization.NumberStyles.HexNumber);
+            ulong sequence = ulong.Parse(parts[4], NumberStyles.HexNumber);
             return new HrtId(authority, type, sequence);
         }
         catch (Exception e) when (e is ArgumentException or OverflowException or ArgumentNullException

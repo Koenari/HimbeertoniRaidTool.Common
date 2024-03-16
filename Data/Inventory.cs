@@ -1,32 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-
-namespace HimbeertoniRaidTool.Common.Data;
+﻿namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonDictionary]
 public class Inventory : Dictionary<int, InventoryEntry>
 {
-    public bool Contains(uint id)
-    {
-        return Values.Any(i => i.Id == id);
-    }
+    public bool Contains(uint id) => Values.Any(i => i.Id == id);
 
-    public int ItemCount(uint id)
-    {
-        return this.Where(i => i.Value.Id == id).Sum(i => i.Value.Quantity);
-    }
+    public int ItemCount(uint id) => this.Where(i => i.Value.Id == id).Sum(i => i.Value.Quantity);
 
-    public int IndexOf(uint id)
-    {
-        return this.FirstOrDefault(i => i.Value.Id == id).Key;
-    }
+    public int IndexOf(uint id) => this.FirstOrDefault(i => i.Value.Id == id).Key;
 
     public int FirstFreeSlot()
     {
         for (int i = 0; i < Values.Count; i++)
+        {
             if (!ContainsKey(i))
                 return i;
+        }
         return Values.Count;
     }
 }
@@ -37,7 +26,7 @@ public class Wallet : Dictionary<Currency, uint>
 }
 
 [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore,
-    MemberSerialization = MemberSerialization.Fields)]
+            MemberSerialization = MemberSerialization.Fields)]
 public class InventoryEntry
 {
     public int Quantity = 0;
@@ -65,10 +54,9 @@ public class InventoryEntry
         {
             if (IsGear)
                 return _gearItem!;
-            else if (IsMateria)
+            if (IsMateria)
                 return _hrtMateria!;
-            else
-                return _hrtItem!;
+            return _hrtItem!;
         }
         set
         {
@@ -96,19 +84,13 @@ public class InventoryEntry
     public bool IsGear => _type == nameof(GearItem);
     public bool IsMateria => _type == nameof(HrtMateria);
 
-    public uint Id
+    public uint Id => _type switch
     {
-        get
-        {
-            return _type switch
-            {
-                nameof(GearItem) => _gearItem!.Id,
-                nameof(HrtMateria) => _hrtMateria!.Id,
-                nameof(HrtItem) => _hrtItem!.Id,
-                _ => 0,
-            };
-        }
-    }
+        nameof(GearItem)   => _gearItem!.Id,
+        nameof(HrtMateria) => _hrtMateria!.Id,
+        nameof(HrtItem)    => _hrtItem!.Id,
+        _                  => 0,
+    };
 
     public static implicit operator InventoryEntry(HrtItem item) => new(item);
 }

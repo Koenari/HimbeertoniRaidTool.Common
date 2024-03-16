@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using HimbeertoniRaidTool.Common.Localization;
+﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
-using Newtonsoft.Json;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
