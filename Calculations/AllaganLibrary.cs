@@ -41,6 +41,7 @@ public static class AllaganLibrary
     /// <param name="type">Type of stat that should be evaluated</param>
     /// <param name="curClass">The job/class to evaluate for</param>
     /// <param name="gear">current gear set to get stats</param>
+    /// <param name="tribe">Tribe of character</param>
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
     public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, Tribe? tribe,
@@ -63,8 +64,7 @@ public static class AllaganLibrary
             (StatType.SkillSpeed or StatType.SpellSpeed, 1) => StatEquations.CalcAADotMultiplier(totalStat, level),
             //GCD
             (StatType.SkillSpeed or StatType.SpellSpeed, _) => StatEquations.CalcGCD(totalStat, level),
-            (StatType.Defense or StatType.MagicDefense, _)  => StatEquations.CalcDefenseMitigation(totalStat, level),
-            //ToDO: Still rounding issues
+            (StatType.Defense or StatType.MagicDefense, _) => StatEquations.CalcDefenseMitigation(totalStat, level),
             (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
             (StatType.PhysicalDamage, _)
                 => StatEquations.CalcAverageDamagePer100(
@@ -75,7 +75,7 @@ public static class AllaganLibrary
                     curClass.GetStat(StatType.Determination, gear, tribe),
                     curClass.GetStat(StatType.Tenacity, gear, tribe),
                     level, curClass.ClassJob) *
-                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear, tribe), level),
+                2.5 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear, tribe), level),
             (StatType.MagicalDamage, _)
                 => StatEquations.CalcAverageDamagePer100(
                     curClass.GetStat(StatType.PhysicalDamage, gear, tribe),
@@ -85,7 +85,7 @@ public static class AllaganLibrary
                     curClass.GetStat(StatType.Determination, gear, tribe),
                     curClass.GetStat(StatType.Tenacity, gear, tribe),
                     level, curClass.ClassJob) *
-                2.45 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear, tribe), level),
+                2.5 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear, tribe), level),
             _ => float.NaN,
         };
     }
