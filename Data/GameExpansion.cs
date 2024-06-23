@@ -33,23 +33,19 @@ public class GameExpansion
     };
 }
 
-public class RaidTier
+public class RaidTier(
+    EncounterDifficulty difficulty,
+    int weaponItemLevel,
+    int armorItemLevel,
+    string name,
+    IEnumerable<uint> bossIds)
 {
-    private readonly List<uint> _bossIDs;
-    public readonly int ArmorItemLevel;
-    public readonly EncounterDifficulty Difficulty;
-    public readonly string Name;
-    public readonly int WeaponItemLevel;
+    private readonly List<uint> _bossIDs = [..bossIds];
+    public readonly int ArmorItemLevel = armorItemLevel;
+    public readonly EncounterDifficulty Difficulty = difficulty;
+    public readonly string Name = name;
+    public readonly int WeaponItemLevel = weaponItemLevel;
 
-    public RaidTier(EncounterDifficulty difficulty, int weaponItemLevel, int armorItemLevel, string name,
-                    IEnumerable<uint> bossIds)
-    {
-        Difficulty = difficulty;
-        WeaponItemLevel = weaponItemLevel;
-        ArmorItemLevel = armorItemLevel;
-        Name = name;
-        _bossIDs = new List<uint>(bossIds);
-    }
     public List<InstanceWithLoot> Bosses => _bossIDs.ConvertAll(id => ServiceManager.GameInfo.GetInstance(id));
 
     public int ItemLevel(GearSetSlot slot) => slot == GearSetSlot.MainHand ? WeaponItemLevel : ArmorItemLevel;

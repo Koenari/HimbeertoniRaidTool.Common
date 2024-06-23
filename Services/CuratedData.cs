@@ -29,6 +29,10 @@ internal class CuratedData
                 new RaidTier(Savage, 665, 660, "Anabaseios Savage", [30127, 30129, 30131, 30133]),
             ],
         },
+        new GameExpansion(7, MateriaLevel.XII, 100)
+        {
+
+        },
     ];
 
 
