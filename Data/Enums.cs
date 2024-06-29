@@ -165,6 +165,8 @@ public enum Job : byte
     DNC = 38,
     RPR = 39,
     SGE = 40,
+    VPR = 41,
+    PCT = 42,
 }
 
 public enum Role : byte
@@ -222,6 +224,8 @@ public enum MateriaLevel : byte
     VIII = 7,
     IX = 8,
     X = 9,
+    XI = 10,
+    XII = 11,
 }
 
 public enum MateriaCategory : ushort

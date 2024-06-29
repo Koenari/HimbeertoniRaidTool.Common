@@ -29,6 +29,13 @@ internal class CuratedData
                 new RaidTier(Savage, 665, 660, "Anabaseios Savage", [30127, 30129, 30131, 30133]),
             ],
         },
+        new GameExpansion(7, MateriaLevel.XII, 100)
+        {
+            SavageRaidTiers =
+            [
+                new RaidTier(Savage, 735, 730, "The Arcadion Savage", []),
+            ],
+        },
     ];
 
 
@@ -72,6 +79,7 @@ internal class CuratedData
     //I only record Gear and items used to get gear
     internal readonly HashSet<InstanceWithLoot> InstanceDb =
     [
+        //6.0
         new InstanceWithLoot(78, Normal, (34155, 34229)),
         new InstanceWithLoot(79, Normal, (34830, 34849)),
         new InstanceWithLoot(80, Normal, (34305, 34379)),
@@ -138,5 +146,32 @@ internal class CuratedData
         new InstanceWithLoot(20092, Extreme, new ItemIdList((41033, 41051), 41054), 41053),
         //Alliance Raid (Thaleia)
         new InstanceWithLoot(30134, Normal, (40897, 40931)),
+        //7.0
+        //Dungeons
+        //Worqor Zormor
+        new InstanceWithLoot(92, Normal, (42067, 42143)),
+        //Origenics
+        new InstanceWithLoot(93, Normal, (42529, 42568)),
+        //Ihuykatumu
+        new InstanceWithLoot(94, Normal, (41913, 41989)),
+        //Alexandria
+        new InstanceWithLoot(95),
+        //The Skydeep Cenote
+        new InstanceWithLoot(96, Normal, (42221, 42297)),
+        //Vanguard
+        new InstanceWithLoot(97, Normal, (42375, 42451)),
+        //Tender Valley
+        new InstanceWithLoot(98),
+        //The Strayborough Deadwalk
+        new InstanceWithLoot(99),
+        //Trials
+        //Worqor Lar Dor
+        new InstanceWithLoot(20093),
+        new InstanceWithLoot(20094, Extreme),
+        //The Interphos
+        new InstanceWithLoot(20095),
+        //Everkeep
+        new InstanceWithLoot(20096, Normal),
+        new InstanceWithLoot(20097, Extreme),
     ];
 }
