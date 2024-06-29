@@ -94,6 +94,8 @@ public static class ClassJobCategoryExtensions
         Job.ACN => cat.ACN,
         Job.CNJ => cat.CNJ,
         Job.ROG => cat.ROG,
+        Job.VPR => cat.VPR,
+        Job.PCT => cat.PCT,
         _       => false,
     };
 }
@@ -143,7 +145,7 @@ public class SpecialShop : ExcelRow
         public LazyRow<Achievement> AchievementUnlock { get; set; }
 
         //Achievement related??
-        //HAs entries for Triple Troiad Cards, Whistels/Horns, Current Tome Gear(100)
+        //HAs entries for Triple Triad Cards, Whistles/Horns, Current Tome Gear(100)
         public byte UnknownData1501 { get; set; }
         public ushort PatchNumber { get; set; }
     }

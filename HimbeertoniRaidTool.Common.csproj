@@ -27,7 +27,7 @@
         <Using Include="Newtonsoft.Json"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Lumina.Excel" Version="6.5.2">
+        <PackageReference Include="Lumina.Excel" Version="7.0.0">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
