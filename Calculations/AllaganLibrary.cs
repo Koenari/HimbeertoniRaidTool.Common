@@ -47,6 +47,8 @@ public static class AllaganLibrary
     public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, Tribe? tribe,
                                       int alternative = 0)
     {
+        //ToDO: reenable when XIvCalc is updated
+        return double.NaN;
         int totalStat = curClass.GetStat(type, gear, tribe);
         int level = curClass.Level;
         return (type, alternative) switch
