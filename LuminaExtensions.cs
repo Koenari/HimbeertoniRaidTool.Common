@@ -259,6 +259,20 @@ public class SpecialShop : ExcelRow
                         //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
                     }
                 }
+            if (ShopEntries[i].PatchNumber == 700)
+                foreach (ItemCostEntry? item in ShopEntries[i].ItemCostEntries)
+                {
+                    switch (item.Item.Row)
+                    {
+                        case 2:
+                            item.Item = new LazyRow<Item>(gameData, 46, language);
+                            break; //White crafter scrip
+                        //case 3: item.Item = new(gameData, 45, language); break; //Casualty TomeStone
+                        //case 4: item.Item = new(gameData, 25200, language); break; //White gatherer scrip
+                        //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
+                        //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
+                    }
+                }
         }
 
         UseCurrencyType = parser.ReadColumn<byte>(AFTER_ENTRIES_OFFSET);

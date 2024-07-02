@@ -114,7 +114,7 @@ public class ItemInfo
         24              => true,
         26              => true,
         28              => true,
-        >= 30 and <= 45 => true,
+        >= 30 and <= 50 => true,
         _               => false,
     };
 
