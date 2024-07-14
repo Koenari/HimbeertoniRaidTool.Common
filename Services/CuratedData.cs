@@ -31,9 +31,13 @@ internal class CuratedData
         },
         new GameExpansion(7, MateriaLevel.XII, 100)
         {
+            NormalRaidTiers =
+            [
+                new RaidTier(Normal, 710, 700, "AAC Light-heavyweight Tier", []),
+            ],
             SavageRaidTiers =
             [
-                new RaidTier(Savage, 735, 730, "The Arcadion Savage", []),
+                new RaidTier(Savage, 725, 720, "AAC Light-heavyweight Tier Savage", []),
             ],
         },
     ];
