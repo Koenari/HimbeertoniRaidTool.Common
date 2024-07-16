@@ -33,11 +33,11 @@ internal class CuratedData
         {
             NormalRaidTiers =
             [
-                new RaidTier(Normal, 710, 700, "AAC Light-heavyweight Tier", []),
+                new RaidTier(Normal, 710, 700, "AAC Light-heavyweight Tier", [30135, 30137, 30139, 30141]),
             ],
             SavageRaidTiers =
             [
-                new RaidTier(Savage, 725, 720, "AAC Light-heavyweight Tier Savage", []),
+                new RaidTier(Savage, 725, 720, "AAC Light-heavyweight Tier Savage", [30136, 30138, 30140, 30142]),
             ],
         },
     ];
@@ -78,6 +78,8 @@ internal class CuratedData
         { 40314, new ItemIdRange(40225, 40229) }, //Ascension necklace coffer
         { 40315, new ItemIdRange(40230, 40234) }, //Ascension bracelet coffer
         { 40316, new ItemIdRange(40235, 40239) }, //Ascension ring coffers
+        //7.0
+        { 43526, 42773..42794 }, //Skyruin weapon coffer
     };
 
     //I only record Gear and items used to get gear
@@ -171,11 +173,21 @@ internal class CuratedData
         //Trials
         //Worqor Lar Dor
         new InstanceWithLoot(20093),
-        new InstanceWithLoot(20094, Extreme),
+        new InstanceWithLoot(20094, Extreme, new ItemIdList(42773..42794, 43526), 43539),
         //The Interphos
         new InstanceWithLoot(20095),
         //Everkeep
         new InstanceWithLoot(20096, Normal),
-        new InstanceWithLoot(20097, Extreme),
+        new InstanceWithLoot(20097, Extreme, 42795..42814, 43540),
+        //Raids
+        new InstanceWithLoot(30135, Normal, 43541..43546), //M1
+        new InstanceWithLoot(30136, Savage), //M1S
+        new InstanceWithLoot(30137, Normal, 43541..43546), //M2
+        new InstanceWithLoot(30138, Savage), //M2S
+        new InstanceWithLoot(30139, Normal, new ItemIdList(43541..43544, 43546)), //M3
+        new InstanceWithLoot(30140, Savage), //M3S
+        new InstanceWithLoot(30141, Normal, 43542..43546, 43547), //M4
+        new InstanceWithLoot(30142, Savage), //M4S
+
     ];
 }

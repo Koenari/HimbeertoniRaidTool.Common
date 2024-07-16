@@ -21,10 +21,11 @@ public class InstanceWithLoot
             _contentFinderLookup.TryAdd(row.Content, row.RowId);
         }
     }
+    public bool IsAvailable => _contentFinderCondition is not null;
     public InstanceType InstanceType => (InstanceType)_instanceContent.InstanceContentType;
 
     public EncounterDifficulty Difficulty { get; }
-    public string Name => _contentFinderCondition?.Name ?? CommonLoc.Unknown;
+    public string Name => _contentFinderCondition?.Name ?? CommonLoc.NotAvail_Abbrev;
     public IEnumerable<HrtItem> PossibleItems { get; }
     public IEnumerable<HrtItem> GuaranteedItems { get; }
     public uint InstanceId => _instanceContent.RowId;

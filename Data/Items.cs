@@ -334,6 +334,10 @@ public class ItemIdRange : ItemIdCollection
                                                               .ToList().ConvertAll(x => (uint)x))
     {
     }
+    public ItemIdRange(int start, int end) : base(Enumerable.Range(start, Math.Max(0, end - start + 1))
+                                                            .ToList().ConvertAll(x => (uint)x))
+    {
+    }
 }
 
 public class ItemIdList : ItemIdCollection
@@ -369,6 +373,9 @@ public abstract class ItemIdCollection : IEnumerable<uint>
     IEnumerator IEnumerable.GetEnumerator() => _iDs.GetEnumerator();
 
     public static implicit operator ItemIdCollection(uint id) => new ItemIdList(id);
+
+    public static implicit operator ItemIdCollection(Range range) =>
+        new ItemIdRange(range.Start.Value, range.End.Value);
 
     public static implicit operator ItemIdCollection((uint, uint) id) => new ItemIdRange(id.Item1, id.Item2);
 }
