@@ -1,4 +1,5 @@
-﻿using HimbeertoniRaidTool.Common.Services;
+﻿using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
@@ -10,25 +11,25 @@ public class InstanceWithLoot
         ServiceManager.ExcelModule.GetSheet<InstanceContent>();
     private static readonly ExcelSheet<ContentFinderCondition>? _contentFinderSheet =
         ServiceManager.ExcelModule.GetSheet<ContentFinderCondition>();
-    private static readonly Dictionary<uint, uint> _contenFinderLookup;
+    private static readonly Dictionary<uint, uint> _contentFinderLookup;
     static InstanceWithLoot()
     {
-        _contenFinderLookup = new Dictionary<uint, uint>();
-        if (_contentFinderSheet != null)
-            foreach (ContentFinderCondition? row in _contentFinderSheet.Where(x => x.ContentLinkType == 1))
-            {
-                _contenFinderLookup.TryAdd(row.Content, row.RowId);
-            }
+        _contentFinderLookup = new Dictionary<uint, uint>();
+        if (_contentFinderSheet == null) return;
+        foreach (ContentFinderCondition? row in _contentFinderSheet.Where(x => x.ContentLinkType == 1))
+        {
+            _contentFinderLookup.TryAdd(row.Content, row.RowId);
+        }
     }
     public InstanceType InstanceType => (InstanceType)_instanceContent.InstanceContentType;
 
     public EncounterDifficulty Difficulty { get; }
-    public string Name => _contentFinderCondition.Name;
+    public string Name => _contentFinderCondition?.Name ?? CommonLoc.Unknown;
     public IEnumerable<HrtItem> PossibleItems { get; }
     public IEnumerable<HrtItem> GuaranteedItems { get; }
     public uint InstanceId => _instanceContent.RowId;
     private readonly InstanceContent _instanceContent;
-    private readonly ContentFinderCondition _contentFinderCondition;
+    private readonly ContentFinderCondition? _contentFinderCondition;
     public IEnumerable<HrtItem> AllLoot
     {
         get
@@ -47,10 +48,10 @@ public class InstanceWithLoot
                             ItemIdCollection? possibleLoot = null, ItemIdCollection? guaranteedLoot = null)
     {
         _instanceContent = _instanceSheet?.GetRow(id) ?? new InstanceContent();
-        _contentFinderCondition = _contenFinderLookup.TryGetValue(id, out uint contentId)
-            ? _contentFinderSheet!.GetRow(contentId)! : new ContentFinderCondition();
+        _contentFinderCondition = _contentFinderLookup.TryGetValue(id, out uint contentId)
+            ? _contentFinderSheet?.GetRow(contentId)! : null;
         Difficulty = difficulty;
-        GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((id, i) => new HrtItem(id));
-        PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((id, i) => new HrtItem(id));
+        GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new HrtItem(selectId));
+        PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new HrtItem(selectId));
     }
 }
