@@ -4,9 +4,9 @@
     "net8.0": {
       "Lumina.Excel": {
         "type": "Direct",
-        "requested": "[7.0.0, )",
-        "resolved": "7.0.0",
-        "contentHash": "hZ0Nydtz9ln9k6P4hjZtE+RJbS3E0GsPhkhUy5NOVTHaSRYgkB/SCrBh0Cv8O1+5oOh7cOXfdHHaykYtS0Cn9w==",
+        "requested": "[7.0.1, )",
+        "resolved": "7.0.1",
+        "contentHash": "6jLesCVDfBW1PAMOBtzzrk+zS4F+WEKI/y3iKuV2lTXqWnuguVuFXdZQvhRQryQ5ruNczFmNo8pZeU0yOfqIKA==",
         "dependencies": {
           "Lumina": "3.15.2"
         }
@@ -19,9 +19,9 @@
       },
       "XIVCalc": {
         "type": "Direct",
-        "requested": "[0.2.0-alpha, )",
-        "resolved": "0.2.0-alpha",
-        "contentHash": "76S8O5gP9235ASZ1V4JRPgFPngPRx04eEk3w23t5gr/18QK56LM3BhfKsvZnuFhFPA7RZl4Gkq9xTq4fYElGRw==",
+        "requested": "[0.2.0, )",
+        "resolved": "0.2.0",
+        "contentHash": "2zMdJtvkfqTSipU9rYP0RrmD3mG0Lg5i5u0ud661HBhRn+qNh5Z4n17vPCKuO72ujrH1s8fTo6i3ZHb8b09REg==",
         "dependencies": {
           "Lumina.Excel": "7.0.0"
         }

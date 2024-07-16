@@ -27,13 +27,13 @@
         <Using Include="Newtonsoft.Json"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Lumina.Excel" Version="7.0.0">
+        <PackageReference Include="Lumina.Excel" Version="7.0.1">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="XIVCalc" Version="0.2.0-alpha" />
+        <PackageReference Include="XIVCalc" Version="0.2.0"/>
     </ItemGroup>
 
     <ItemGroup>
