@@ -28,6 +28,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public string EtroId { set => ExternalId = value; }
 
     [JsonProperty("ExternalId")] public string ExternalId = "";
+    [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
     [JsonProperty("LastExternalFetch")] public DateTime LastExternalFetchDate;
 
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;

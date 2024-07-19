@@ -201,7 +201,7 @@ public enum GearSetManager
 {
     Hrt,
     Etro,
-    XivGearApp,
+    XivGear,
 }
 
 public enum Gender
