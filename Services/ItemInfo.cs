@@ -121,10 +121,8 @@ public class ItemInfo
     public ItemSource GetSource(HrtItem item, int maxDepth = 10)
     {
         uint itemId = item.Id;
-        maxDepth--;
-        if (itemId == 0)
+        if (itemId == 0 || --maxDepth < 0)
             return ItemSource.Undefined;
-        if (maxDepth < 0) return ItemSource.Undefined;
         if (item.Rarity == Rarity.Relic)
             return ItemSource.Relic;
         if (_lootSources.TryGetValue(itemId, out var instanceId))
