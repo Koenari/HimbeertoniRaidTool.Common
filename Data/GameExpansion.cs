@@ -40,6 +40,7 @@ public class RaidTier(
     string name,
     IEnumerable<uint> bossIds)
 {
+    public static readonly RaidTier Empty = new(EncounterDifficulty.None, 0, 0, string.Empty, []);
     private readonly List<uint> _bossIDs = [..bossIds];
     public readonly int ArmorItemLevel = armorItemLevel;
     public readonly EncounterDifficulty Difficulty = difficulty;
