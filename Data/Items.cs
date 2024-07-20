@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Threading;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
@@ -296,11 +297,30 @@ public class HrtMateria : HrtItem, IEquatable<HrtMateria>
     [JsonIgnore]
     private static readonly ExcelSheet<Materia>? _materiaSheet = ServiceManager.ExcelModule.GetSheet<Materia>();
 
+    [JsonIgnore] private static Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> _idLookupImpl = new(() =>
+    {
+        var result = new Dictionary<uint, (MateriaCategory, MateriaLevel)>();
+        if (_materiaSheet is null) return result;
+        foreach (Materia materia in _materiaSheet)
+        {
+            int level = 0;
+            foreach (var tier in materia.Item)
+            {
+                if (tier.Row == 0) continue;
+                result.Add(tier.Row, ((MateriaCategory)materia.RowId, (MateriaLevel)level));
+                level++;
+            }
+        }
+        return result;
+    });
+    [JsonIgnore] private static Dictionary<uint, (MateriaCategory, MateriaLevel)> IdLookup => _idLookupImpl.Value;
+
     [JsonIgnore] private readonly Lazy<uint> _idCache;
     [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;
     //Begin Object
     [JsonProperty("Category")] public readonly MateriaCategory Category;
 
+    public HrtMateria(uint id) : this(IdLookup[id]) { }
     public HrtMateria() : this(0, 0)
     {
     }

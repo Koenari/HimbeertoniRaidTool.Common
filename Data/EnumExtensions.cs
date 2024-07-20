@@ -154,9 +154,10 @@ public static class EnumExtensions
 
     public static string FriendlyName(this GearSetManager manager) => manager switch
     {
-        GearSetManager.Hrt  => CommonLoc.GearManager_HrtLocal,
-        GearSetManager.Etro => CommonLoc.GearManager_etro_gg,
-        _                   => CommonLoc.undefined,
+        GearSetManager.Hrt     => CommonLoc.GearManager_HrtLocal,
+        GearSetManager.Etro    => CommonLoc.GearManager_etro_gg,
+        GearSetManager.XivGear => CommonLoc.GearManager_XivGear,
+        _                      => CommonLoc.undefined,
     };
 
     public static string FriendlyName(this GroupType groupType) => groupType switch

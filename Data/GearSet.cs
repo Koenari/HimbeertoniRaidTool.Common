@@ -19,17 +19,27 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
 
     //Caches
     [JsonIgnore] private int? _levelCache;
-    [JsonProperty("LastEtroFetched")] public DateTime EtroFetchDate;
 
-    [JsonProperty("EtroID")] public string EtroId = "";
+    //Properties
+    [JsonProperty("LastEtroFetched")] [Obsolete("Use LastExternalFetchDate", true)]
+    public DateTime EtroFetchDate { set => LastExternalFetchDate = value; }
+
+    [JsonProperty("EtroID")] [Obsolete("Use ExternalId", true)]
+    public string EtroId { set => ExternalId = value; }
+
+    [JsonProperty("ExternalId")] public string ExternalId = "";
+    [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
+    [JsonProperty("LastExternalFetch")] public DateTime LastExternalFetchDate;
 
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
     [JsonProperty("Name")] public string Name = "";
 
     [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
 
-    //Properties
+
     [JsonProperty("TimeStamp")] public DateTime TimeStamp;
+
+    public bool IsManagedExternally => ManagedBy != GearSetManager.Hrt;
 
     [JsonConstructor]
     public GearSet() : this(GearSetManager.Hrt) { }
@@ -130,7 +140,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public void CopyFrom(GearSet gearSet)
     {
         TimeStamp = gearSet.TimeStamp;
-        EtroId = gearSet.EtroId;
+        ExternalId = gearSet.ExternalId;
         Name = gearSet.Name;
         ManagedBy = gearSet.ManagedBy;
         //Do an actual copy of the item

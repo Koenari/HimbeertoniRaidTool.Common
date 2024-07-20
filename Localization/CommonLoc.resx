@@ -420,4 +420,7 @@
     <data name="Weekday_Abbrev_Sunday" xml:space="preserve">
         <value>Sun</value>
     </data>
+    <data name="GearManager_XivGear" xml:space="preserve">
+        <value>XivGear.app</value>
+    </data>
 </root>

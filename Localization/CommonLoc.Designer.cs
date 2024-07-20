@@ -204,6 +204,15 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to XivGear.app.
+        /// </summary>
+        public static string GearManager_XivGear {
+            get {
+                return ResourceManager.GetString("GearManager_XivGear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Belt.
         /// </summary>
         public static string GearSlot_Belt {
