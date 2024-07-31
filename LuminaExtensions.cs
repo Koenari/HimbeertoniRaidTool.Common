@@ -266,8 +266,10 @@ public class SpecialShop : ExcelRow
                     {
                         case 2:
                             item.Item = new LazyRow<Item>(gameData, 46, language);
-                            break; //White crafter scrip
-                        //case 3: item.Item = new(gameData, 45, language); break; //Casualty TomeStone
+                            break; //Allagan tomestone of aesthetics
+                        case 3:
+                            item.Item = new LazyRow<Item>(gameData, 47, language);
+                            break; //Allagan tomestone of heliometry
                         //case 4: item.Item = new(gameData, 25200, language); break; //White gatherer scrip
                         //case 6: item.Item = new(gameData, 33913, language); break; //Purple crafter scrip
                         //case 7: item.Item = new(gameData, 33914, language); break; //Purple gatherer scrip
