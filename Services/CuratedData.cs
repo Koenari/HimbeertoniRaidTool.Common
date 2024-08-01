@@ -194,11 +194,11 @@ internal class CuratedData
         new InstanceWithLoot(30135, Normal, 43541..43546), //M1
         new InstanceWithLoot(30136, Savage, 43533..43536, 43549), //M1S
         new InstanceWithLoot(30137, Normal, 43541..43546), //M2
-        new InstanceWithLoot(30138, Savage, new ItemIdList(43528, 43530, 43532, 43553, 43548), 43550), //M2S
+        new InstanceWithLoot(30138, Savage, new ItemIdList(43528, 43530, 43532, 43555, 43548), 43550), //M2S
         new InstanceWithLoot(30139, Normal, new ItemIdList(43541..43544, 43546)), //M3
         new InstanceWithLoot(30140, Savage, new ItemIdList(43529, 43531, 43553, 43554), 43551), //M3S
         new InstanceWithLoot(30141, Normal, 43542..43546, 43547), //M4
-        new InstanceWithLoot(30142, Savage, new ItemIdList(43101..43121, 43527), 43550), //M4S
+        new InstanceWithLoot(30142, Savage, new ItemIdList(43101..43121, 43527), 43552), //M4S
 
     ];
 }
