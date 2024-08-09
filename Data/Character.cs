@@ -9,7 +9,7 @@ using Lumina.Excel.GeneratedSheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
 {
     private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
@@ -70,6 +70,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
         set => HomeWorldId = value?.RowId ?? 0;
     }
 
+    public string Initials => string.Join(' ', Name.Split(" ").Select(word => word[0] + "."));
     public bool Filled => !LocalId.IsEmpty;
 
     public IEnumerable<PlayableClass> Classes => _classes;
@@ -100,8 +101,27 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
         _classes.Add(classToAdd);
         return classToAdd;
     }
+    public override string ToString() => ToString(null, null);
 
-    public override string ToString() => $"{Name} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
+    public string ToString(string? format, IFormatProvider? formatProvider)
+    {
+        switch (format)
+        {
+            case "a":
+                return "xxx @ xxx";
+            case "n":
+                return Name;
+            case "i":
+                return Initials;
+            case "is":
+                return $"{Initials} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
+            case "ns":
+            default:
+                return $"{Name} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
+        }
+
+    }
+
 
     public bool RemoveClass(Job type) => _classes.RemoveAll(job => job.Job == type) > 0;
 
@@ -134,6 +154,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 
     public override int GetHashCode() => LocalId.GetHashCode();
+
 
     public static ulong CalcCharId(ulong contentId)
     {
