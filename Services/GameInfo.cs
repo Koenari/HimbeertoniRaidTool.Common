@@ -5,6 +5,10 @@ public class GameInfo
     private readonly GameExpansion[] _expansions;
     private readonly Dictionary<uint, InstanceWithLoot> _instanceDb;
     public GameExpansion CurrentExpansion => _expansions[^1];
+
+    public RaidTier? CurrentSavageTier => CurrentExpansion.CurrentSavage;
+    public RaidTier? PreviousSavageTier => CurrentExpansion.PreviousSavage ?? _expansions[^2].CurrentSavage;
+
     public IReadOnlyList<GameExpansion> Expansions => _expansions;
     internal GameInfo(CuratedData curatedData)
     {

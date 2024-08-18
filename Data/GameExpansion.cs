@@ -20,7 +20,10 @@ public class GameExpansion
     public RaidTier[] SavageRaidTiers { get; init; }
     public RaidTier[] NormalRaidTiers { get; init; }
 
-    public RaidTier? CurrentSavage => SavageRaidTiers.Any() ? SavageRaidTiers[^1] : null;
+    public RaidTier? CurrentSavage => SavageRaidTiers.Length != 0 ? SavageRaidTiers[^1] : null;
+
+    internal RaidTier? PreviousSavage => SavageRaidTiers.Length > 1 ? SavageRaidTiers[^2] : null;
+
     public string Name => GameVersion switch
     {
         2 => CommonLoc.Expansion_ARR,
