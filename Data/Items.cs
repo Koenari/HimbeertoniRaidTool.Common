@@ -132,6 +132,9 @@ public class GearItem : HrtItem, IEquatable<GearItem>
             case StatType.MagicDefense:
                 result += Item.DefenseMag;
                 break;
+            case StatType.Delay:
+                result += Item.Delayms;
+                break;
             default:
                 if (IsHq)
                     foreach (Item.ItemUnkData73Obj? param in

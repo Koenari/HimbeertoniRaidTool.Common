@@ -3,6 +3,7 @@ using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using XIVCalc.Calculations;
+using XIVCalc.Interfaces;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -64,8 +65,12 @@ public class PlayableClass : IHrtDataType
             if (_curGearIdx >= 0) return;
             _gearSets.Add(value);
             _curGearIdx = _gearSets.Count - 1;
+            _curGearStatsCache = null;
         }
     }
+    private IStatEquations? _curGearStatsCache;
+    public IStatEquations CurGearStats =>
+        _curGearStatsCache ??= new StatBlockEquations(new GearSetStatBlock(this, CurGear));
 
     public GearSet AutoUpdatedGearSet
     {
@@ -104,8 +109,15 @@ public class PlayableClass : IHrtDataType
             if (_curBisIdx >= 0) return;
             _bis.Add(value);
             _curBisIdx = _bis.Count - 1;
+            _curBisStatsCache = null;
         }
     }
+
+    private IStatEquations? _curBisStatsCache;
+    public IStatEquations CurBisStats =>
+        _curBisStatsCache ??= new StatBlockEquations(new GearSetStatBlock(this, CurBis));
+
+    public IJobStatBlock CurBisStatBlock => new GearSetStatBlock(this, CurBis);
     public (GearItem, GearItem) this[GearSetSlot slot]
     {
         get
@@ -201,4 +213,30 @@ public class PlayableClass : IHrtDataType
         _gearSets.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
         _bis.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
     }
+}
+
+public class GearSetStatBlock(PlayableClass jobClass, IReadOnlyGearSet set, Tribe? tribe = null) : IJobStatBlock
+{
+
+    public ClassJob Job => jobClass.ClassJob;
+    public int Level => jobClass.Level;
+    public int WeaponDamage => set[GearSetSlot.MainHand].GetStat(StatType.PhysicalDamage);
+    public int WeaponDelay => set[GearSetSlot.MainHand].GetStat(StatType.Delay);
+    public int Vitality => jobClass.GetStat(StatType.Vitality, set, tribe);
+    public int Strength => jobClass.GetStat(StatType.Strength, set, tribe);
+    public int Dexterity => jobClass.GetStat(StatType.Dexterity, set, tribe);
+    public int Intelligence => jobClass.GetStat(StatType.Intelligence, set, tribe);
+    public int Mind => jobClass.GetStat(StatType.Mind, set, tribe);
+    public int PhysicalDefense => jobClass.GetStat(StatType.Defense, set, tribe);
+    public int MagicalDefense => jobClass.GetStat(StatType.MagicDefense, set, tribe);
+    public int AttackPower => jobClass.GetStat(StatType.AttackPower, set, tribe);
+    public int AttackMagicPotency => jobClass.GetStat(StatType.AttackMagicPotency, set, tribe);
+    public int HealingMagicPotency => jobClass.GetStat(StatType.HealingMagicPotency, set, tribe);
+    public int DirectHit => jobClass.GetStat(StatType.DirectHitRate, set, tribe);
+    public int CriticalHit => jobClass.GetStat(StatType.CriticalHit, set, tribe);
+    public int Determination => jobClass.GetStat(StatType.Determination, set, tribe);
+    public int SkillSpeed => jobClass.GetStat(StatType.SkillSpeed, set, tribe);
+    public int SpellSpeed => jobClass.GetStat(StatType.SpellSpeed, set, tribe);
+    public int Piety => jobClass.GetStat(StatType.Piety, set, tribe);
+    public int Tenacity => jobClass.GetStat(StatType.Tenacity, set, tribe);
 }

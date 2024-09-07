@@ -44,49 +44,27 @@ public static class AllaganLibrary
     /// <param name="tribe">Tribe of character</param>
     /// <param name="alternative">a way to use alternative formulas for stats that have multiple effects (0 is default formula)</param>
     /// <returns>Evaluated value (percentage values are in mathematical correct value, means 100% = 1.0)</returns>
-    public static double EvaluateStat(StatType type, PlayableClass curClass, IReadOnlyGearSet gear, Tribe? tribe,
-                                      int alternative = 0)
+    public static double EvaluateStat(StatType type, IStatEquations stats,
+                                      int alternative = 0) => (type, alternative) switch
     {
-        int totalStat = curClass.GetStat(type, gear, tribe);
-        int level = curClass.Level;
-        return (type, alternative) switch
-        {
-            (StatType.CriticalHit, 1)   => StatEquations.CalcCritDamage(totalStat, level),
-            (StatType.CriticalHit, _)   => StatEquations.CalcCritRate(totalStat, level),
-            (StatType.DirectHitRate, _) => StatEquations.CalcDirectHitRate(totalStat, level),
-            (StatType.Determination, _) => StatEquations.CalcDeterminationMultiplier(totalStat, level),
-            //Outgoing DMG
-            (StatType.Tenacity, 1) => 1f + StatEquations.CalcTenacityModifier(totalStat, level),
-            //Incoming DMG
-            (StatType.Tenacity, _) => 1f - StatEquations.CalcTenacityModifier(totalStat, level),
-            (StatType.Piety, _)    => StatEquations.CalcMPPerSecond(totalStat, level),
-            //AA/DoT Multiplier
-            (StatType.SkillSpeed or StatType.SpellSpeed, 1) => StatEquations.CalcAADotMultiplier(totalStat, level),
-            //GCD
-            (StatType.SkillSpeed or StatType.SpellSpeed, _) => StatEquations.CalcGCD(totalStat, level),
-            (StatType.Defense or StatType.MagicDefense, _) => StatEquations.CalcDefenseMitigation(totalStat, level),
-            (StatType.Vitality, _) => StatEquations.CalcHP(totalStat, level, curClass.ClassJob),
-            (StatType.PhysicalDamage, _)
-                => StatEquations.CalcAverageDamagePer100(
-                    curClass.GetStat(StatType.PhysicalDamage, gear, tribe),
-                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear, tribe),
-                    curClass.GetStat(StatType.CriticalHit, gear, tribe),
-                    curClass.GetStat(StatType.DirectHitRate, gear, tribe),
-                    curClass.GetStat(StatType.Determination, gear, tribe),
-                    curClass.GetStat(StatType.Tenacity, gear, tribe),
-                    level, curClass.ClassJob) *
-                2.5 / StatEquations.CalcGCD(curClass.GetStat(StatType.SkillSpeed, gear, tribe), level),
-            (StatType.MagicalDamage, _)
-                => StatEquations.CalcAverageDamagePer100(
-                    curClass.GetStat(StatType.PhysicalDamage, gear, tribe),
-                    curClass.GetStat((StatType)curClass.ClassJob.PrimaryStat, gear, tribe),
-                    curClass.GetStat(StatType.CriticalHit, gear, tribe),
-                    curClass.GetStat(StatType.DirectHitRate, gear, tribe),
-                    curClass.GetStat(StatType.Determination, gear, tribe),
-                    curClass.GetStat(StatType.Tenacity, gear, tribe),
-                    level, curClass.ClassJob) *
-                2.5 / StatEquations.CalcGCD(curClass.GetStat(StatType.SpellSpeed, gear, tribe), level),
-            _ => float.NaN,
-        };
-    }
+        (StatType.CriticalHit, 1)   => stats.CritDamage(),
+        (StatType.CriticalHit, _)   => stats.CritChance(),
+        (StatType.DirectHitRate, _) => stats.DirectHitChance(),
+        (StatType.Determination, _) => stats.DeterminationMultiplier(),
+        //Outgoing DMG
+        (StatType.Tenacity, 1) => stats.TenacityOffensiveModifier(),
+        //Incoming DMG
+        (StatType.Tenacity, _) => stats.TenacityDefensiveModifier(),
+        (StatType.Piety, _)    => stats.MpPerTick(),
+        //AA/DoT Multiplier
+        (StatType.SkillSpeed or StatType.SpellSpeed, 1) => stats.DotMultiplier(),
+        //GCD
+        (StatType.SkillSpeed or StatType.SpellSpeed, _) => stats.Gcd(),
+        (StatType.Defense, _)                           => stats.PhysicalDefenseMitigation(),
+        (StatType.MagicDefense, _)                      => stats.MagicalDefenseMitigation(),
+        (StatType.Vitality, _)                          => stats.MaxHp(),
+        (StatType.PhysicalDamage, _)                    => stats.AverageSkillDamagePerSecond(100),
+        (StatType.MagicalDamage, _)                     => stats.AverageSkillDamagePerSecond(100),
+        _                                               => float.NaN,
+    };
 }

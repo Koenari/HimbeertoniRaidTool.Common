@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
+using Lumina.Excel.GeneratedSheets;
+using XIVCalc.Calculations;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -8,6 +10,8 @@ public interface IReadOnlyGearSet
 {
     GearItem this[GearSetSlot slot] { get; }
     int GetStat(StatType type);
+
+    public IStatEquations GetStatEquations(PlayableClass job, Tribe? tribe = null);
 }
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
@@ -74,6 +78,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
             InvalidateCaches();
         }
     }
+
+    public IStatEquations GetStatEquations(PlayableClass job, Tribe? tribe = null) =>
+        new StatBlockEquations(new GearSetStatBlock(job, this, tribe));
 
     public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
                                                         .Where(slot => slot < GearSetSlot.SoulCrystal
@@ -183,6 +190,8 @@ internal class GearSetOverride : IReadOnlyGearSet
         result += _override.GetStat(statType);
         return result;
     }
+    public IStatEquations GetStatEquations(PlayableClass job, Tribe? tribe = null) =>
+        new StatBlockEquations(new GearSetStatBlock(job, this, tribe));
 }
 
 public static class GearSetExtensions
