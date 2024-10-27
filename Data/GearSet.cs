@@ -3,6 +3,7 @@ using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
 using Lumina.Excel.GeneratedSheets;
 using XIVCalc.Calculations;
+using XIVCalc.Interfaces;
 
 namespace HimbeertoniRaidTool.Common.Data;
 

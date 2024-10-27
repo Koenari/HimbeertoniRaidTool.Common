@@ -4,6 +4,7 @@ using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 using XIVCalc.Calculations;
 using XIVCalc.Interfaces;
+using XIVCalc.Lumina;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -195,9 +196,12 @@ public class PlayableClass : IHrtDataType
             StatType.AttackPower         => Job.MainStat(),
             _                            => type,
         };
+        bool isMainStat = type is StatType.Strength or StatType.Dexterity or StatType.Intelligence or StatType.Mind
+                               or StatType.Vitality;
         return set.GetStat(type) //Gear Stats
-             + (int)Math.Floor(LevelTable.GetBaseStat((byte)type, Level)
-                             * StatEquations.GetJobModifier((byte)type, ClassJob)) //Base Stat dependent on job
+             + (int)Math.Floor((isMainStat ? LevelTable.MAIN(Level) : LevelTable.SUB(Level))
+                             * StatEquations.GetJobModifier(
+                                   type, new LuminaJobModifiers(ClassJob))) //Base Stat dependent on job
              + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
     }
 
@@ -218,7 +222,7 @@ public class PlayableClass : IHrtDataType
 public class GearSetStatBlock(PlayableClass jobClass, IReadOnlyGearSet set, Tribe? tribe = null) : IJobStatBlock
 {
 
-    public ClassJob Job => jobClass.ClassJob;
+    public IJobModifiers JobModifiers => new LuminaJobModifiers(jobClass.ClassJob);
     public int Level => jobClass.Level;
     public int WeaponDamage => set[GearSetSlot.MainHand].GetStat(StatType.PhysicalDamage);
     public int WeaponDelay => set[GearSetSlot.MainHand].GetStat(StatType.Delay);

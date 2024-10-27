@@ -25,6 +25,7 @@
         <Using Include="System.Collections.Generic"/>
         <Using Include="System.Linq"/>
         <Using Include="Newtonsoft.Json"/>
+        <Using Include="XIVCalc"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Lumina.Excel" Version="7.0.1">
@@ -33,7 +34,8 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="XIVCalc" Version="0.3.0-alpha1"/>
+        <PackageReference Include="XIVCalc" Version="0.3.0-alpha4" />
+        <PackageReference Include="XIVCalc.Lumina" Version="7.0.0-alpha1"/>
     </ItemGroup>
 
     <ItemGroup>
