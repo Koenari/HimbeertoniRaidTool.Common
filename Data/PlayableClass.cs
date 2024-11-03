@@ -196,12 +196,16 @@ public class PlayableClass : IHrtDataType
             StatType.AttackPower         => Job.MainStat(),
             _                            => type,
         };
-        bool isMainStat = type is StatType.Strength or StatType.Dexterity or StatType.Intelligence or StatType.Mind
-                               or StatType.Vitality;
+        int statBase = 0;
+        if (type is >= StatType.Strength and <= StatType.Mind)
+            statBase = LevelTable.IntMAIN(Level);
+        if (type is StatType.Piety or StatType.Tenacity or StatType.CriticalHit or StatType.Determination
+                 or StatType.SkillSpeed or StatType.SpellSpeed or StatType.DirectHitRate)
+            statBase = LevelTable.IntSUB(Level);
         return set.GetStat(type) //Gear Stats
-             + (int)Math.Floor((isMainStat ? LevelTable.MAIN(Level) : LevelTable.SUB(Level))
-                             * StatEquations.GetJobModifier(
-                                   type, new LuminaJobModifiers(ClassJob))) //Base Stat dependent on job
+             + (int)Math.Floor(
+                   statBase * StatEquations.GetJobModifier(
+                       type, new LuminaJobModifiers(ClassJob))) //Base Stat dependent on job
              + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
     }
 
