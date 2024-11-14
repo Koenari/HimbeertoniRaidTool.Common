@@ -17,8 +17,8 @@ public class ItemInfo
     {
         _gameInfo = gameInfo;
         _itemContainerDb = curData.ItemContainerDb;
-        _shopSheet = excelModule.GetSheet<SpecialShop>()!;
-        _recipeLookupSheet = excelModule.GetSheet<RecipeLookup>()!;
+        _shopSheet = excelModule.GetSheet<SpecialShop>();
+        _recipeLookupSheet = excelModule.GetSheet<RecipeLookup>();
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();

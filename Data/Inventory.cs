@@ -21,7 +21,7 @@ public class Inventory : Dictionary<int, InventoryEntry>
 }
 
 [JsonDictionary]
-public class Wallet : Dictionary<Currency, uint>
+public class Wallet : Dictionary<Currency, int>
 {
 }
 

@@ -7,14 +7,13 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public static class EnumExtensions
 {
-    private static ExcelSheet<ClassJob>? _jobSheetCache;
     private static readonly Dictionary<Job, ClassJob?> _jobCache = new();
-    private static ExcelSheet<ClassJob> JobSheet => _jobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static readonly ExcelSheet<ClassJob> _jobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
 
     private static ClassJob GetClassJob(Job j)
     {
         _jobCache.TryAdd(j, null);
-        return _jobCache[j] ??= JobSheet.GetRow((uint)j);
+        return _jobCache[j] ??= _jobSheet.GetRow((uint)j);
     }
 
     public static Role GetRole(this Job c)

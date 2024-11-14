@@ -11,9 +11,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
 {
-    private static readonly ExcelSheet<World>? _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
+    private static readonly ExcelSheet<World> _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
 
-    private static readonly ExcelSheet<Tribe>? _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
+    private static readonly ExcelSheet<Tribe> _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
     //Properties
     [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
 
@@ -62,11 +62,11 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     }
 
     public PlayableClass? MainClass => this[MainJob];
-    public Tribe? Tribe => _tribeSheet?.GetRow(TribeId);
+    public Tribe Tribe => _tribeSheet.GetRow(TribeId);
 
     public World? HomeWorld
     {
-        get => HomeWorldId > 0 ? _worldSheet?.GetRow(HomeWorldId) : null;
+        get => HomeWorldId > 0 ? _worldSheet.GetRow(HomeWorldId) : null;
         set => HomeWorldId = value?.RowId ?? 0;
     }
 
