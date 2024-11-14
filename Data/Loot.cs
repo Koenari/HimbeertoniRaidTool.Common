@@ -1,31 +1,30 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 public class InstanceWithLoot
 {
-    private static readonly ExcelSheet<InstanceContent>? _instanceSheet =
+    private static readonly ExcelSheet<InstanceContent> _instanceSheet =
         ServiceManager.ExcelModule.GetSheet<InstanceContent>();
-    private static readonly ExcelSheet<ContentFinderCondition>? _contentFinderSheet =
+    private static readonly ExcelSheet<ContentFinderCondition> _contentFinderSheet =
         ServiceManager.ExcelModule.GetSheet<ContentFinderCondition>();
     private static readonly Dictionary<uint, uint> _contentFinderLookup;
     static InstanceWithLoot()
     {
         _contentFinderLookup = new Dictionary<uint, uint>();
-        if (_contentFinderSheet == null) return;
         foreach (ContentFinderCondition? row in _contentFinderSheet.Where(x => x.ContentLinkType == 1))
         {
-            _contentFinderLookup.TryAdd(row.Content, row.RowId);
+            _contentFinderLookup.TryAdd(row.Value.Content.RowId, row.Value.RowId);
         }
     }
     public bool IsAvailable => _contentFinderCondition is not null;
-    public InstanceType InstanceType => (InstanceType)_instanceContent.InstanceContentType;
+    public InstanceType InstanceType => (InstanceType)_instanceContent.InstanceContentType.RowId;
 
     public EncounterDifficulty Difficulty { get; }
-    public string Name => _contentFinderCondition?.Name ?? CommonLoc.NotAvail_Abbrev;
+    public string Name => _contentFinderCondition?.Name.ToString() ?? CommonLoc.NotAvail_Abbrev;
     public IEnumerable<HrtItem> PossibleItems { get; }
     public IEnumerable<HrtItem> GuaranteedItems { get; }
     public uint InstanceId => _instanceContent.RowId;

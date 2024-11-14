@@ -1,18 +1,12 @@
-﻿using Lumina.Excel.GeneratedSheets;
+﻿using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.GameData;
 
 /// <summary>
 ///     Extends <see cref="Lumina.Excel.GeneratedSheets.Item" /> by using enums where possible
 /// </summary>
-public class LuminaItem
+public class LuminaItem(Item item)
 {
-    private readonly Item _item;
 
-    public LuminaItem(Item item)
-    {
-        _item = item;
-    }
-
-    public Rarity Rarity => (Rarity)_item.Rarity;
+    public Rarity Rarity => (Rarity)item.Rarity;
 }

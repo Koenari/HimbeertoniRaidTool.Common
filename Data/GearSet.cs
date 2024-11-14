@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using XIVCalc.Calculations;
 using XIVCalc.Interfaces;
 

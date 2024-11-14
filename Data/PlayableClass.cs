@@ -1,7 +1,7 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using XIVCalc.Calculations;
 using XIVCalc.Interfaces;
 using XIVCalc.Lumina;
@@ -11,7 +11,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class PlayableClass : IHrtDataType
 {
-    private static readonly ExcelSheet<ClassJob>? _classJobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static readonly ExcelSheet<ClassJob> _classJobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
 
     [JsonProperty("BisSets")] private readonly List<GearSet> _bis = new();
 
@@ -29,7 +29,7 @@ public class PlayableClass : IHrtDataType
         Job = job;
     }
     [JsonIgnore]
-    public ClassJob ClassJob => _classJobSheet?.GetRow((uint)Job)!;
+    public ClassJob ClassJob => _classJobSheet.GetRow((uint)Job)!;
     public Role Role => Job.GetRole();
     [JsonProperty("Gear")] [Obsolete("Use CurGear", true)]
     private GearSet GearMigration

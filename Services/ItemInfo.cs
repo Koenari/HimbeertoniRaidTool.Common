@@ -1,5 +1,5 @@
 ﻿using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
@@ -22,6 +22,8 @@ public class ItemInfo
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();
+        //ToDo: Port to new Lumina
+        /*
         foreach (SpecialShop shop in _shopSheet.Where(s => !string.IsNullOrEmpty(s.Name.RawString)))
         {
             for (int idx = 0; idx < shop.ShopEntries.Length; idx++)
@@ -46,7 +48,7 @@ public class ItemInfo
                 }
             }
         }
-
+        */
         _lootSources = new Dictionary<uint, List<uint>>();
         foreach (InstanceWithLoot instance in _gameInfo.GetInstances())
         {
@@ -89,7 +91,7 @@ public class ItemInfo
 
     public bool CanBePurchased(uint itemId) => _shopIndex.ContainsKey(itemId);
 
-    public bool CanBeCrafted(uint itemId) => _recipeLookupSheet.GetRow(itemId) != null;
+    public bool CanBeCrafted(uint itemId) => _recipeLookupSheet.HasRow(itemId);
 
     public ItemIdCollection GetPossiblePurchases(uint itemId) =>
         new ItemIdList(_usedAsCurrency.GetValueOrDefault(itemId) ?? Enumerable.Empty<uint>());
@@ -97,8 +99,11 @@ public class ItemInfo
     public ItemIdCollection GetContainerContents(uint itemId) =>
         _itemContainerDb.GetValueOrDefault(itemId, ItemIdCollection.Empty);
 
-    public IEnumerable<(string shopName, SpecialShop.ShopEntry entry)> GetShopEntriesForItem(uint itemId)
+    public IEnumerable<(string shopName, SpecialShop.ItemStruct entry)> GetShopEntriesForItem(uint itemId)
     {
+        yield break;
+        //ToDo: Adapt to new Lumina
+        /*
         if (_shopIndex.TryGetValue(itemId, out var shopEntries))
             foreach ((uint shopId, int idx) in shopEntries)
             {
@@ -106,6 +111,7 @@ public class ItemInfo
                 if (shop != null)
                     yield return (shop.Name, shop.ShopEntries[idx]);
             }
+            */
     }
 
     public static bool IsTomeStone(uint itemId) => itemId switch
@@ -131,19 +137,19 @@ public class ItemInfo
             return ItemSource.Crafted;
         if (CanBePurchased(itemId))
         {
-            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Any(e => CanBeCrafted(e.Item.Row)))
-             || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
-                                                          .Any(e => GetSource(new HrtItem(e.Item.Row), maxDepth)
+            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Any(e => CanBeCrafted(e.ItemCost.RowId)))
+             || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Where(e => e.ItemCost.RowId != 0)
+                                                          .Any(e => GetSource(new HrtItem(e.ItemCost.RowId), maxDepth)
                                                                  == ItemSource.Crafted)))
                 return ItemSource.Crafted;
-            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Any(e => IsTomeStone(e.Item.Row)))
-             || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCostEntries.Where(e => e.Item.Row != 0)
-                                                          .Any(e => GetSource(new HrtItem(e.Item.Row), maxDepth)
+            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Any(e => IsTomeStone(e.ItemCost.RowId)))
+             || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Where(e => e.ItemCost.RowId != 0)
+                                                          .Any(e => GetSource(new HrtItem(e.ItemCost.RowId), maxDepth)
                                                                  == ItemSource.Tome)))
                 return ItemSource.Tome;
             if (GetShopEntriesForItem(itemId).Any(se =>
-                                                      se.entry.ItemCostEntries.Any(
-                                                          e => GetSource(new HrtItem(e.Item.Row), maxDepth)
+                                                      se.entry.ItemCosts.Any(
+                                                          e => GetSource(new HrtItem(e.ItemCost.RowId), maxDepth)
                                                             == ItemSource.Raid)))
                 return ItemSource.Raid;
             return ItemSource.Shop;

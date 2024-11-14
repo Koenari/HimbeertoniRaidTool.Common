@@ -1,7 +1,7 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -9,19 +9,17 @@ public static class EnumExtensions
 {
     private static ExcelSheet<ClassJob>? _jobSheetCache;
     private static readonly Dictionary<Job, ClassJob?> _jobCache = new();
-    private static ExcelSheet<ClassJob>? JobSheet => _jobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static ExcelSheet<ClassJob> JobSheet => _jobSheetCache ??= ServiceManager.ExcelModule.GetSheet<ClassJob>();
 
-    private static ClassJob? GetClassJob(Job j)
+    private static ClassJob GetClassJob(Job j)
     {
         _jobCache.TryAdd(j, null);
-        return _jobCache[j] ??= JobSheet?.GetRow((uint)j);
+        return _jobCache[j] ??= JobSheet.GetRow((uint)j);
     }
 
     public static Role GetRole(this Job c)
     {
-        ClassJob? cj = GetClassJob(c);
-        if (cj is null)
-            return Role.None;
+        ClassJob cj = GetClassJob(c);
         if (cj.PartyBonus > 4)
             return (Role)cj.PartyBonus;
         return (Role)cj.Role;
@@ -30,7 +28,7 @@ public static class EnumExtensions
     public static bool IsCombatRole(this Role role) =>
         role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
 
-    public static StatType MainStat(this Job job) => (StatType)(GetClassJob(job)?.PrimaryStat ?? 0);
+    public static StatType MainStat(this Job job) => (StatType)GetClassJob(job).PrimaryStat;
 
     public static int GroupSize(this GroupType groupType) => groupType switch
     {
@@ -48,11 +46,8 @@ public static class EnumExtensions
 
     public static bool IsDoL(this Job j) => j is >= Job.CRP and <= Job.CUL;
 
-    public static Job GetBaseJob(this Job j)
-    {
-        uint? parentId = GetClassJob(j)?.ClassJobParent.Row;
-        return parentId is null ? Job.ADV : (Job)parentId;
-    }
+    public static Job GetBaseJob(this Job j) => (Job)GetClassJob(j).ClassJobParent.RowId;
+
     public static bool HasBaseJob(this Job j) => GetBaseJob(j) is not Job.ADV;
     public static StatType GetStatType(this MateriaCategory materiaCategory) => materiaCategory switch
     {
