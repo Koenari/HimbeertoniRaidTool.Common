@@ -31,14 +31,10 @@ public class GearItem : HrtItem, IEquatable<GearItem>
         {
             //ToDo: Do actual Cap
             if (Item.Rarity == (byte)Rarity.Relic) return int.MaxValue;
-            return int.MaxValue;
-            //Todo: Figure out how to do in new Lumina
-            /*
-            int maxVal = int.Max(Item.UnkData59[2].BaseParamValue, Item.UnkData59[3].BaseParamValue);
+            int maxVal = int.Max(Item.BaseParamValue[2], Item.BaseParamValue[3]);
             if (IsHq)
-                maxVal += int.Max(Item.UnkData73[2].BaseParamValueSpecial, Item.UnkData73[3].BaseParamValueSpecial);
+                maxVal += int.Max(Item.BaseParamValueSpecial[2], Item.BaseParamValueSpecial[3]);
             return maxVal;
-            */
         });
     }
     [JsonIgnore] public new string DataTypeName => CommonLoc.DataTypeName_item_gear;
@@ -347,7 +343,10 @@ public class ItemIdList : ItemIdCollection
     public ItemIdList(IEnumerable<uint> ids) : base(ids)
     {
     }
-    public static implicit operator ItemIdList(uint[] ids) => new(ids);
+    public static implicit operator ItemIdList(uint[] ids)
+    {
+        return new ItemIdList(ids);
+    }
 }
 
 public abstract class ItemIdCollection : IEnumerable<uint>
@@ -365,12 +364,20 @@ public abstract class ItemIdCollection : IEnumerable<uint>
 
     IEnumerator IEnumerable.GetEnumerator() => _iDs.GetEnumerator();
 
-    public static implicit operator ItemIdCollection(uint id) => new ItemIdList(id);
+    public static implicit operator ItemIdCollection(uint id)
+    {
+        return new ItemIdList(id);
+    }
 
-    public static implicit operator ItemIdCollection(Range range) =>
-        new ItemIdRange(range.Start.Value, range.End.Value);
+    public static implicit operator ItemIdCollection(Range range)
+    {
+        return new ItemIdRange(range.Start.Value, range.End.Value);
+    }
 
-    public static implicit operator ItemIdCollection((uint, uint) id) => new ItemIdRange(id.Item1, id.Item2);
+    public static implicit operator ItemIdCollection((uint, uint) id)
+    {
+        return new ItemIdRange(id.Item1, id.Item2);
+    }
 }
 
 public enum ItemComparisonMode
