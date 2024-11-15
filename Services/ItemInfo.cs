@@ -11,6 +11,7 @@ public class ItemInfo
     private readonly ExcelSheet<RecipeLookup> _recipeLookupSheet;
     private readonly Dictionary<uint, List<(uint shopID, int idx)>> _shopIndex;
     private readonly ExcelSheet<SpecialShop> _shopSheet;
+    private readonly ExcelSheet<Item> _itemSheet;
     private readonly Dictionary<uint, List<uint>> _usedAsCurrency;
 
     internal ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
@@ -19,6 +20,7 @@ public class ItemInfo
         _itemContainerDb = curData.ItemContainerDb;
         _shopSheet = excelModule.GetSheet<SpecialShop>();
         _recipeLookupSheet = excelModule.GetSheet<RecipeLookup>();
+        _itemSheet = excelModule.GetSheet<Item>();
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();
@@ -39,7 +41,7 @@ public class ItemInfo
                     foreach (SpecialShop.ItemStruct.ItemCostsStruct item in entry.ItemCosts)
                     {
                         if (item.ItemCost.RowId == 0) continue;
-                        uint costId = TranslateTomestoneIds(item.ItemCost.RowId, entry.PatchNumber);
+                        uint costId = AdjustItemCost(item.ItemCost.RowId, entry.PatchNumber);
                         _usedAsCurrency.TryAdd(costId, []);
                         _usedAsCurrency[costId].Add(entry.ReceiveItems[0].Item.RowId);
                     }
@@ -60,14 +62,19 @@ public class ItemInfo
             }
         }
     }
-    private static uint TranslateTomestoneIds(uint id, ushort patchNumber) => (patchNumber, id) switch
+
+    public Item AdjustItemCost(RowRef<Item> cost, ushort patchNumber)
+        => _itemSheet.GetRow(AdjustItemCost(cost.RowId, patchNumber));
+
+
+    public static uint AdjustItemCost(uint itemId, ushort patchNumber) => (patch: patchNumber, id: itemId) switch
     {
         (600, 2) => 43,
         (620, 2) => 44,
         (640, 3) => 45,
         (700, 2) => 46,
         (700, 3) => 47,
-        _        => id,
+        _        => itemId,
     };
 
     private void RegisterLoot(uint itemId, uint instanceId)
@@ -115,7 +122,7 @@ public class ItemInfo
             }
     }
 
-    public static bool IsTomeStone(uint itemId, ushort patch = 0) => TranslateTomestoneIds(itemId, patch) switch
+    public static bool IsTomeStone(uint itemId, ushort patch = 0) => AdjustItemCost(itemId, patch) switch
     {
         23              => true,
         24              => true,
