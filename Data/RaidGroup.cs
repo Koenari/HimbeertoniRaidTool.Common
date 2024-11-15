@@ -53,7 +53,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
         GroupType.Solo  => 1,
         GroupType.Group => 4,
         GroupType.Raid  => 8,
-        _               => throw new NotImplementedException(),
+        _               => throw new ArgumentOutOfRangeException(),
     };
 
     public Player this[int idx]

@@ -22,33 +22,30 @@ public class ItemInfo
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();
-        //ToDo: Port to new Lumina
-        /*
-        foreach (SpecialShop shop in _shopSheet.Where(s => !string.IsNullOrEmpty(s.Name.RawString)))
+        foreach (SpecialShop shop in _shopSheet.Where(s => !s.Name.IsEmpty))
         {
-            for (int idx = 0; idx < shop.ShopEntries.Length; idx++)
+            for (int idx = 0; idx < shop.Item.Count; idx++)
             {
-                SpecialShop.ShopEntry entry = shop.ShopEntries[idx];
-                foreach (SpecialShop.ItemReceiveEntry receiveEntry in entry.ItemReceiveEntries)
+                SpecialShop.ItemStruct entry = shop.Item[idx];
+                foreach (SpecialShop.ItemStruct.ReceiveItemsStruct receiveEntry in entry.ReceiveItems)
                 {
-                    if (receiveEntry.Item.Row == 0)
+                    if (receiveEntry.Item.RowId == 0)
                         continue;
-                    if (!_shopIndex.ContainsKey(receiveEntry.Item.Row))
-                        _shopIndex[receiveEntry.Item.Row] = new List<(uint shopID, int idx)>();
-                    if (_shopIndex[receiveEntry.Item.Row].Contains((shop.RowId, idx)))
+                    if (!_shopIndex.ContainsKey(receiveEntry.Item.RowId))
+                        _shopIndex[receiveEntry.Item.RowId] = [];
+                    if (_shopIndex[receiveEntry.Item.RowId].Contains((shop.RowId, idx)))
                         continue;
-                    _shopIndex[receiveEntry.Item.Row].Add((shop.RowId, idx));
-                    foreach (SpecialShop.ItemCostEntry item in entry.ItemCostEntries)
+                    _shopIndex[receiveEntry.Item.RowId].Add((shop.RowId, idx));
+                    foreach (SpecialShop.ItemStruct.ItemCostsStruct item in entry.ItemCosts)
                     {
-                        if (item.Item.Row == 0) continue;
-                        if (!_usedAsCurrency.ContainsKey(item.Item.Row))
-                            _usedAsCurrency.Add(item.Item.Row, new List<uint>());
-                        _usedAsCurrency[item.Item.Row].Add(entry.ItemReceiveEntries[0].Item.Row);
+                        if (item.ItemCost.RowId == 0) continue;
+                        uint costId = TranslateTomestoneIds(item.ItemCost.RowId, entry.PatchNumber);
+                        _usedAsCurrency.TryAdd(costId, []);
+                        _usedAsCurrency[costId].Add(entry.ReceiveItems[0].Item.RowId);
                     }
                 }
             }
         }
-        */
         _lootSources = new Dictionary<uint, List<uint>>();
         foreach (InstanceWithLoot instance in _gameInfo.GetInstances())
         {
@@ -63,6 +60,15 @@ public class ItemInfo
             }
         }
     }
+    private static uint TranslateTomestoneIds(uint id, ushort patchNumber) => (patchNumber, id) switch
+    {
+        (600, 2) => 43,
+        (620, 2) => 44,
+        (640, 3) => 45,
+        (700, 2) => 46,
+        (700, 3) => 47,
+        _        => id,
+    };
 
     private void RegisterLoot(uint itemId, uint instanceId)
     {
@@ -101,20 +107,15 @@ public class ItemInfo
 
     public IEnumerable<(string shopName, SpecialShop.ItemStruct entry)> GetShopEntriesForItem(uint itemId)
     {
-        yield break;
-        //ToDo: Adapt to new Lumina
-        /*
         if (_shopIndex.TryGetValue(itemId, out var shopEntries))
             foreach ((uint shopId, int idx) in shopEntries)
             {
-                SpecialShop? shop = _shopSheet.GetRow(shopId);
-                if (shop != null)
-                    yield return (shop.Name, shop.ShopEntries[idx]);
+                SpecialShop shop = _shopSheet.GetRow(shopId);
+                yield return (shop.Name.ToString(), shop.Item[idx]);
             }
-            */
     }
 
-    public static bool IsTomeStone(uint itemId) => itemId switch
+    public static bool IsTomeStone(uint itemId, ushort patch = 0) => TranslateTomestoneIds(itemId, patch) switch
     {
         23              => true,
         24              => true,
@@ -142,7 +143,8 @@ public class ItemInfo
                                                           .Any(e => GetSource(new HrtItem(e.ItemCost.RowId), maxDepth)
                                                                  == ItemSource.Crafted)))
                 return ItemSource.Crafted;
-            if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Any(e => IsTomeStone(e.ItemCost.RowId)))
+            if (GetShopEntriesForItem(itemId)
+                    .Any(se => se.entry.ItemCosts.Any(e => IsTomeStone(e.ItemCost.RowId, se.entry.PatchNumber)))
              || GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Where(e => e.ItemCost.RowId != 0)
                                                           .Any(e => GetSource(new HrtItem(e.ItemCost.RowId), maxDepth)
                                                                  == ItemSource.Tome)))
