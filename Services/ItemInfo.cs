@@ -24,12 +24,12 @@ public class ItemInfo
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();
-        foreach (SpecialShop shop in _shopSheet.Where(s => !s.Name.IsEmpty))
+        foreach (var shop in _shopSheet.Where(s => !s.Name.IsEmpty))
         {
             for (int idx = 0; idx < shop.Item.Count; idx++)
             {
-                SpecialShop.ItemStruct entry = shop.Item[idx];
-                foreach (SpecialShop.ItemStruct.ReceiveItemsStruct receiveEntry in entry.ReceiveItems)
+                var entry = shop.Item[idx];
+                foreach (var receiveEntry in entry.ReceiveItems)
                 {
                     if (receiveEntry.Item.RowId == 0)
                         continue;
@@ -38,10 +38,10 @@ public class ItemInfo
                     if (_shopIndex[receiveEntry.Item.RowId].Contains((shop.RowId, idx)))
                         continue;
                     _shopIndex[receiveEntry.Item.RowId].Add((shop.RowId, idx));
-                    foreach (SpecialShop.ItemStruct.ItemCostsStruct item in entry.ItemCosts)
+                    foreach (var item in entry.ItemCosts)
                     {
                         if (item.ItemCost.RowId == 0) continue;
-                        uint costId = AdjustItemCost(item.ItemCost.RowId, entry.PatchNumber);
+                        uint costId = AdjustItemCostId(item.ItemCost.RowId, entry.PatchNumber);
                         _usedAsCurrency.TryAdd(costId, []);
                         _usedAsCurrency[costId].Add(entry.ReceiveItems[0].Item.RowId);
                     }
@@ -49,13 +49,13 @@ public class ItemInfo
             }
         }
         _lootSources = new Dictionary<uint, List<uint>>();
-        foreach (InstanceWithLoot instance in _gameInfo.GetInstances())
+        foreach (var instance in _gameInfo.GetInstances())
         {
-            foreach (HrtItem loot in instance.AllLoot)
+            foreach (var loot in instance.AllLoot)
             {
                 RegisterLoot(loot.Id, instance.InstanceId);
                 if (!IsItemContainer(loot.Id)) continue;
-                foreach (HrtItem item in GetContainerContents(loot.Id).Select(id => new HrtItem(id)))
+                foreach (var item in GetContainerContents(loot.Id).Select(id => new HrtItem(id)))
                 {
                     RegisterLoot(item.Id, instance.InstanceId);
                 }
@@ -64,10 +64,10 @@ public class ItemInfo
     }
 
     public Item AdjustItemCost(RowRef<Item> cost, ushort patchNumber)
-        => _itemSheet.GetRow(AdjustItemCost(cost.RowId, patchNumber));
+        => _itemSheet.GetRow(AdjustItemCostId(cost.RowId, patchNumber));
 
 
-    public static uint AdjustItemCost(uint itemId, ushort patchNumber) => (patch: patchNumber, id: itemId) switch
+    public static uint AdjustItemCostId(uint itemId, ushort patch) => (patch, itemId) switch
     {
         (600, 2) => 43,
         (620, 2) => 44,
@@ -117,12 +117,12 @@ public class ItemInfo
         if (_shopIndex.TryGetValue(itemId, out var shopEntries))
             foreach ((uint shopId, int idx) in shopEntries)
             {
-                SpecialShop shop = _shopSheet.GetRow(shopId);
+                var shop = _shopSheet.GetRow(shopId);
                 yield return (shop.Name.ToString(), shop.Item[idx]);
             }
     }
 
-    public static bool IsTomeStone(uint itemId, ushort patch = 0) => AdjustItemCost(itemId, patch) switch
+    public static bool IsTomeStone(uint itemId, ushort patch = 0) => AdjustItemCostId(itemId, patch) switch
     {
         23              => true,
         24              => true,
