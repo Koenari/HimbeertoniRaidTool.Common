@@ -1,28 +1,86 @@
-﻿namespace HimbeertoniRaidTool.Common.Data;
+﻿using System.Collections;
 
-[JsonDictionary]
-public class Inventory : Dictionary<int, InventoryEntry>
+namespace HimbeertoniRaidTool.Common.Data;
+
+[JsonObject]
+public class Inventory : IEnumerable<KeyValuePair<int, InventoryEntry>>
 {
-    public bool Contains(uint id) => Values.Any(i => i.Id == id);
+    //Todo: Does not work on changes withing Inventory entry
+    [JsonProperty("LastUpdated")] public DateTime LastUpdated { get; private set; }
+    [JsonProperty("Data")] private Dictionary<int, InventoryEntry> _data = new();
 
-    public int ItemCount(uint id) => this.Where(i => i.Value.Id == id).Sum(i => i.Value.Quantity);
-
-    public int IndexOf(uint id) => this.FirstOrDefault(i => i.Value.Id == id).Key;
-
-    public int FirstFreeSlot()
+    public InventoryEntry this[int id]
     {
-        for (int i = 0; i < Values.Count; i++)
+        get => _data[id];
+        set
         {
-            if (!ContainsKey(i))
+            LastUpdated = DateTime.UtcNow;
+            _data[id] = value;
+        }
+    }
+    public bool Contains(uint id) => _data.Values.Any(i => i.Id == id);
+
+    public int ItemCount(uint id) => _data.Where(i => i.Value.Id == id).Sum(i => i.Value.Quantity);
+
+    public int IndexOf(uint id) => _data.FirstOrDefault(i => i.Value.Id == id).Key;
+
+    public void Remove(int idx)
+    {
+        LastUpdated = DateTime.UtcNow;
+        _data.Remove(idx);
+    }
+
+    private int FirstFreeSlot()
+    {
+        for (int i = 0; i < _data.Values.Count; i++)
+        {
+            if (!_data.ContainsKey(i))
                 return i;
         }
-        return Values.Count;
+        return _data.Values.Count;
     }
+
+    public int ReserveSlot(HrtItem item, int quantity = 0)
+    {
+        if (Contains(item.Id)) return IndexOf(item.Id);
+        int slot = FirstFreeSlot();
+        this[slot] = new InventoryEntry(item)
+        {
+            Quantity = quantity,
+        };
+        return slot;
+    }
+    public IEnumerator<KeyValuePair<int, InventoryEntry>> GetEnumerator() => _data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_data).GetEnumerator();
 }
 
-[JsonDictionary]
-public class Wallet : Dictionary<Currency, int>
+[JsonObject]
+public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
 {
+
+    [JsonProperty("Data")] private Dictionary<Currency, int> _data = new();
+    [JsonProperty("LastUpdated")] public DateTime LastUpdated { get; private set; }
+    public bool ContainsKey(Currency key) => _data.ContainsKey(key);
+    public int this[Currency cur]
+    {
+        get => _data[cur];
+        set
+        {
+            LastUpdated = DateTime.UtcNow;
+            _data[cur] = value;
+        }
+    }
+    public ICollection<Currency> Keys => ((IDictionary<Currency, int>)_data).Keys;
+    public ICollection<int> Values => ((IDictionary<Currency, int>)_data).Values;
+    public IEnumerator<KeyValuePair<Currency, int>> GetEnumerator() => _data.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_data).GetEnumerator();
+    public bool Contains(KeyValuePair<Currency, int> item) => _data.Contains(item);
+    public bool Remove(KeyValuePair<Currency, int> item)
+    {
+        LastUpdated = DateTime.UtcNow;
+        return _data.Remove(item.Key);
+    }
+    public int Count => _data.Count;
 }
 
 [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore,
@@ -92,7 +150,10 @@ public class InventoryEntry
         _                  => 0,
     };
 
-    public static implicit operator InventoryEntry(HrtItem item) => new(item);
+    public static implicit operator InventoryEntry(HrtItem item)
+    {
+        return new InventoryEntry(item);
+    }
 }
 
 public enum Currency : uint
@@ -125,4 +186,5 @@ public enum Currency : uint
     TomestoneOfAstronomy = 43,
     TomestoneOfCausality = 44,
     TomestoneOfComedy = 45,
+    TomestoneOfHeliometry = 46,
 }

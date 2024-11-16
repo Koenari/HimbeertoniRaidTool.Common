@@ -60,6 +60,15 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wallet.
+        /// </summary>
+        public static string CommonTerms_Wallet {
+            get {
+                return ResourceManager.GetString("CommonTerms_Wallet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Character.
         /// </summary>
         public static string DataType_Character {
