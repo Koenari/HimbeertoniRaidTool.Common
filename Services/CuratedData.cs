@@ -9,12 +9,13 @@ internal class CuratedData
 {
     internal readonly GameExpansion[] Expansions =
     [
-        new GameExpansion(1, MateriaLevel.None, 0),
-        new GameExpansion(2, MateriaLevel.II, 50),
-        new GameExpansion(3, MateriaLevel.IV, 60),
-        new GameExpansion(4, MateriaLevel.VI, 70),
-        new GameExpansion(5, MateriaLevel.VIII, 80),
-        new GameExpansion(6, MateriaLevel.X, 90)
+        new(1, MateriaLevel.None, 0),
+        new(1, MateriaLevel.None, 0),
+        new(2, MateriaLevel.II, 50),
+        new(3, MateriaLevel.IV, 60),
+        new(4, MateriaLevel.VI, 70),
+        new(5, MateriaLevel.VIII, 80),
+        new(6, MateriaLevel.X, 90)
         {
             NormalRaidTiers =
             [
@@ -29,7 +30,7 @@ internal class CuratedData
                 new RaidTier(Savage, 665, 660, "Anabaseios Savage", [30127, 30129, 30131, 30133]),
             ],
         },
-        new GameExpansion(7, MateriaLevel.XII, 100)
+        new(7, MateriaLevel.XII, 100)
         {
             NormalRaidTiers =
             [
@@ -96,109 +97,100 @@ internal class CuratedData
     internal readonly HashSet<InstanceWithLoot> InstanceDb =
     [
         //6.0
-        new InstanceWithLoot(78, Normal, 34155..34229),
-        new InstanceWithLoot(79, Normal, 34830..34849),
-        new InstanceWithLoot(80, Normal, 34305..34379),
-        new InstanceWithLoot(81, Normal, 34810..34829),
-        new InstanceWithLoot(82, Normal, 34605..34679),
-        new InstanceWithLoot(83, Normal, 34455..34529),
-        new InstanceWithLoot(84, Normal, 34830..34849),
-        new InstanceWithLoot(85, Normal, 34830..34849),
-        new InstanceWithLoot(20077, Normal, 36283),
-        new InstanceWithLoot(20078, Extreme, 34925..34944),
-        new InstanceWithLoot(20079, Normal, 36275),
-        new InstanceWithLoot(20080, Normal, 36282),
-        new InstanceWithLoot(20081, Extreme, 34945..34964),
-        new InstanceWithLoot(30107, Normal, 35817..35822),
+        new(78, Normal, 34155..34229),
+        new(79, Normal, 34830..34849),
+        new(80, Normal, 34305..34379),
+        new(81, Normal, 34810..34829),
+        new(82, Normal, 34605..34679),
+        new(83, Normal, 34455..34529),
+        new(84, Normal, 34830..34849),
+        new(85, Normal, 34830..34849),
+        new(20077, Normal, 36283),
+        new(20078, Extreme, 34925..34944),
+        new(20079, Normal, 36275),
+        new(20080, Normal, 36282),
+        new(20081, Extreme, 34945..34964),
+        new(30107, Normal, 35817..35822),
         //Raids
-        new InstanceWithLoot(30108, Savage, new ItemIdList(35245..35264, 35734, 35736), 35826),
-        new InstanceWithLoot(30109, Normal, (35817, 35822)),
-        new InstanceWithLoot(30110, Savage, new ItemIdList(35735, 35737, 35738, 35739, 35828, 35829), 35825),
-        new InstanceWithLoot(30111, Normal, (35817, 35822)),
-        new InstanceWithLoot(30112, Savage, 35740..35743, 35823),
-        new InstanceWithLoot(30113, Normal, (35817, 35822)),
-        new InstanceWithLoot(30114, Savage, new ItemIdList(35735, 35737, 35739, 35830, 35831), 35824),
+        new(30108, Savage, new ItemIdList(35245..35264, 35734, 35736), 35826),
+        new(30109, Normal, (35817, 35822)),
+        new(30110, Savage, new ItemIdList(35735, 35737, 35738, 35739, 35828, 35829), 35825),
+        new(30111, Normal, (35817, 35822)),
+        new(30112, Savage, 35740..35743, 35823),
+        new(30113, Normal, (35817, 35822)),
+        new(30114, Savage, new ItemIdList(35735, 35737, 35739, 35830, 35831), 35824),
         //6.1
-        new InstanceWithLoot(87, Normal, (37166, 37227)),
-        new InstanceWithLoot(20083, Extreme, (36923, 36942), 36809),
-        new InstanceWithLoot(30106, Ultimate, 36810),
-        new InstanceWithLoot(30115, Normal, (37131, 37165), 36820),
+        new(87, Normal, (37166, 37227)),
+        new(20083, Extreme, (36923, 36942), 36809),
+        new(30106, Ultimate, 36810),
+        new(30115, Normal, (37131, 37165), 36820),
         //6.2
-        new InstanceWithLoot(88, Normal, 38156..38210),
-        new InstanceWithLoot(20084, Normal, 38437),
-        new InstanceWithLoot(20085, Extreme, 37856..37875, 38374),
-        new InstanceWithLoot(30116, Normal, 38375..38380),
-        new InstanceWithLoot(30117, Savage, 38396..38399, 38381),
-        new InstanceWithLoot(30118, Normal, 38375..38380),
-        new InstanceWithLoot(30119, Savage, new ItemIdList(38391, 38393, 38394, 38395, 38386, 38387), 38383),
-        new InstanceWithLoot(30120, Normal, 38375..38380),
-        new InstanceWithLoot(30121, Savage, new ItemIdList(38391, 38393, 38395, 38388, 38389), 38382),
-        new InstanceWithLoot(30122, Normal, 38375..38380, 38385),
-        new InstanceWithLoot(30123, Savage, new ItemIdList(38081..38099, 38390, 38392), 38384),
+        new(88, Normal, 38156..38210),
+        new(20084, Normal, 38437),
+        new(20085, Extreme, 37856..37875, 38374),
+        new(30116, Normal, 38375..38380),
+        new(30117, Savage, 38396..38399, 38381),
+        new(30118, Normal, 38375..38380),
+        new(30119, Savage, new ItemIdList(38391, 38393, 38394, 38395, 38386, 38387), 38383),
+        new(30120, Normal, 38375..38380),
+        new(30121, Savage, new ItemIdList(38391, 38393, 38395, 38388, 38389), 38382),
+        new(30122, Normal, 38375..38380, 38385),
+        new(30123, Savage, new ItemIdList(38081..38099, 38390, 38392), 38384),
         //6.3
-        //Lapis Manalis
-        new InstanceWithLoot(89, Normal, (38957, 39011)),
-        //Euphrosyne
-        new InstanceWithLoot(30125, Normal, new ItemIdList(39089..39123, 39373, 39481, 39600, 39601, 39602), 38950),
+        new(89, Normal, (38957, 39011)), //Lapis Manalis
+        new(30125, Normal, new ItemIdList(39089..39123, 39373, 39481, 39600, 39601, 39602), 38950), //Euphrosyne
         //6.4
         //Dungeon
-        new InstanceWithLoot(90, Normal, 40240..40294),
+        new(90, Normal, 40240..40294),
         //Trial
-        new InstanceWithLoot(20089),
-        new InstanceWithLoot(20090, Extreme, new ItemIdList(39940..39959, 40296), 40295),
+        new(20089),
+        new(20090, Extreme, new ItemIdList(39940..39959, 40296), 40295),
         //Raids
-        new InstanceWithLoot(30126, Normal, 40297..40302),
-        new InstanceWithLoot(30127, Savage, 40313..40316, 40303),
-        new InstanceWithLoot(30128, Normal, 40297..40302),
-        new InstanceWithLoot(30129, Savage, new ItemIdList(40308, 40310, 40312, 40320, 40321), 40304),
-        new InstanceWithLoot(30130, Normal, 40297..40302),
-        new InstanceWithLoot(30131, Savage, new ItemIdList(40308, 40310, 40309, 40311, 40312, 40318, 40319), 40305),
-        new InstanceWithLoot(30132, Normal, 40297..40302, 40317),
-        new InstanceWithLoot(30133, Savage, new ItemIdList(40165..40183, 40307), 40306),
+        new(30126, Normal, 40297..40302),
+        new(30127, Savage, 40313..40316, 40303),
+        new(30128, Normal, 40297..40302),
+        new(30129, Savage, new ItemIdList(40308, 40310, 40312, 40320, 40321), 40304),
+        new(30130, Normal, 40297..40302),
+        new(30131, Savage, new ItemIdList(40308, 40310, 40309, 40311, 40312, 40318, 40319), 40305),
+        new(30132, Normal, 40297..40302, 40317),
+        new(30133, Savage, new ItemIdList(40165..40183, 40307), 40306),
         //6.5
         //Dungeon (The Lunar Subterrane)
-        new InstanceWithLoot(91, Normal, (40765, 40819)),
+        new(91, Normal, (40765, 40819)),
         //Trial (The Abyssal Fracture)
-        new InstanceWithLoot(20091, Normal),
-        new InstanceWithLoot(20092, Extreme, new ItemIdList(41033..41051, 41054), 41053),
+        new(20091, Normal),
+        new(20092, Extreme, new ItemIdList(41033..41051, 41054), 41053),
         //Alliance Raid (Thaleia)
-        new InstanceWithLoot(30134, Normal, 40897..40931),
+        new(30134, Normal, 40897..40931),
         //7.0
         //Dungeons
-        //Worqor Zormor
-        new InstanceWithLoot(92, Normal, 42067..42143),
-        //Origenics
-        new InstanceWithLoot(93, Normal, 42529..42568),
-        //Ihuykatumu
-        new InstanceWithLoot(94, Normal, 41913..41989),
-        //Alexandria
-        new InstanceWithLoot(95),
-        //The Skydeep Cenote
-        new InstanceWithLoot(96, Normal, 42221..42297),
-        //Vanguard
-        new InstanceWithLoot(97, Normal, 42375..42451),
-        //Tender Valley
-        new InstanceWithLoot(98),
-        //The Strayborough Deadwalk
-        new InstanceWithLoot(99),
+        new(92, Normal, 42067..42143), //Worqor Zormor
+        new(93, Normal, 42529..42568), //Origenics
+        new(94, Normal, 41913..41989), //Ihuykatumu
+        new(95), //Alexandria
+        new(96, Normal, 42221..42297), //The Skydeep Cenote
+        new(97, Normal, 42375..42451), //Vanguard
+        new(98), //Tender Valley
+        new(99), //The Strayborough Deadwalk
         //Trials
-        //Worqor Lar Dor
-        new InstanceWithLoot(20093),
-        new InstanceWithLoot(20094, Extreme, new ItemIdList(42773..42794, 43526), 43539),
-        //The Interphos
-        new InstanceWithLoot(20095),
-        //Everkeep
-        new InstanceWithLoot(20096, Normal),
-        new InstanceWithLoot(20097, Extreme, 42795..42814, 43540),
+        new(20093), //Worqor Lar Dor
+        new(20094, Extreme, new ItemIdList(42773..42794, 43526), 43539), //Worqor Lar Dor
+        new(20095), //The Interphos
+        new(20096, Normal), //Everkeep
+        new(20097, Extreme, 42795..42814, 43540), //Everkeep
         //Raids
-        new InstanceWithLoot(30135, Normal, 43541..43546), //M1
-        new InstanceWithLoot(30136, Savage, 43533..43536, 43549), //M1S
-        new InstanceWithLoot(30137, Normal, 43541..43546), //M2
-        new InstanceWithLoot(30138, Savage, new ItemIdList(43528, 43530, 43532, 43555, 43548), 43550), //M2S
-        new InstanceWithLoot(30139, Normal, new ItemIdList(43541..43544, 43546)), //M3
-        new InstanceWithLoot(30140, Savage, new ItemIdList(43529, 43531, 43553, 43554), 43551), //M3S
-        new InstanceWithLoot(30141, Normal, 43542..43546, 43547), //M4
-        new InstanceWithLoot(30142, Savage, new ItemIdList(43101..43121, 43527), 43552), //M4S
-
+        new(30135, Normal, 43541..43546), //M1
+        new(30136, Savage, 43533..43536, 43549), //M1S
+        new(30137, Normal, 43541..43546), //M2
+        new(30138, Savage, new ItemIdList(43528, 43530, 43532, 43555, 43548), 43550), //M2S
+        new(30139, Normal, new ItemIdList(43541..43544, 43546)), //M3
+        new(30140, Savage, new ItemIdList(43529, 43531, 43553, 43554), 43551), //M3S
+        new(30141, Normal, 43542..43546, 43547), //M4
+        new(30142, Savage, new ItemIdList(43101..43121, 43527), 43552), //M4S
+        //7.1
+        new(00100, Normal, 44550..44604), //Dungeon: Yuweyawata Field Station
+        new(30144, Normal, 44514..44548), //Alliance-Raid - Jeuno: The First Walk
+        new(20099, Extreme, 44696..44717, 44718..44719), // The Minstrel's Ballad: Sphene's Burden
+        new(64009, Unreal), //The Jade Stoa (Unreal)
     ];
 }

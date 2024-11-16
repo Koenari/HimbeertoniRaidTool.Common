@@ -111,6 +111,7 @@ public enum EncounterDifficulty
     Extreme,
     Savage,
     Ultimate,
+    Unreal,
 }
 
 public enum Role : byte
