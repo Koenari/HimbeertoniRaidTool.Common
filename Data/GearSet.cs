@@ -38,6 +38,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
 
     [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
     [JsonProperty("Name")] public string Name = "";
+    [JsonProperty("Alias")] public string? Alias;
 
     [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
 
@@ -90,7 +91,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    string IHrtDataType.Name => Name;
+    string IHrtDataType.Name => Alias ?? Name;
 
     [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
     [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
@@ -166,7 +167,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
             yield return this[i];
         }
     }
-    public override string ToString() => $"{Name} ({ItemLevel})";
+    public override string ToString() => $"{Alias ?? Name} ({ItemLevel})";
 }
 
 internal class GearSetOverride : IReadOnlyGearSet
