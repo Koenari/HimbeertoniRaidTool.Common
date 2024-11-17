@@ -144,9 +144,10 @@ public enum GroupType
 
 public enum GearSetManager
 {
-    Hrt,
-    Etro,
-    XivGear,
+    Unknown = -1,
+    Hrt = 0,
+    Etro = 1,
+    XivGear = 2,
 }
 
 public enum Gender
