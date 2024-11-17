@@ -11,7 +11,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class PlayableClass : IHrtDataType
 {
-    private static readonly ExcelSheet<ClassJob> _classJobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static readonly ExcelSheet<ClassJob> ClassJobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
 
     [JsonProperty("BisSets")] private readonly List<GearSet> _bis = new();
 
@@ -29,7 +29,7 @@ public class PlayableClass : IHrtDataType
         Job = job;
     }
     [JsonIgnore]
-    public ClassJob ClassJob => _classJobSheet.GetRow((uint)Job)!;
+    public ClassJob ClassJob => ClassJobSheet.GetRow((uint)Job);
     public Role Role => Job.GetRole();
     [JsonProperty("Gear")] [Obsolete("Use CurGear", true)]
     private GearSet GearMigration
@@ -123,7 +123,7 @@ public class PlayableClass : IHrtDataType
     {
         get
         {
-            GearSetSlot slot2 = slot;
+            var slot2 = slot;
             if (slot is not (GearSetSlot.Ring1 or GearSetSlot.Ring2))
                 return (CurGear[slot], CurBis[slot2]);
             if (CurGear[GearSetSlot.Ring2].Equals(CurBis[GearSetSlot.Ring1], ItemComparisonMode.IdOnly)
@@ -139,7 +139,7 @@ public class PlayableClass : IHrtDataType
     [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
     [JsonIgnore] public string Name => Job.ToString();
     /// <summary>
-    ///     Evaluates if all of the given slots have BiS item or an item with higher or equal item level as
+    ///     Evaluates if all the given slots have BiS item or an item with higher or equal item level as
     ///     given item
     /// </summary>
     /// <param name="slots">List of slots to evaluate</param>
@@ -221,6 +221,10 @@ public class PlayableClass : IHrtDataType
         _gearSets.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
         _bis.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
     }
+
+    public void RemoveGearSet(GearSet gearSet) => _gearSets.Remove(gearSet);
+
+    public void RemoveBisSet(GearSet bisSet) => _bis.Remove(bisSet);
 }
 
 public class GearSetStatBlock(PlayableClass jobClass, IReadOnlyGearSet set, Tribe? tribe = null) : IJobStatBlock

@@ -40,7 +40,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     [JsonProperty]
     public readonly ulong Sequence;
     [JsonProperty]
-    public byte[] Signature = Array.Empty<byte>();
+    public byte[] Signature = [];
     [JsonIgnore] public bool IsSigned => Signature.Length > 0;
     [JsonIgnore] public bool IsEmpty => Sequence == 0;
 
@@ -87,13 +87,34 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
 
     public override int GetHashCode() => (int)(Sequence & int.MaxValue);
     public override bool Equals(object? obj) => Equals(obj as HrtId);
-    public static bool operator ==(HrtId left, HrtId right) => left.Equals(right);
-    public static bool operator !=(HrtId left, HrtId right) => !(left == right);
-    public static bool operator <(HrtId left, HrtId right) => left.CompareTo(right) < 0;
-    public static bool operator <=(HrtId left, HrtId right) => left.CompareTo(right) <= 0;
-    public static bool operator >(HrtId left, HrtId right) => left.CompareTo(right) > 0;
-    public static bool operator >=(HrtId left, HrtId right) => left.CompareTo(right) >= 0;
-    public static explicit operator HrtId(string id) => FromString(id);
+    public static bool operator ==(HrtId left, HrtId right)
+    {
+        return left.Equals(right);
+    }
+    public static bool operator !=(HrtId left, HrtId right)
+    {
+        return !(left == right);
+    }
+    public static bool operator <(HrtId left, HrtId right)
+    {
+        return left.CompareTo(right) < 0;
+    }
+    public static bool operator <=(HrtId left, HrtId right)
+    {
+        return left.CompareTo(right) <= 0;
+    }
+    public static bool operator >(HrtId left, HrtId right)
+    {
+        return left.CompareTo(right) > 0;
+    }
+    public static bool operator >=(HrtId left, HrtId right)
+    {
+        return left.CompareTo(right) >= 0;
+    }
+    public static explicit operator HrtId(string id)
+    {
+        return FromString(id);
+    }
 }
 
 public interface IHasHrtId : IEquatable<IHasHrtId>
