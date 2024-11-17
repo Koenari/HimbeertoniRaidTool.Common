@@ -150,8 +150,12 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     {
         TimeStamp = gearSet.TimeStamp;
         ExternalId = gearSet.ExternalId;
+        ExternalIdx = gearSet.ExternalIdx;
+        LastExternalFetchDate = gearSet.LastExternalFetchDate;
         Name = gearSet.Name;
+        Alias = gearSet.Alias;
         ManagedBy = gearSet.ManagedBy;
+        RemoteIDs = gearSet.RemoteIDs;
         //Do an actual copy of the item
         for (int i = 0; i < _items.Length; i++)
         {
