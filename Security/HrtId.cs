@@ -8,19 +8,17 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public static readonly HrtId Empty = new(0, IdType.None, 0);
     public static HrtId FromString(string id)
     {
-        string[] parts = id.Split('-');
+        var parts = id.Split('-');
         if (parts is not ["HRT", "1", _, _, _])
             return Empty;
-        try
-        {
-            uint authority = uint.Parse(parts[2], NumberStyles.HexNumber);
-            var type = Enum.Parse<IdType>(parts[3]);
-            ulong sequence = ulong.Parse(parts[4], NumberStyles.HexNumber);
-            return new HrtId(authority, type, sequence);
-        }
-        catch (Exception e) when (e is ArgumentException or OverflowException or ArgumentNullException
-                                    or FormatException) { }
-        return Empty;
+        if(!uint.TryParse(parts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture,  out var authority))
+            return Empty;
+        if(!Enum.TryParse<IdType>(parts[3], true, out var type))
+            return Empty;
+        if(!ulong.TryParse(parts[4], NumberStyles.HexNumber, CultureInfo.InvariantCulture ,out var sequence))
+            return Empty;
+        return new HrtId(authority, type, sequence);
+        
     }
     [JsonProperty]
     public readonly byte Revision = 1;
@@ -74,6 +72,8 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
         Gear = 3,
         Group = 4,
         RaidSession = 5,
+        User = 6,
+        XivAccount = 7,
     }
 
     public enum AuthorityLevel
@@ -125,5 +125,5 @@ public interface IHasHrtId : IEquatable<IHasHrtId>
     /// <summary>
     ///     XIV Raid Tool specific unique IDs used for remote storage and lookup.
     /// </summary>
-    public IEnumerable<HrtId> RemoteIds { get; }
+    public IList<HrtId> RemoteIds { get; }
 }

@@ -91,7 +91,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     /// </summary>
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 

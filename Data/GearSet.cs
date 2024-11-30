@@ -98,7 +98,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     //IDs
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
+    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
     public GearItem this[GearSetSlot slot]

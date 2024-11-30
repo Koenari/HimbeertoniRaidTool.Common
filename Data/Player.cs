@@ -56,7 +56,7 @@ public class Player : IHrtDataTypeWithId
     [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
 
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
     public override string ToString() => Name;
 

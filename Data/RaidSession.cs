@@ -3,6 +3,7 @@ using HimbeertoniRaidTool.Common.Security;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
+[JsonObject(MemberSerialization.OptIn)]
 public class RaidSession : IHrtDataTypeWithId
 {
     public static string DataTypeNameStatic = "session";
@@ -19,7 +20,7 @@ public class RaidSession : IHrtDataTypeWithId
     /// </summary>
     [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
 
-    [JsonIgnore] IEnumerable<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
     [JsonProperty("StartTime")] public DateTime StartTime { get; private set; }
     [JsonProperty("Duration")] public TimeSpan Duration { get; private set; }
