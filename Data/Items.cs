@@ -197,7 +197,7 @@ public class GearItem : Item, IEquatable<GearItem>
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Item : IEquatable<Item>, IHrtDataType
 {
-
+    public static readonly Item Empty = new(0);
     [JsonIgnore]
     protected static readonly ExcelSheet<Lumina.Excel.Sheets.Item> ItemSheet =
         ServiceManager.ExcelModule.GetSheet<Lumina.Excel.Sheets.Item>();
@@ -222,9 +222,6 @@ public class Item : IEquatable<Item>, IHrtDataType
     [JsonIgnore] public ushort Icon => GameItem.RawItem.Icon;
 
     protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
-
-    [Obsolete("", true)]
-    protected Lumina.Excel.Sheets.Item LuminaItem => _itemCache ??= ItemSheet.GetRow(Id);
 
     public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
     public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
@@ -317,6 +314,39 @@ public class MateriaItem : Item, IEquatable<MateriaItem>
     public bool Equals(MateriaItem? other) => base.Equals(other);
 
     public int GetStat() => LuminaMateria.Value[_materiaLevel];
+}
+
+[JsonObject(MemberSerialization.OptIn)]
+[ImmutableObject(true)]
+public class FoodItem : Item, IEquatable<FoodItem>
+{
+    private static readonly ExcelSheet<ItemAction> ItemActionSheet = ServiceManager.ExcelModule.GetSheet<ItemAction>();
+    private static readonly ExcelSheet<ItemFood> FoodSheet = ServiceManager.ExcelModule.GetSheet<ItemFood>();
+    private readonly ItemFood? _luminaFood;
+    [JsonProperty] public bool IsHq { get; init; } = true;
+    public FoodItem(uint id) : base(id)
+    {
+        var action = GameItem.RawItem.ItemAction;
+        if (action is { IsValid: true, Value.Type: 845 })
+            _luminaFood = FoodSheet.GetRow(action.Value.Data[1]);
+    }
+
+    public int ApplyEffect(StatType type, int before)
+    {
+        if (_luminaFood is null) return before;
+        foreach (var param in _luminaFood.Value.Params.Where(param => param.BaseParam.RowId == (uint)type))
+        {
+            int added;
+            if (param.IsRelative)
+                added = before * (IsHq ? param.ValueHQ : param.Value) / 100;
+            else
+                added = IsHq ? param.ValueHQ : param.Value;
+            added = int.Clamp(added, 0, IsHq ? param.MaxHQ : param.Max);
+            return before + added;
+        }
+        return before;
+    }
+    public bool Equals(FoodItem? other) => Id == other?.Id && IsHq == other.IsHq;
 }
 
 public class ItemIdRange : ItemIdCollection

@@ -32,6 +32,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     [JsonProperty("EtroID")] [Obsolete("Use ExternalId", true)]
     public string EtroId { set => ExternalId = value; }
 
+    [JsonProperty("Food")] public FoodItem? Food;
+
     [JsonProperty("ExternalId")] public string ExternalId = "";
     [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
     [JsonProperty("LastExternalFetch")] public DateTime LastExternalFetchDate;
@@ -110,7 +112,11 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     /*
      * Caching stats is a problem since this needs to be invalidated when changing materia
      */
-    public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
+    public int GetStat(StatType type)
+    {
+        int preFood = this.Sum(x => x.GetStat(type));
+        return Food?.ApplyEffect(type, preFood) ?? preFood;
+    }
 
     public void MarkAsSystemManaged() => IsSystemManaged = true;
 
@@ -156,6 +162,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
         Alias = gearSet.Alias;
         ManagedBy = gearSet.ManagedBy;
         RemoteIDs = gearSet.RemoteIDs;
+        Food = gearSet.Food;
         //Do an actual copy of the item
         for (int i = 0; i < _items.Length; i++)
         {
