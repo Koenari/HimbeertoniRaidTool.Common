@@ -25,20 +25,20 @@ public class InstanceWithLoot
 
     public EncounterDifficulty Difficulty { get; }
     public string Name => _contentFinderCondition?.Name.ToString() ?? CommonLoc.NotAvail_Abbrev;
-    public IEnumerable<HrtItem> PossibleItems { get; }
-    public IEnumerable<HrtItem> GuaranteedItems { get; }
+    public IEnumerable<Item> PossibleItems { get; }
+    public IEnumerable<Item> GuaranteedItems { get; }
     public uint InstanceId => _instanceContent.RowId;
     private readonly InstanceContent _instanceContent;
     private readonly ContentFinderCondition? _contentFinderCondition;
-    public IEnumerable<HrtItem> AllLoot
+    public IEnumerable<Item> AllLoot
     {
         get
         {
-            foreach (HrtItem? item in PossibleItems)
+            foreach (var item in PossibleItems)
             {
                 yield return item;
             }
-            foreach (HrtItem? item in GuaranteedItems)
+            foreach (var item in GuaranteedItems)
             {
                 yield return item;
             }
@@ -51,7 +51,7 @@ public class InstanceWithLoot
         _contentFinderCondition = _contentFinderLookup.TryGetValue(id, out uint contentId)
             ? _contentFinderSheet?.GetRow(contentId)! : null;
         Difficulty = difficulty;
-        GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new HrtItem(selectId));
-        PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new HrtItem(selectId));
+        GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
+        PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
     }
 }

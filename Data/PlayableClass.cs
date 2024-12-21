@@ -143,7 +143,7 @@ public class PlayableClass : IHrtDataType
     ///     given item
     /// </summary>
     /// <param name="slots">List of slots to evaluate</param>
-    /// <param name="toCompare">Item to compare to items in slots</param>
+    /// <param name="toCompare">LuminaItem to compare to items in slots</param>
     /// <returns>True if all slots are BiS or better</returns>
     public bool HaveBisOrHigherItemLevel(IEnumerable<GearSetSlot> slots, GearItem toCompare) =>
         SwappedCompare((item, bis) => BisOrBetterComparer(item, bis, toCompare), slots);

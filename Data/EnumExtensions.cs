@@ -18,7 +18,7 @@ public static class EnumExtensions
 
     public static Role GetRole(this Job c)
     {
-        ClassJob cj = GetClassJob(c);
+        var cj = GetClassJob(c);
         if (cj.PartyBonus > 4)
             return (Role)cj.PartyBonus;
         return (Role)cj.Role;
@@ -91,7 +91,7 @@ public static class EnumExtensions
     };
     public static string PrefixName(this MateriaCategory cat)
     {
-        HrtMateria mat = new(cat, MateriaLevel.I);
+        MateriaItem mat = new(cat, MateriaLevel.I);
         return mat.Name.Length > 9 ? mat.Name[..^9] : "";
     }
 

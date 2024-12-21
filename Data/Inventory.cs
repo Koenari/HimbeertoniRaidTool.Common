@@ -40,7 +40,7 @@ public class Inventory : IEnumerable<KeyValuePair<int, InventoryEntry>>
         return _data.Values.Count;
     }
 
-    public int ReserveSlot(HrtItem item, int quantity = 0)
+    public int ReserveSlot(Item item, int quantity = 0)
     {
         if (Contains(item.Id)) return IndexOf(item.Id);
         int slot = FirstFreeSlot();
@@ -89,12 +89,12 @@ public class InventoryEntry
 {
     public int Quantity = 0;
     private string _type;
-    private HrtItem? _hrtItem;
+    private Item? _hrtItem;
     private GearItem? _gearItem;
-    private HrtMateria? _hrtMateria;
+    private MateriaItem? _hrtMateria;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-    public InventoryEntry(HrtItem item)
+    public InventoryEntry(Item item)
     {
         Item = item;
     }
@@ -106,7 +106,7 @@ public class InventoryEntry
     }
 
     [JsonIgnore]
-    public HrtItem Item
+    public Item Item
     {
         get
         {
@@ -126,31 +126,31 @@ public class InventoryEntry
                 _gearItem = item;
                 _type = nameof(GearItem);
             }
-            else if (value is HrtMateria mat)
+            else if (value is MateriaItem mat)
             {
                 _hrtMateria = mat;
-                _type = nameof(HrtMateria);
+                _type = nameof(MateriaItem);
             }
             else
             {
                 _hrtItem = value;
-                _type = nameof(HrtItem);
+                _type = nameof(Data.Item);
             }
         }
     }
 
     public bool IsGear => _type == nameof(GearItem);
-    public bool IsMateria => _type == nameof(HrtMateria);
+    public bool IsMateria => _type == nameof(MateriaItem);
 
     public uint Id => _type switch
     {
-        nameof(GearItem)   => _gearItem!.Id,
-        nameof(HrtMateria) => _hrtMateria!.Id,
-        nameof(HrtItem)    => _hrtItem!.Id,
-        _                  => 0,
+        nameof(GearItem)    => _gearItem!.Id,
+        nameof(MateriaItem) => _hrtMateria!.Id,
+        nameof(Data.Item)   => _hrtItem!.Id,
+        _                   => 0,
     };
 
-    public static implicit operator InventoryEntry(HrtItem item)
+    public static implicit operator InventoryEntry(Item item)
     {
         return new InventoryEntry(item);
     }
