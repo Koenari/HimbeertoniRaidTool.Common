@@ -221,6 +221,8 @@ public class Item : IEquatable<Item>, IHrtDataType
 
     [JsonIgnore] public ushort Icon => GameItem.RawItem.Icon;
 
+    public bool CanBeHq => GameItem.RawItem.CanBeHq;
+
     protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
 
     public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
@@ -313,6 +315,8 @@ public class MateriaItem : Item, IEquatable<MateriaItem>
 
     public bool Equals(MateriaItem? other) => base.Equals(other);
 
+    public override bool Equals(object? other) => base.Equals(other);
+
     public int GetStat() => LuminaMateria.Value[_materiaLevel];
 }
 
@@ -347,6 +351,8 @@ public class FoodItem : Item, IEquatable<FoodItem>
         return before;
     }
     public bool Equals(FoodItem? other) => Id == other?.Id && IsHq == other.IsHq;
+
+    public override bool Equals(object? other) => Equals(other as FoodItem);
 }
 
 public class ItemIdRange : ItemIdCollection

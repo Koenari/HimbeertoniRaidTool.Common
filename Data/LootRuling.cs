@@ -6,10 +6,10 @@ public class RolePriority : Dictionary<Role, int>
     public delegate bool InputIntImpl(string desc, ref int val);
     private int Max => this.Aggregate(0, (sum, x) => Math.Max(sum, x.Value));
     public int GetPriority(Role r) => TryGetValue(r, out int val) ? val : Max + 1;
-
+    public int GetPriority(Role? r) => r is not null ? GetPriority(r.Value) : Max + 1;
     public void DrawEdit(InputIntImpl uiImplementation)
     {
-        foreach (Role r in Enum.GetValues<Role>())
+        foreach (var r in Enum.GetValues<Role>())
         {
             if (!r.IsCombatRole())
             {
