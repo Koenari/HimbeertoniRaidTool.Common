@@ -1,25 +1,25 @@
 ﻿namespace HimbeertoniRaidTool.Common.Services;
 
-public class GameInfo
+public static class GameInfo
 {
-    private readonly GameExpansion[] _expansions;
-    private readonly Dictionary<uint, InstanceWithLoot> _instanceDb;
-    public GameExpansion CurrentExpansion => _expansions[^1];
+    private static readonly Dictionary<uint, InstanceWithLoot> InstanceDb;
+    public static GameExpansion CurrentExpansion => Expansions[^1];
 
-    public RaidTier? CurrentSavageTier => CurrentExpansion.CurrentSavage;
-    public RaidTier? PreviousSavageTier => CurrentExpansion.PreviousSavage ?? _expansions[^2].CurrentSavage;
+    public static RaidTier? CurrentSavageTier => CurrentExpansion.CurrentSavage;
+    public static RaidTier? PreviousSavageTier => CurrentExpansion.PreviousSavage ?? Expansions[^2].CurrentSavage;
 
-    public IReadOnlyList<GameExpansion> Expansions => _expansions;
-    internal GameInfo(CuratedData curatedData)
+    public static IReadOnlyList<GameExpansion> Expansions { get; }
+    static GameInfo()
     {
-        _instanceDb = new Dictionary<uint, InstanceWithLoot>();
-        foreach (InstanceWithLoot? instance in curatedData.InstanceDb)
+        var curatedData = new CuratedData();
+        InstanceDb = new Dictionary<uint, InstanceWithLoot>();
+        foreach (var instance in curatedData.InstanceDb)
         {
-            _instanceDb.Add(instance.InstanceId, instance);
+            InstanceDb.Add(instance.InstanceId, instance);
         }
-        _expansions = curatedData.Expansions;
+        Expansions = curatedData.Expansions;
     }
-    public GameExpansion GetExpansionByLevel(int level) => _expansions.First(exp => exp.MaxLevel >= level);
-    public InstanceWithLoot GetInstance(uint instanceId) => _instanceDb[instanceId];
-    public IEnumerable<InstanceWithLoot> GetInstances() => _instanceDb.Values;
+    public static GameExpansion GetExpansionByLevel(int level) => Expansions.First(exp => exp.MaxLevel >= level);
+    public static InstanceWithLoot GetInstance(uint instanceId) => InstanceDb[instanceId];
+    public static IEnumerable<InstanceWithLoot> GetInstances() => InstanceDb.Values;
 }

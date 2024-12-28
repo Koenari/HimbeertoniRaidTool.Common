@@ -186,7 +186,7 @@ public class GearItem : Item, IEquatable<GearItem>
     public MateriaLevel MaxAffixableMateriaLevel()
     {
         if (!CanAffixMateria()) return 0;
-        var maxAllowed = ServiceManager.GameInfo.GetExpansionByLevel(GameItem.RawItem.LevelEquip).MaxMateriaLevel;
+        var maxAllowed = GameInfo.GetExpansionByLevel(GameItem.RawItem.LevelEquip).MaxMateriaLevel;
         if (_materia.Count >= GameItem.RawItem.MateriaSlotCount)
             maxAllowed--;
 
@@ -226,25 +226,25 @@ public class Item : IEquatable<Item>, IHrtDataType
     protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
 
     public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
-    public ItemSource Source => ServiceManager.ItemInfo.GetSource(this);
+    public ItemSource Source => ServiceManager.ItemInfoService.GetSource(this);
 
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
     public bool Filled => Id > 0;
-    public bool IsExchangableItem => ServiceManager.ItemInfo.UsedAsShopCurrency(Id);
-    public bool IsContainerItem => ServiceManager.ItemInfo.IsItemContainer(Id);
+    public bool IsExchangableItem => ServiceManager.ItemInfoService.UsedAsShopCurrency(Id);
+    public bool IsContainerItem => ServiceManager.ItemInfoService.IsItemContainer(Id);
 
     public IEnumerable<GearItem> PossiblePurchases
     {
         get
         {
             if (IsExchangableItem)
-                foreach (uint canBuy in ServiceManager.ItemInfo.GetPossiblePurchases(Id))
+                foreach (uint canBuy in ServiceManager.ItemInfoService.GetPossiblePurchases(Id))
                 {
                     yield return new GearItem(canBuy);
                 }
             if (IsContainerItem)
-                foreach (uint id in ServiceManager.ItemInfo.GetContainerContents(Id))
+                foreach (uint id in ServiceManager.ItemInfoService.GetContainerContents(Id))
                 {
                     yield return new GearItem(id);
                 }

@@ -6,16 +6,15 @@ namespace HimbeertoniRaidTool.Common.Services;
 #pragma warning disable CS8618
 public static class ServiceManager
 {
-
-    public static ExcelModule ExcelModule { get; private set; }
-    public static GameInfo GameInfo { get; private set; }
-    public static ItemInfo ItemInfo { get; private set; }
+    private static bool _isInitialized;
+    internal static ExcelModule ExcelModule { get; private set; }
+    internal static ItemInfoService ItemInfoService { get; private set; }
     public static void Init(ExcelModule module, string? language = null)
     {
+        if (_isInitialized) return;
+        _isInitialized = true;
         ExcelModule = module;
-        var curatedData = new CuratedData();
-        GameInfo = new GameInfo(curatedData);
-        ItemInfo = new ItemInfo(module, curatedData, GameInfo);
+        ItemInfoService = new ItemInfoService(module);
         if (language is not null)
             SetLanguage(language);
     }

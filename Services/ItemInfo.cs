@@ -5,9 +5,8 @@ using LuminaItem = Lumina.Excel.Sheets.Item;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
-public class ItemInfo
+internal class ItemInfoService
 {
-    private readonly GameInfo _gameInfo;
     private readonly Dictionary<uint, ItemIdCollection> _itemContainerDb;
     private readonly Dictionary<uint, List<uint>> _lootSources;
     private readonly ExcelSheet<RecipeLookup> _recipeLookupSheet;
@@ -16,10 +15,9 @@ public class ItemInfo
     private readonly ExcelSheet<LuminaItem> _itemSheet;
     private readonly Dictionary<uint, List<uint>> _usedAsCurrency;
 
-    internal ItemInfo(ExcelModule excelModule, CuratedData curData, GameInfo gameInfo)
+    internal ItemInfoService(ExcelModule excelModule)
     {
-        _gameInfo = gameInfo;
-        _itemContainerDb = curData.ItemContainerDb;
+        _itemContainerDb = new CuratedData().ItemContainerDb;
         _shopSheet = excelModule.GetSheet<SpecialShop>();
         _recipeLookupSheet = excelModule.GetSheet<RecipeLookup>();
         _itemSheet = excelModule.GetSheet<Lumina.Excel.Sheets.Item>();
@@ -51,7 +49,7 @@ public class ItemInfo
             }
         }
         _lootSources = new Dictionary<uint, List<uint>>();
-        foreach (var instance in _gameInfo.GetInstances())
+        foreach (var instance in GameInfo.GetInstances())
         {
             foreach (var loot in instance.AllLoot)
             {
@@ -94,7 +92,7 @@ public class ItemInfo
         if (_lootSources.TryGetValue(itemId, out var instanceIDs))
             foreach (uint instanceId in instanceIDs)
             {
-                yield return _gameInfo.GetInstance(instanceId);
+                yield return GameInfo.GetInstance(instanceId);
             }
     }
 
@@ -142,7 +140,7 @@ public class ItemInfo
         if (item.Rarity == Rarity.Relic)
             return ItemSource.Relic;
         if (_lootSources.TryGetValue(itemId, out var instanceId))
-            return _gameInfo.GetInstance(instanceId.First()).InstanceType.ToItemSource();
+            return GameInfo.GetInstance(instanceId.First()).InstanceType.ToItemSource();
         if (CanBeCrafted(itemId))
             return ItemSource.Crafted;
         if (CanBePurchased(itemId))
@@ -168,4 +166,35 @@ public class ItemInfo
 
         return ItemSource.Undefined;
     }
+}
+
+public static class ItemInfoExtensions
+{
+    public static bool CanBePurchased(this Item item) => ServiceManager.ItemInfoService.CanBePurchased(item.Id);
+
+    public static IEnumerable<(string shopName, SpecialShop.ItemStruct entry)> PurchasedFrom(this Item item) =>
+        ServiceManager.ItemInfoService.GetShopEntriesForItem(item.Id);
+
+    public static LuminaItem AdjustItemCost(this RowRef<LuminaItem> itemId, ushort patchNumber) =>
+        ServiceManager.ItemInfoService.AdjustItemCost(itemId, patchNumber);
+
+    public static bool IsTomeStone(this LuminaItem item, ushort patchNumber = 0) =>
+        ItemInfoService.IsTomeStone(item.RowId, patchNumber);
+
+    public static bool IsTomeStone(this Item item, ushort patchNumber = 0) =>
+        ItemInfoService.IsTomeStone(item.Id, patchNumber);
+
+    public static bool IsCurrency(this Item item) => ItemInfoService.IsCurrency(item.Id);
+
+    public static bool IsCurrency(this LuminaItem item) => ItemInfoService.IsCurrency(item.RowId);
+
+    public static bool CanBeLooted(this Item item) => ServiceManager.ItemInfoService.CanBeLooted(item.Id);
+
+    public static bool CanBeLooted(this LuminaItem item) => ServiceManager.ItemInfoService.CanBeLooted(item.RowId);
+
+    public static IEnumerable<InstanceWithLoot> LootSources(this Item item) =>
+        ServiceManager.ItemInfoService.GetLootSources(item.Id);
+
+    public static IEnumerable<InstanceWithLoot> LootSources(this LuminaItem item) =>
+        ServiceManager.ItemInfoService.GetLootSources(item.RowId);
 }

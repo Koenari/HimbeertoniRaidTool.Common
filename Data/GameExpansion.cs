@@ -50,7 +50,7 @@ public class RaidTier(
     public readonly string Name = name;
     public readonly int WeaponItemLevel = weaponItemLevel;
 
-    public List<InstanceWithLoot> Bosses => _bossIDs.ConvertAll(id => ServiceManager.GameInfo.GetInstance(id));
+    public List<InstanceWithLoot> Bosses => _bossIDs.ConvertAll(GameInfo.GetInstance);
 
     public int ItemLevel(GearSetSlot slot) => slot == GearSetSlot.MainHand ? WeaponItemLevel : ArmorItemLevel;
 }
