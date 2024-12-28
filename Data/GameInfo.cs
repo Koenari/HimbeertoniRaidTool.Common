@@ -1,4 +1,4 @@
-﻿namespace HimbeertoniRaidTool.Common.Services;
+﻿namespace HimbeertoniRaidTool.Common.Data;
 
 public static class GameInfo
 {

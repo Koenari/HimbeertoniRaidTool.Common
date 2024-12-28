@@ -1,6 +1,6 @@
 ﻿using static HimbeertoniRaidTool.Common.Data.EncounterDifficulty;
 
-namespace HimbeertoniRaidTool.Common.Services;
+namespace HimbeertoniRaidTool.Common;
 
 /// <summary>
 /// This class/file encapsulates all data that needs to be update for new Patches of the game.
