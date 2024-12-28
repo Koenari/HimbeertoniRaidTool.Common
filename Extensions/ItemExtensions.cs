@@ -62,7 +62,8 @@ public static class ItemExtensions
                 }
         }
     }
-    public static bool IsFood(this LuminaItem item) => item.ItemAction.RowId != 0 && item.ItemAction.Value.Type == 845
-     && item.ItemAction.Value.Data[0] == 48;
+    public static bool IsFood(this LuminaItem item) => item.ItemAction.RowId != 0
+                                                    && item.ItemAction.Value.Type is 845 or 844
+                                                    && item.ItemAction.Value.Data[0] == 48;
 
 }
