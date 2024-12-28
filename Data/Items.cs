@@ -10,9 +10,9 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class GearItem : Item, IEquatable<GearItem>
+public class GearItem : HqItem
 {
-    [JsonIgnore] public static readonly GearItem Empty = new();
+    [JsonIgnore] public static readonly new GearItem Empty = new();
 
     [JsonProperty("Materia")] private readonly List<MateriaItem> _materia = new();
 
@@ -37,8 +37,6 @@ public class GearItem : Item, IEquatable<GearItem>
         });
     }
     [JsonIgnore] public new string DataTypeName => CommonLoc.DataTypeName_item_gear;
-
-    [JsonProperty] public bool IsHq { get; init; }
 
     [JsonIgnore] public IEnumerable<Job> Jobs => GameItem.RawItem.ClassJobCategory.Value.ToJob();
 
@@ -143,10 +141,8 @@ public class GearItem : Item, IEquatable<GearItem>
         Dictionary<MateriaItem, int> cnt = new();
         foreach (var s in _materia)
         {
-            if (cnt.ContainsKey(s))
+            if (!cnt.TryAdd(s, 0))
                 cnt[s]++;
-            else
-                cnt.Add(s, 1);
         }
         foreach (var s in other._materia)
         {
@@ -192,6 +188,16 @@ public class GearItem : Item, IEquatable<GearItem>
 
         return maxAllowed;
     }
+}
+
+public class HqItem : Item, IEquatable<HqItem>
+{
+    public HqItem(uint id) : base(id) { }
+    [JsonProperty] public bool IsHq { get; init; }
+    public bool Equals(HqItem? other) => IsHq == other?.IsHq && base.Equals(other);
+
+    public override bool Equals(object? obj) => Equals(obj as HqItem);
+    public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), IsHq);
 }
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
@@ -315,24 +321,22 @@ public class MateriaItem : Item, IEquatable<MateriaItem>
 
     public bool Equals(MateriaItem? other) => base.Equals(other);
 
-    public override bool Equals(object? other) => base.Equals(other);
-
     public int GetStat() => LuminaMateria.Value[_materiaLevel];
 }
 
 [JsonObject(MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class FoodItem : Item, IEquatable<FoodItem>
+public class FoodItem : HqItem
 {
     private static readonly ExcelSheet<ItemAction> ItemActionSheet = ServiceManager.ExcelModule.GetSheet<ItemAction>();
     private static readonly ExcelSheet<ItemFood> FoodSheet = ServiceManager.ExcelModule.GetSheet<ItemFood>();
     private readonly ItemFood? _luminaFood;
-    [JsonProperty] public bool IsHq { get; init; } = true;
     public FoodItem(uint id) : base(id)
     {
         var action = GameItem.RawItem.ItemAction;
         if (action is { IsValid: true, Value.Type: 845 })
             _luminaFood = FoodSheet.GetRow(action.Value.Data[1]);
+        IsHq = true;
     }
 
     public int ApplyEffect(StatType type, int before)
@@ -350,9 +354,6 @@ public class FoodItem : Item, IEquatable<FoodItem>
         }
         return before;
     }
-    public bool Equals(FoodItem? other) => Id == other?.Id && IsHq == other.IsHq;
-
-    public override bool Equals(object? other) => Equals(other as FoodItem);
 }
 
 public class ItemIdRange : ItemIdCollection
