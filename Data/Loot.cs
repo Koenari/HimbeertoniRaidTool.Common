@@ -8,9 +8,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 public class InstanceWithLoot
 {
     private static readonly ExcelSheet<InstanceContent> _instanceSheet =
-        ServiceManager.ExcelModule.GetSheet<InstanceContent>();
+        CommonLibrary.ExcelModule.GetSheet<InstanceContent>();
     private static readonly ExcelSheet<ContentFinderCondition> _contentFinderSheet =
-        ServiceManager.ExcelModule.GetSheet<ContentFinderCondition>();
+        CommonLibrary.ExcelModule.GetSheet<ContentFinderCondition>();
     private static readonly Dictionary<uint, uint> _contentFinderLookup;
     static InstanceWithLoot()
     {

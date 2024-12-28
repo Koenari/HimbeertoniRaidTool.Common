@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
@@ -206,7 +207,7 @@ public class Item : IEquatable<Item>, IHrtDataType
     public static readonly Item Empty = new(0);
     [JsonIgnore]
     protected static readonly ExcelSheet<Lumina.Excel.Sheets.Item> ItemSheet =
-        ServiceManager.ExcelModule.GetSheet<Lumina.Excel.Sheets.Item>();
+        CommonLibrary.ExcelModule.GetSheet<Lumina.Excel.Sheets.Item>();
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
     private readonly uint _id;
 
@@ -232,30 +233,12 @@ public class Item : IEquatable<Item>, IHrtDataType
     protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
 
     public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
-    public ItemSource Source => ServiceManager.ItemInfoService.GetSource(this);
+
 
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
     public bool Filled => Id > 0;
-    public bool IsExchangableItem => ServiceManager.ItemInfoService.UsedAsShopCurrency(Id);
-    public bool IsContainerItem => ServiceManager.ItemInfoService.IsItemContainer(Id);
 
-    public IEnumerable<GearItem> PossiblePurchases
-    {
-        get
-        {
-            if (IsExchangableItem)
-                foreach (uint canBuy in ServiceManager.ItemInfoService.GetPossiblePurchases(Id))
-                {
-                    yield return new GearItem(canBuy);
-                }
-            if (IsContainerItem)
-                foreach (uint id in ServiceManager.ItemInfoService.GetContainerContents(Id))
-                {
-                    yield return new GearItem(id);
-                }
-        }
-    }
     public bool Equals(Item? obj) => Id == obj?.Id;
 
     public string Name => GameItem.RawItem.Name.ExtractText();
@@ -272,7 +255,7 @@ public class MateriaItem : Item, IEquatable<MateriaItem>
 {
     [JsonIgnore]
     private static readonly ExcelSheet<Materia> MateriaSheet =
-        ServiceManager.ExcelModule.GetSheet<Materia>();
+        CommonLibrary.ExcelModule.GetSheet<Materia>();
 
     [JsonIgnore] private static Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> _idLookupImpl = new(() =>
     {
@@ -328,8 +311,8 @@ public class MateriaItem : Item, IEquatable<MateriaItem>
 [ImmutableObject(true)]
 public class FoodItem : HqItem
 {
-    private static readonly ExcelSheet<ItemAction> ItemActionSheet = ServiceManager.ExcelModule.GetSheet<ItemAction>();
-    private static readonly ExcelSheet<ItemFood> FoodSheet = ServiceManager.ExcelModule.GetSheet<ItemFood>();
+    private static readonly ExcelSheet<ItemAction> ItemActionSheet = CommonLibrary.ExcelModule.GetSheet<ItemAction>();
+    private static readonly ExcelSheet<ItemFood> FoodSheet = CommonLibrary.ExcelModule.GetSheet<ItemFood>();
     private readonly ItemFood? _luminaFood;
     public FoodItem(uint id) : base(id)
     {

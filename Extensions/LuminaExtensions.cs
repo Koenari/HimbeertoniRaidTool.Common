@@ -1,6 +1,6 @@
 ﻿using Lumina.Excel.Sheets;
 
-namespace HimbeertoniRaidTool.Common;
+namespace HimbeertoniRaidTool.Common.Extensions;
 
 public static class TribeExtensions
 {
@@ -55,7 +55,8 @@ public static class EquipSlotCategoryExtensions
 
 public static class ClassJobCategoryExtensions
 {
-    public static IEnumerable<Job> ToJob(this ClassJobCategory self) => Enum.GetValues<Job>().Where( job => self.Contains(job));
+    public static IEnumerable<Job> ToJob(this ClassJobCategory self) =>
+        Enum.GetValues<Job>().Where(job => self.Contains(job));
 
     public static bool Contains(this ClassJobCategory cat, Job job) => job switch
     {

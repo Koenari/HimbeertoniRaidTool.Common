@@ -11,9 +11,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
 {
-    private static readonly ExcelSheet<World> _worldSheet = ServiceManager.ExcelModule.GetSheet<World>();
+    private static readonly ExcelSheet<World> _worldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
 
-    private static readonly ExcelSheet<Tribe> _tribeSheet = ServiceManager.ExcelModule.GetSheet<Tribe>();
+    private static readonly ExcelSheet<Tribe> _tribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
     //Properties
     [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
 
@@ -176,9 +176,9 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
             LodestoneId = toMerge.LodestoneId;
         if (TribeId == 0)
             TribeId = toMerge.TribeId;
-        foreach (PlayableClass job in _classes)
+        foreach (var job in _classes)
         {
-            PlayableClass? jobToMerge = toMerge[job.Job];
+            var jobToMerge = toMerge[job.Job];
             if (jobToMerge == null)
                 continue;
             job.Level = Math.Max(job.Level, jobToMerge.Level);

@@ -167,34 +167,3 @@ internal class ItemInfoService
         return ItemSource.Undefined;
     }
 }
-
-public static class ItemInfoExtensions
-{
-    public static bool CanBePurchased(this Item item) => ServiceManager.ItemInfoService.CanBePurchased(item.Id);
-
-    public static IEnumerable<(string shopName, SpecialShop.ItemStruct entry)> PurchasedFrom(this Item item) =>
-        ServiceManager.ItemInfoService.GetShopEntriesForItem(item.Id);
-
-    public static LuminaItem AdjustItemCost(this RowRef<LuminaItem> itemId, ushort patchNumber) =>
-        ServiceManager.ItemInfoService.AdjustItemCost(itemId, patchNumber);
-
-    public static bool IsTomeStone(this LuminaItem item, ushort patchNumber = 0) =>
-        ItemInfoService.IsTomeStone(item.RowId, patchNumber);
-
-    public static bool IsTomeStone(this Item item, ushort patchNumber = 0) =>
-        ItemInfoService.IsTomeStone(item.Id, patchNumber);
-
-    public static bool IsCurrency(this Item item) => ItemInfoService.IsCurrency(item.Id);
-
-    public static bool IsCurrency(this LuminaItem item) => ItemInfoService.IsCurrency(item.RowId);
-
-    public static bool CanBeLooted(this Item item) => ServiceManager.ItemInfoService.CanBeLooted(item.Id);
-
-    public static bool CanBeLooted(this LuminaItem item) => ServiceManager.ItemInfoService.CanBeLooted(item.RowId);
-
-    public static IEnumerable<InstanceWithLoot> LootSources(this Item item) =>
-        ServiceManager.ItemInfoService.GetLootSources(item.Id);
-
-    public static IEnumerable<InstanceWithLoot> LootSources(this LuminaItem item) =>
-        ServiceManager.ItemInfoService.GetLootSources(item.RowId);
-}

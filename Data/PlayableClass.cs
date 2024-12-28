@@ -1,4 +1,5 @@
-﻿using HimbeertoniRaidTool.Common.Localization;
+﻿using HimbeertoniRaidTool.Common.Extensions;
+using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
@@ -11,7 +12,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class PlayableClass : IHrtDataType
 {
-    private static readonly ExcelSheet<ClassJob> ClassJobSheet = ServiceManager.ExcelModule.GetSheet<ClassJob>();
+    private static readonly ExcelSheet<ClassJob> ClassJobSheet = CommonLibrary.ExcelModule.GetSheet<ClassJob>();
 
     [JsonProperty("BisSets")] private readonly List<GearSet> _bis = new();
 
