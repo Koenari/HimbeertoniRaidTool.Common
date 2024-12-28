@@ -4,7 +4,6 @@ using System.ComponentModel;
 using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
-using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
@@ -234,6 +233,7 @@ public class Item : IEquatable<Item>, IHrtDataType
 
     public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
 
+    public bool IsFood => GameItem.IsFood;
 
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
@@ -317,7 +317,7 @@ public class FoodItem : HqItem
     public FoodItem(uint id) : base(id)
     {
         var action = GameItem.RawItem.ItemAction;
-        if (action is { IsValid: true, Value.Type: 845 })
+        if (action is { IsValid: true, Value.Type: 845 } && action.Value.Data[0] == 48)
             _luminaFood = FoodSheet.GetRow(action.Value.Data[1]);
         IsHq = true;
     }

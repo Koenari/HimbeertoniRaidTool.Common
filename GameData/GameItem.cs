@@ -1,9 +1,10 @@
-﻿using LuminaItem = Lumina.Excel.Sheets.Item;
+﻿using HimbeertoniRaidTool.Common.Extensions;
+using LuminaItem = Lumina.Excel.Sheets.Item;
 
 namespace HimbeertoniRaidTool.Common.GameData;
 
 /// <summary>
-///     Extends <see cref="Lumina.Excel.GeneratedSheets.Item" /> by using enums where possible
+///     Extends <see cref="Lumina.Excel.Sheets.Item" /> by using enums where possible
 /// </summary>
 public class GameItem(LuminaItem item)
 {
@@ -11,4 +12,5 @@ public class GameItem(LuminaItem item)
 
     public uint ItemLevel => RawItem.LevelItem.RowId;
     public Rarity Rarity => (Rarity)item.Rarity;
+    public bool IsFood => item.IsFood();
 }
