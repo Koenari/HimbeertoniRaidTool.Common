@@ -203,11 +203,13 @@ public class PlayableClass : IHrtDataType
         if (type is StatType.Piety or StatType.Tenacity or StatType.CriticalHit or StatType.Determination
                  or StatType.SkillSpeed or StatType.SpellSpeed or StatType.DirectHitRate)
             statBase = LevelTable.IntSUB(Level);
-        return set.GetStat(type) //Gear Stats
-             + (int)Math.Floor(
-                   statBase * StatEquations.GetJobModifier(
-                       type, new LuminaJobModifiers(ClassJob))) //Base Stat dependent on job
-             + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
+        int preFood = set.GetStat(type) //Gear Stats
+                    + (int)Math.Floor(
+                          statBase * StatEquations.GetJobModifier(
+                              type, new LuminaJobModifiers(ClassJob))) //Base Stat dependent on job
+                    + (tribe?.GetRacialModifier(type) ?? 0); //"Racial" modifier +- up to 2
+
+        return set.Food?.ApplyEffect(type, preFood) ?? preFood;
     }
 
     public bool Equals(PlayableClass? other)

@@ -317,7 +317,7 @@ public class FoodItem : HqItem
     public FoodItem(uint id) : base(id)
     {
         var action = GameItem.RawItem.ItemAction;
-        if (action is { IsValid: true, Value.Type: 845 } && action.Value.Data[0] == 48)
+        if (GameItem.IsFood)
             _luminaFood = FoodSheet.GetRow(action.Value.Data[1]);
         IsHq = true;
     }

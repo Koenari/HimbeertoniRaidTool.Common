@@ -11,6 +11,8 @@ namespace HimbeertoniRaidTool.Common.Data;
 public interface IReadOnlyGearSet
 {
     GearItem this[GearSetSlot slot] { get; }
+
+    FoodItem? Food { get; }
     int GetStat(StatType type);
 
     public IStatEquations GetStatEquations(PlayableClass job, Tribe? tribe = null);
@@ -33,7 +35,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     [JsonProperty("EtroID")] [Obsolete("Use ExternalId", true)]
     public string EtroId { set => ExternalId = value; }
 
-    [JsonProperty("Food")] public FoodItem? Food;
+    [JsonProperty("Food")] public FoodItem? Food { get; set; }
 
     [JsonProperty("ExternalId")] public string ExternalId = "";
     [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
@@ -113,11 +115,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     /*
      * Caching stats is a problem since this needs to be invalidated when changing materia
      */
-    public int GetStat(StatType type)
-    {
-        int preFood = this.Sum(x => x.GetStat(type));
-        return Food?.ApplyEffect(type, preFood) ?? preFood;
-    }
+    public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
 
     public void MarkAsSystemManaged() => IsSystemManaged = true;
 
@@ -197,6 +195,7 @@ internal class GearSetOverride : IReadOnlyGearSet
 
     public GearItem this[GearSetSlot slot] => slot == _slot ? _override : _base[slot];
 
+    public FoodItem? Food => _base.Food;
     public int GetStat(StatType statType)
     {
         int result = _base.GetStat(statType);
