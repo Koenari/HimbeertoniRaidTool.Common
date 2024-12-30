@@ -188,10 +188,14 @@ public class GearItem : HqItem
     }
 }
 
-public class HqItem : Item, IEquatable<HqItem>
+public class HqItem(uint id) : Item(id), IEquatable<HqItem>
 {
-    public HqItem(uint id) : base(id) { }
-    [JsonProperty] public bool IsHq { get; init; }
+    private readonly bool _isHq;
+    [JsonProperty] public bool IsHq
+    {
+        get => _isHq && CanBeHq;
+        init => _isHq = value & CanBeHq;
+    }
     public bool Equals(HqItem? other) => IsHq == other?.IsHq && base.Equals(other);
 
     public override bool Equals(object? obj) => Equals(obj as HqItem);
