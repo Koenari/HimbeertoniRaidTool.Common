@@ -294,6 +294,28 @@ public class FoodItem : HqItem
         IsHq = true;
     }
 
+    public IEnumerable<StatType> StatTypesEffected
+    {
+        get
+        {
+            if (_luminaFood == null) yield break;
+            foreach (var param in _luminaFood.Value.Params.Where(param => param.BaseParam.RowId != 0))
+            {
+                yield return (StatType)param.BaseParam.RowId;
+            }
+        }
+    }
+
+    public (int Value, bool IsRelative, int MaxValue) GetEffect(StatType statType)
+    {
+        if (_luminaFood is null) return (0, false, 0);
+        foreach (var param in _luminaFood.Value.Params.Where(param => param.BaseParam.RowId == (uint)statType))
+        {
+            return (IsHq ? param.ValueHQ : param.Value, param.IsRelative, IsHq ? param.MaxHQ : param.Max);
+        }
+        return (0, false, 0);
+    }
+
     public int ApplyEffect(StatType type, int before)
     {
         if (_luminaFood is null) return before;
