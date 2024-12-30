@@ -234,10 +234,11 @@ public class Item : IEquatable<Item>, IHrtDataType
 
     protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
 
-    public bool IsGear => this is GearItem || GameItem.RawItem.ClassJobCategory.RowId != 0;
+    public bool IsGear => this is GearItem || GameItem.IsGear;
 
-    public bool IsFood => GameItem.IsFood;
+    public bool IsFood => this is FoodItem || GameItem.IsFood;
 
+    public bool IsMateria => this is MateriaItem || GameItem.IsMateria;
     [JsonIgnore] public uint ItemLevel => LevelCache.Value;
 
     public bool Filled => Id > 0;
@@ -254,54 +255,22 @@ public class Item : IEquatable<Item>, IHrtDataType
 
 [JsonObject(MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class MateriaItem : Item, IEquatable<MateriaItem>
+[method: JsonConstructor]
+public class MateriaItem(MateriaCategory cat, MateriaLevel lvl) : Item(0), IEquatable<MateriaItem>
 {
-    [JsonIgnore]
-    private static readonly ExcelSheet<Materia> MateriaSheet =
-        CommonLibrary.ExcelModule.GetSheet<Materia>();
-
-    [JsonIgnore] private static Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> _idLookupImpl = new(() =>
-    {
-        var result = new Dictionary<uint, (MateriaCategory, MateriaLevel)>();
-        foreach (var materia in MateriaSheet)
-        {
-            int level = 0;
-            foreach (var tier in materia.Item)
-            {
-                if (tier.RowId == 0) continue;
-                result.Add(tier.RowId, ((MateriaCategory)materia.RowId, (MateriaLevel)level));
-                level++;
-            }
-        }
-        return result;
-    });
-    [JsonIgnore] private static Dictionary<uint, (MateriaCategory, MateriaLevel)> IdLookup => _idLookupImpl.Value;
-
-    [JsonIgnore] private readonly Lazy<uint> _idCache;
-    [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel;
+    private static readonly ExcelSheet<Materia> MateriaSheet = CommonLibrary.ExcelModule.GetSheet<Materia>();
+    [JsonProperty("MateriaLevel")] private readonly byte _materiaLevel = (byte)lvl;
     //Begin Object
-    [JsonProperty("Category")] public readonly MateriaCategory Category;
+    [JsonProperty("Category")] public readonly MateriaCategory Category = cat;
 
-    public MateriaItem(uint id) : this(IdLookup[id]) { }
-    public MateriaItem() : this(0, 0)
-    {
-    }
+    public MateriaItem(uint id) : this(GameItem.MateriaLookup[id]) { }
+    public MateriaItem() : this(0, 0) { }
+    public MateriaItem((MateriaCategory cat, MateriaLevel lvl) mat) : this(mat.cat, mat.lvl) { }
 
-    public MateriaItem((MateriaCategory cat, MateriaLevel lvl) mat) : this(mat.cat, mat.lvl)
-    {
-    }
-
-    [JsonConstructor]
-    public MateriaItem(MateriaCategory cat, MateriaLevel lvl) : base(0)
-    {
-        Category = cat;
-        _materiaLevel = (byte)lvl;
-        _idCache = new Lazy<uint>(() => LuminaMateria.Item[_materiaLevel].RowId);
-    }
     [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_materia;
     [JsonIgnore] public new string DataTypeName => DataTypeNameStatic;
     [JsonIgnore] public MateriaLevel Level => (MateriaLevel)_materiaLevel;
-    [JsonIgnore] public override uint Id => _idCache.Value;
+    [JsonIgnore] public override uint Id => LuminaMateria.Item[_materiaLevel].RowId;
     private Materia LuminaMateria => MateriaSheet.GetRow((ushort)Category);
     public StatType StatType => Category.GetStatType();
 
