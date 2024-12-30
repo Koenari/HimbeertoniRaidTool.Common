@@ -198,6 +198,7 @@ public class HqItem(uint id) : Item(id), IEquatable<HqItem>
     }
     public bool Equals(HqItem? other) => IsHq == other?.IsHq && base.Equals(other);
 
+    public override string ToString() => Name + (IsHq ? " (HQ)" : string.Empty);
     public override bool Equals(object? obj) => Equals(obj as HqItem);
     public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), IsHq);
 }
