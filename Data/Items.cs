@@ -59,7 +59,7 @@ public class GearItem : HqItem
     {
         get
         {
-            SortedSet<StatType> done = new();
+            SortedSet<StatType> done = [];
             foreach (var stat in GameItem.RawItem.BaseParam)
             {
                 var type = (StatType)stat.Value.RowId;
@@ -141,7 +141,7 @@ public class GearItem : HqItem
         Dictionary<MateriaItem, int> cnt = new();
         foreach (var s in _materia)
         {
-            if (!cnt.TryAdd(s, 0))
+            if (!cnt.TryAdd(s, 1))
                 cnt[s]++;
         }
         foreach (var s in other._materia)
