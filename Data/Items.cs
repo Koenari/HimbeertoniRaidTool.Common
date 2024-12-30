@@ -137,22 +137,20 @@ public class GearItem : HqItem
         if (IsHq != other.IsHq) return false;
         if (mode == ItemComparisonMode.IgnoreMateria) return true;
         //Full
-        if (_materia.Count != other._materia.Count) return false;
-        Dictionary<MateriaItem, int> cnt = new();
+        Dictionary<StatType, int> matVals = new();
         foreach (var s in _materia)
         {
-            if (!cnt.TryAdd(s, 1))
-                cnt[s]++;
+            if (!matVals.TryAdd(s.StatType, s.GetStat()))
+                matVals[s.StatType] += s.GetStat();
         }
         foreach (var s in other._materia)
         {
-            if (cnt.ContainsKey(s))
-                cnt[s]--;
-            else
+            if (!matVals.ContainsKey(s.StatType))
                 return false;
-        }
+            matVals[s.StatType] -= s.GetStat();
 
-        return cnt.Values.All(s => s == 0);
+        }
+        return matVals.Values.All(s => s == 0);
     }
     public bool IsRelic() => GameItem.Rarity == Rarity.Relic;
     public bool CanAffixMateria() => _materia.Count < MaxMateriaSlots;
