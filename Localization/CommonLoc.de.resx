@@ -423,4 +423,16 @@
   <data name="CommonTerms_Wallet" xml:space="preserve">
         <value>Geldbeutel</value>
     </data>
+  <data name="PartyBonus_None" xml:space="preserve">
+        <value>Kein Bonus</value>
+    </data>
+  <data name="PartyBonus_ThreePercent" xml:space="preserve">
+        <value>Zwei unterschiedliche Rollen</value>
+    </data>
+  <data name="PartyBonus_FourPercent" xml:space="preserve">
+        <value>Drei unterschiedliche Rollen</value>
+    </data>
+  <data name="PartyBonus_FivePercent" xml:space="preserve">
+        <value>Voller Bonus</value>
+    </data>
 </root>
