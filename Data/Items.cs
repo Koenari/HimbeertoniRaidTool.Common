@@ -212,8 +212,6 @@ public class Item : IEquatable<Item>, IHrtDataType
         CommonLibrary.ExcelModule.GetSheet<Lumina.Excel.Sheets.Item>();
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
     private readonly uint _id;
-
-    private Lumina.Excel.Sheets.Item? _itemCache;
     private GameItem? _luminaItemCache;
 
     [JsonIgnore] public Lazy<uint> LevelCache;

@@ -276,4 +276,14 @@ public static class EnumExtensions
         Weekday.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
         _                 => throw new ArgumentOutOfRangeException(nameof(day), day, null),
     };
+
+    public static string FriendlyName(this PartyBonus bonus) => bonus switch
+    {
+
+        PartyBonus.None         => CommonLoc.PartyBonus_None,
+        PartyBonus.ThreePercent => CommonLoc.PartyBonus_ThreePercent,
+        PartyBonus.FourPercent  => CommonLoc.PartyBonus_FourPercent,
+        PartyBonus.FivePercent  => CommonLoc.PartyBonus_FivePercent,
+        _                       => throw new ArgumentOutOfRangeException(nameof(bonus), bonus, null),
+    };
 }

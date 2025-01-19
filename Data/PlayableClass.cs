@@ -1,6 +1,5 @@
 ﻿using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
-using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using XIVCalc.Calculations;
@@ -230,18 +229,33 @@ public class PlayableClass : IHrtDataType
     public void RemoveBisSet(GearSet bisSet) => _bis.Remove(bisSet);
 }
 
-public class GearSetStatBlock(PlayableClass jobClass, IReadOnlyGearSet set, Tribe? tribe = null) : IJobStatBlock
+public class GearSetStatBlock(
+    PlayableClass jobClass,
+    IReadOnlyGearSet set,
+    Tribe? tribe = null,
+    PartyBonus bonus = PartyBonus.None) : IJobStatBlock
 {
-
+    public Job Job => jobClass.Job;
+    public IStatEquations StatEquations => new StatBlockEquations(this);
     public IJobModifiers JobModifiers => new LuminaJobModifiers(jobClass.ClassJob);
     public int Level => jobClass.Level;
     public int WeaponDamage => set[GearSetSlot.MainHand].GetStat(StatType.PhysicalDamage);
     public int WeaponDelay => set[GearSetSlot.MainHand].GetStat(StatType.Delay);
-    public int Vitality => jobClass.GetStat(StatType.Vitality, set, tribe);
-    public int Strength => jobClass.GetStat(StatType.Strength, set, tribe);
-    public int Dexterity => jobClass.GetStat(StatType.Dexterity, set, tribe);
-    public int Intelligence => jobClass.GetStat(StatType.Intelligence, set, tribe);
-    public int Mind => jobClass.GetStat(StatType.Mind, set, tribe);
+    public int Vitality =>
+        (int)XIVCalc.Calculations.StatEquations.MainStatWithPartyBonus(
+            bonus, jobClass.GetStat(StatType.Vitality, set, tribe));
+    public int Strength =>
+        (int)XIVCalc.Calculations.StatEquations.MainStatWithPartyBonus(
+            bonus, jobClass.GetStat(StatType.Strength, set, tribe));
+    public int Dexterity =>
+        (int)XIVCalc.Calculations.StatEquations.MainStatWithPartyBonus(
+            bonus, jobClass.GetStat(StatType.Dexterity, set, tribe));
+    public int Intelligence =>
+        (int)XIVCalc.Calculations.StatEquations.MainStatWithPartyBonus(
+            bonus, jobClass.GetStat(StatType.Intelligence, set, tribe));
+    public int Mind =>
+        (int)XIVCalc.Calculations.StatEquations.MainStatWithPartyBonus(
+            bonus, jobClass.GetStat(StatType.Mind, set, tribe));
     public int PhysicalDefense => jobClass.GetStat(StatType.Defense, set, tribe);
     public int MagicalDefense => jobClass.GetStat(StatType.MagicDefense, set, tribe);
     public int AttackPower => jobClass.GetStat(StatType.AttackPower, set, tribe);

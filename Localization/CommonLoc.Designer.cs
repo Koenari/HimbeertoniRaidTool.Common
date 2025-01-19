@@ -708,6 +708,42 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Full Bonus.
+        /// </summary>
+        public static string PartyBonus_FivePercent {
+            get {
+                return ResourceManager.GetString("PartyBonus_FivePercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Three distinct roles.
+        /// </summary>
+        public static string PartyBonus_FourPercent {
+            get {
+                return ResourceManager.GetString("PartyBonus_FourPercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Bonus.
+        /// </summary>
+        public static string PartyBonus_None {
+            get {
+                return ResourceManager.GetString("PartyBonus_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two distinct roles.
+        /// </summary>
+        public static string PartyBonus_ThreePercent {
+            get {
+                return ResourceManager.GetString("PartyBonus_ThreePercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Caster.
         /// </summary>
         public static string Role_Caster {

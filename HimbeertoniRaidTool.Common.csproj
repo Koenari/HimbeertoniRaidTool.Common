@@ -28,10 +28,13 @@
         <Using Include="XIVCalc"/>
     </ItemGroup>
     <ItemGroup>
+        <PackageReference Include="Lumina" Version="5.6.0">
+            <PrivateAssets>runtime</PrivateAssets>
+        </PackageReference>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="XIVCalc.Lumina" Version="7.1.0" />
+        <PackageReference Include="XIVCalc.Lumina" Version="7.1.3"/>
     </ItemGroup>
 
     <ItemGroup>
