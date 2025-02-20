@@ -43,6 +43,7 @@ public class RaidSession : IHrtDataTypeWithId
         Organizer = organizer;
     }
 
+    public RaidSession() : this(DateTime.Now) { }
     public RaidSession(DateTime startTime) : this(startTime, TimeSpan.FromHours(1)) { }
 
     public RaidSession(DateTime startTime, TimeSpan duration, Player? organizer = null, RaidGroup? group = null)
@@ -50,14 +51,14 @@ public class RaidSession : IHrtDataTypeWithId
         StartTime = startTime;
         Duration = duration;
         Organizer = organizer;
-        if (Organizer is not null && Invite(Organizer, out Participant? p))
+        if (Organizer is not null && Invite(Organizer, out var p))
         {
             p.InvitationStatus = InviteStatus.Confirmed;
         }
         Group = group;
         if (Group == null)
             return;
-        foreach (Player player in Group)
+        foreach (var player in Group)
         {
             if (player == Organizer) continue;
             Invite(player, out _);
