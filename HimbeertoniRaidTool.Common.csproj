@@ -26,6 +26,7 @@
         <Using Include="System.Linq"/>
         <Using Include="Newtonsoft.Json"/>
         <Using Include="XIVCalc"/>
+        <Using Alias="LuminaItem" Include="Lumina.Excel.Sheets.Item"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Lumina" Version="5.6.0">

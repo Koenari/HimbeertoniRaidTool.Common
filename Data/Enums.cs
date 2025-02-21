@@ -103,6 +103,7 @@ public enum LootRuleEnum
     Custom = 999,
 }
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public enum EncounterDifficulty
 {
     None = 0,
@@ -114,6 +115,7 @@ public enum EncounterDifficulty
     Unreal,
 }
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public enum Role : byte
 {
     None = 0,
@@ -158,6 +160,7 @@ public enum Gender
 }
 
 [SuppressMessage("ReSharper", "InconsistentNaming")]
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public enum MateriaLevel : byte
 {
     None = 255,
@@ -193,6 +196,7 @@ public enum MateriaCategory : ushort
     SpellSpeed = 25,
 }
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public enum Rarity : byte
 {
     None = 0,

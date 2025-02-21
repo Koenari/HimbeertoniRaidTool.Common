@@ -1,7 +1,6 @@
 ﻿using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using Item = HimbeertoniRaidTool.Common.Data.Item;
-using LuminaItem = Lumina.Excel.Sheets.Item;
 
 namespace HimbeertoniRaidTool.Common.Services;
 
@@ -20,7 +19,7 @@ internal class ItemInfoService
         _itemContainerDb = new CuratedData().ItemContainerDb;
         _shopSheet = excelModule.GetSheet<SpecialShop>();
         _recipeLookupSheet = excelModule.GetSheet<RecipeLookup>();
-        _itemSheet = excelModule.GetSheet<Lumina.Excel.Sheets.Item>();
+        _itemSheet = excelModule.GetSheet<LuminaItem>();
         //Load Vendor Data
         _shopIndex = new Dictionary<uint, List<(uint shopID, int idx)>>();
         _usedAsCurrency = new Dictionary<uint, List<uint>>();
@@ -63,11 +62,11 @@ internal class ItemInfoService
         }
     }
 
-    public Lumina.Excel.Sheets.Item AdjustItemCost(RowRef<Lumina.Excel.Sheets.Item> cost, ushort patchNumber)
-        => _itemSheet.GetRow(AdjustItemCostId(cost.RowId, patchNumber));
+    public LuminaItem AdjustItemCost(RowRef<LuminaItem> cost, ushort patchNumber) =>
+        _itemSheet.GetRow(AdjustItemCostId(cost.RowId, patchNumber));
 
 
-    public static uint AdjustItemCostId(uint itemId, ushort patch) => (patch, itemId) switch
+    private static uint AdjustItemCostId(uint itemId, ushort patch) => (patch, itemId) switch
     {
         (600, 2) => 43,
         (620, 2) => 44,
@@ -80,7 +79,7 @@ internal class ItemInfoService
     private void RegisterLoot(uint itemId, uint instanceId)
     {
         if (!_lootSources.ContainsKey(itemId))
-            _lootSources[itemId] = new List<uint>();
+            _lootSources[itemId] = [];
         if (!_lootSources[itemId].Contains(instanceId))
             _lootSources[itemId].Add(instanceId);
     }
@@ -89,11 +88,11 @@ internal class ItemInfoService
 
     public IEnumerable<InstanceWithLoot> GetLootSources(uint itemId)
     {
-        if (_lootSources.TryGetValue(itemId, out var instanceIDs))
-            foreach (uint instanceId in instanceIDs)
-            {
-                yield return GameInfo.GetInstance(instanceId);
-            }
+        if (!_lootSources.TryGetValue(itemId, out var instanceIDs)) yield break;
+        foreach (uint instanceId in instanceIDs)
+        {
+            yield return GameInfo.GetInstance(instanceId);
+        }
     }
 
     public bool IsItemContainer(uint itemId) => _itemContainerDb.ContainsKey(itemId);
@@ -106,20 +105,19 @@ internal class ItemInfoService
 
     public bool CanBeCrafted(uint itemId) => _recipeLookupSheet.HasRow(itemId);
 
-    public ItemIdCollection GetPossiblePurchases(uint itemId) =>
-        new ItemIdList(_usedAsCurrency.GetValueOrDefault(itemId) ?? Enumerable.Empty<uint>());
+    public ItemIdCollection GetPossiblePurchases(uint itemId) => new(_usedAsCurrency.GetValueOrDefault(itemId, []));
 
     public ItemIdCollection GetContainerContents(uint itemId) =>
         _itemContainerDb.GetValueOrDefault(itemId, ItemIdCollection.Empty);
 
     public IEnumerable<(string shopName, SpecialShop.ItemStruct entry)> GetShopEntriesForItem(uint itemId)
     {
-        if (_shopIndex.TryGetValue(itemId, out var shopEntries))
-            foreach ((uint shopId, int idx) in shopEntries)
-            {
-                var shop = _shopSheet.GetRow(shopId);
-                yield return (shop.Name.ToString(), shop.Item[idx]);
-            }
+        if (!_shopIndex.TryGetValue(itemId, out var shopEntries)) yield break;
+        foreach ((uint shopId, int idx) in shopEntries)
+        {
+            var shop = _shopSheet.GetRow(shopId);
+            yield return (shop.Name.ToString(), shop.Item[idx]);
+        }
     }
 
     public static bool IsTomeStone(uint itemId, ushort patch = 0) => AdjustItemCostId(itemId, patch) switch
@@ -143,6 +141,7 @@ internal class ItemInfoService
             return GameInfo.GetInstance(instanceId.First()).InstanceType.ToItemSource();
         if (CanBeCrafted(itemId))
             return ItemSource.Crafted;
+        // ReSharper disable once InvertIf
         if (CanBePurchased(itemId))
         {
             if (GetShopEntriesForItem(itemId).Any(se => se.entry.ItemCosts.Any(e => CanBeCrafted(e.ItemCost.RowId)))

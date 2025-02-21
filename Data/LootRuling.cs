@@ -41,15 +41,13 @@ public class RolePriority : Dictionary<Role, int>
         }
         result += ordered[^1].Key;
         var missing = Enum.GetValues<Role>().Where(r => !ContainsKey(r)).Where(r => r.IsCombatRole()).ToList();
-        if (missing.Any())
+        if (missing.Count == 0) return result;
+        result += " > ";
+        for (int j = 0; j < missing.Count - 1; j++)
         {
-            result += " > ";
-            for (int j = 0; j < missing.Count - 1; j++)
-            {
-                result += $"{missing[j]} = ";
-            }
-            result += missing[^1].ToString();
+            result += $"{missing[j]} = ";
         }
+        result += missing[^1].ToString();
         return result;
     }
 }

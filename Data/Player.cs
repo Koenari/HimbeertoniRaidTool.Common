@@ -7,14 +7,14 @@ namespace HimbeertoniRaidTool.Common.Data;
 public class Player : IHrtDataTypeWithId
 {
     [JsonProperty("Chars")]
-    private readonly List<Character> _characters = new();
+    private readonly List<Character> _characters = [];
     [JsonProperty("AdditionalData", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public readonly AdditionalPlayerData AdditionalData = new();
 
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
     [JsonProperty("MainCharIndex")]
     private int _mainCharIndex;
 
@@ -62,7 +62,7 @@ public class Player : IHrtDataTypeWithId
 
     public void RemoveCharacter(Character character)
     {
-        Character mainChar = MainChar;
+        var mainChar = MainChar;
         _characters.Remove(character);
         MainChar = mainChar;
     }

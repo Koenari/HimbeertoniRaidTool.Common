@@ -8,10 +8,5 @@ public interface IHrtDataType : ICloneable
     public string Name { get; }
 }
 
-public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId
-{
-}
-
-public interface ICloneable
-{
-}
+public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId;
+public interface ICloneable;

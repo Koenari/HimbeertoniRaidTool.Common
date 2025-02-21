@@ -14,7 +14,7 @@ public class GearItem : HqItem
 {
     [JsonIgnore] public static readonly new GearItem Empty = new();
 
-    [JsonProperty("Materia")] private readonly List<MateriaItem> _materia = new();
+    [JsonProperty("Materia")] private readonly List<MateriaItem> _materia = [];
 
     //This holds the total stats of this gear item (including materia)
     [JsonIgnore] private readonly Dictionary<StatType, int> _statCache = new();
@@ -29,29 +29,19 @@ public class GearItem : HqItem
         _statCapImpl = new Lazy<int>(() =>
         {
             //ToDo: Do actual Cap
-            if (GameItem.RawItem.Rarity == (byte)Rarity.Relic) return int.MaxValue;
-            int maxVal = int.Max(GameItem.RawItem.BaseParamValue[2], GameItem.RawItem.BaseParamValue[3]);
-            if (IsHq)
-                maxVal += int.Max(GameItem.RawItem.BaseParamValueSpecial[2], GameItem.RawItem.BaseParamValueSpecial[3]);
-            return maxVal;
+            if (GameItem.Rarity == Rarity.Relic) return int.MaxValue;
+            return StatTypesAffected.Where(EnumExtensions.IsSecondary).Select(stat => GameItem.GetStat(stat, IsHq))
+                                    .Max();
         });
     }
     [JsonIgnore] public new string DataTypeName => CommonLoc.DataTypeName_item_gear;
 
-    [JsonIgnore] public IEnumerable<Job> Jobs => GameItem.RawItem.ClassJobCategory.Value.ToJob();
-
-    [JsonIgnore] public EquipSlotCategory EquipSlotCategory => GameItem.RawItem.EquipSlotCategory.Value;
-
     [JsonIgnore] public IEnumerable<GearSetSlot> Slots => EquipSlotCategory.AvailableSlots();
-
-    [JsonIgnore] public bool IsUnique => GameItem.RawItem.IsUnique;
 
     [JsonIgnore] public IEnumerable<MateriaItem> Materia => _materia;
 
-    [JsonIgnore] public int MateriaSlotCount => GameItem.RawItem.MateriaSlotCount;
-
     [JsonIgnore]
-    public int MaxMateriaSlots => GameItem.RawItem.IsAdvancedMeldingPermitted ? 5 : GameItem.RawItem.MateriaSlotCount;
+    public int MaxMateriaSlots => GameItem.IsAdvancedMeldingPermitted ? 5 : GameItem.MateriaSlotCount;
 
     [JsonIgnore] public int StatCap => _statCapImpl.Value;
 
@@ -59,12 +49,7 @@ public class GearItem : HqItem
     {
         get
         {
-            SortedSet<StatType> done = [];
-            foreach (var stat in GameItem.RawItem.BaseParam)
-            {
-                var type = (StatType)stat.Value.RowId;
-                done.Add(type);
-            }
+            SortedSet<StatType> done = new(GameItem.StatTypesAffected);
             if (IsRelic() && RelicStats is not null)
             {
                 foreach ((var type, int value) in RelicStats)
@@ -88,35 +73,7 @@ public class GearItem : HqItem
     {
         if (includeMateria && _statCache.TryGetValue(type, out int cached))
             return cached;
-        int result = 0;
-        switch (type)
-        {
-            case StatType.PhysicalDamage:
-                result += GameItem.RawItem.DamagePhys;
-                break;
-            case StatType.MagicalDamage:
-                result += GameItem.RawItem.DamageMag;
-                break;
-            case StatType.Defense:
-                result += GameItem.RawItem.DefensePhys;
-                break;
-            case StatType.MagicDefense:
-                result += GameItem.RawItem.DefenseMag;
-                break;
-            case StatType.Delay:
-                result += GameItem.RawItem.Delayms;
-                break;
-            default:
-                if (IsHq)
-                    result = GameItem.RawItem.BaseParamSpecial.Zip(GameItem.RawItem.BaseParamValueSpecial)
-                                     .Where(x => x.First.RowId == (byte)type)
-                                     .Aggregate(result, (current, param) => current + param.Second);
-
-                result = GameItem.RawItem.BaseParam.Zip(GameItem.RawItem.BaseParamValue)
-                                 .Where(x => x.First.RowId == (byte)type)
-                                 .Aggregate(result, (current, param) => current + param.Second);
-                break;
-        }
+        int result = GameItem.GetStat(type, IsHq);
         if (IsRelic() && (RelicStats?.TryGetValue(type, out int val) ?? false))
             result += val;
         if (!includeMateria)
@@ -180,8 +137,8 @@ public class GearItem : HqItem
     public MateriaLevel MaxAffixableMateriaLevel()
     {
         if (!CanAffixMateria()) return 0;
-        var maxAllowed = GameInfo.GetExpansionByLevel(GameItem.RawItem.LevelEquip).MaxMateriaLevel;
-        if (_materia.Count >= GameItem.RawItem.MateriaSlotCount)
+        var maxAllowed = GameInfo.GetExpansionByLevel(GameItem.LevelEquip).MaxMateriaLevel;
+        if (_materia.Count >= GameItem.MateriaSlotCount)
             maxAllowed--;
 
         return maxAllowed;
@@ -204,46 +161,54 @@ public class HqItem(uint id) : Item(id), IEquatable<HqItem>
 }
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
+[ImmutableObject(true)]
 public class Item : IEquatable<Item>, IHrtDataType
 {
     public static readonly Item Empty = new(0);
     [JsonIgnore]
-    protected static readonly ExcelSheet<Lumina.Excel.Sheets.Item> ItemSheet =
-        CommonLibrary.ExcelModule.GetSheet<Lumina.Excel.Sheets.Item>();
+    protected static readonly ExcelSheet<LuminaItem> ItemSheet = CommonLibrary.ExcelModule.GetSheet<LuminaItem>();
     [JsonProperty("ID", DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
     private readonly uint _id;
-    private GameItem? _luminaItemCache;
-
-    [JsonIgnore] public Lazy<uint> LevelCache;
+    private Lazy<GameItem> _gameItemCache;
+    private Lazy<uint> _levelCache;
 
     public Item(uint id)
     {
         _id = id;
-        LevelCache = new Lazy<uint>(() => GameItem.ItemLevel);
+        _gameItemCache = new Lazy<GameItem>(new GameItem(ItemSheet.GetRow(id)));
+        _levelCache = new Lazy<uint>(() => GameItem.ItemLevel);
     }
 
     public virtual uint Id => _id;
 
-    [JsonIgnore] public Rarity Rarity => GameItem.Rarity;
+    public Rarity Rarity => GameItem.Rarity;
 
-    [JsonIgnore] public ushort Icon => GameItem.RawItem.Icon;
+    public ushort Icon => GameItem.Icon;
 
-    public bool CanBeHq => GameItem.RawItem.CanBeHq;
+    public bool CanBeHq => GameItem.CanBeHq;
 
-    protected GameItem GameItem => _luminaItemCache ??= new GameItem(ItemSheet.GetRow(Id));
+    public IEnumerable<Job> Jobs => GameItem.ApplicableJobs;
+
+    public EquipSlotCategory EquipSlotCategory => GameItem.EquipSlotCategory;
+
+    public bool IsUnique => GameItem.IsUnique;
+
+    public int MateriaSlotCount => GameItem.MateriaSlotCount;
+
+    protected GameItem GameItem => _gameItemCache.Value;
 
     public bool IsGear => this is GearItem || GameItem.IsGear;
 
     public bool IsFood => this is FoodItem || GameItem.IsFood;
 
     public bool IsMateria => this is MateriaItem || GameItem.IsMateria;
-    [JsonIgnore] public uint ItemLevel => LevelCache.Value;
+    [JsonIgnore] public uint ItemLevel => _levelCache.Value;
 
     public bool Filled => Id > 0;
 
     public bool Equals(Item? obj) => Id == obj?.Id;
 
-    public string Name => GameItem.RawItem.Name.ExtractText();
+    public string Name => GameItem.Name.ExtractText();
     [JsonIgnore] public string DataTypeName => CommonLoc.DataTypeName_item;
     public override string ToString() => Name;
     public override bool Equals(object? obj) => Equals(obj as Item);
@@ -286,9 +251,8 @@ public class FoodItem : HqItem
     private readonly ItemFood? _luminaFood;
     public FoodItem(uint id) : base(id)
     {
-        var action = GameItem.RawItem.ItemAction;
         if (GameItem.IsFood)
-            _luminaFood = FoodSheet.GetRow(action.Value.Data[1]);
+            _luminaFood = FoodSheet.GetRow(GameItem.ItemAction.Data[1]);
         IsHq = true;
     }
 
@@ -331,67 +295,44 @@ public class FoodItem : HqItem
     }
 }
 
-public class ItemIdRange : ItemIdCollection
+public class ItemIdCollection : IEnumerable<uint>
 {
-    public ItemIdRange(uint start, uint end) : base(Enumerable.Range((int)start, Math.Max(0, (int)end - (int)start + 1))
-                                                              .ToList().ConvertAll(x => (uint)x))
-    {
-    }
-    public ItemIdRange(int start, int end) : base(Enumerable.Range(start, Math.Max(0, end - start + 1))
-                                                            .ToList().ConvertAll(x => (uint)x))
-    {
-    }
-}
+    public static readonly ItemIdCollection Empty = new();
+    private readonly ReadOnlyCollection<uint> _ids;
 
-public class ItemIdList : ItemIdCollection
-{
-
-    public ItemIdList(params uint[] ids) : base(ids)
+    public ItemIdCollection(params uint[] ids)
     {
+        _ids = new ReadOnlyCollection<uint>(ids.ToList());
     }
 
-    public ItemIdList(ItemIdCollection col, params uint[] ids) : base(col.Concat(ids))
+    public ItemIdCollection(Range range, params uint[] ids)
     {
+        _ids = new ReadOnlyCollection<uint>(ToList(range).Concat(ids).ToList());
     }
 
-    public ItemIdList(IEnumerable<uint> ids) : base(ids)
+    public ItemIdCollection(IEnumerable<uint> ids)
     {
+        _ids = new ReadOnlyCollection<uint>(ids.ToList());
     }
-    public static implicit operator ItemIdList(uint[] ids)
-    {
-        return new ItemIdList(ids);
-    }
-}
 
-public abstract class ItemIdCollection : IEnumerable<uint>
-{
-    public static readonly ItemIdCollection Empty = new ItemIdList();
-    private readonly ReadOnlyCollection<uint> _iDs;
+    public IEnumerator<uint> GetEnumerator() => _ids.GetEnumerator();
 
-    protected ItemIdCollection(IEnumerable<uint> ids)
-    {
-        _iDs = new ReadOnlyCollection<uint>(ids.ToList());
-    }
-    public int Count => _iDs.Count;
-
-    public IEnumerator<uint> GetEnumerator() => _iDs.GetEnumerator();
-
-    IEnumerator IEnumerable.GetEnumerator() => _iDs.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => _ids.GetEnumerator();
 
     public static implicit operator ItemIdCollection(uint id)
     {
-        return new ItemIdList(id);
+        return new ItemIdCollection(id);
     }
 
     public static implicit operator ItemIdCollection(Range range)
     {
-        return new ItemIdRange(range.Start.Value, range.End.Value);
+        return new ItemIdCollection(range);
     }
 
-    public static implicit operator ItemIdCollection((uint, uint) id)
-    {
-        return new ItemIdRange(id.Item1, id.Item2);
-    }
+    private static List<uint> ToList(Range range) => Enumerable
+                                                     .Range(range.Start.Value,
+                                                            Math.Max(0, range.End.Value - range.Start.Value + 1))
+                                                     .ToList().ConvertAll(x => (uint)x);
 }
 
 public enum ItemComparisonMode

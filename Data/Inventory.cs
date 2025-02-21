@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -87,7 +88,7 @@ public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
             MemberSerialization = MemberSerialization.Fields)]
 public class InventoryEntry
 {
-    public int Quantity = 0;
+    public int Quantity;
     private string _type;
     private Item? _hrtItem;
     private GearItem? _gearItem;
@@ -156,6 +157,7 @@ public class InventoryEntry
     }
 }
 
+[SuppressMessage("ReSharper", "UnusedMember.Global")]
 public enum Currency : uint
 {
     Unknown = 0,

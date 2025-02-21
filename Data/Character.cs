@@ -2,7 +2,6 @@
 using System.Security.Cryptography;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
-using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
@@ -11,18 +10,18 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
 {
-    private static readonly ExcelSheet<World> _worldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
+    private static readonly ExcelSheet<World> WorldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
 
-    private static readonly ExcelSheet<Tribe> _tribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
+    private static readonly ExcelSheet<Tribe> TribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
     //Properties
-    [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = new();
+    [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = [];
 
     [JsonProperty("MainInventory")] public readonly Inventory MainInventory = new();
 
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
     [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
     [JsonProperty("MainJob")] private Job? _mainJob;
 
@@ -62,11 +61,11 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     }
 
     public PlayableClass? MainClass => this[MainJob];
-    public Tribe Tribe => _tribeSheet.GetRow(TribeId);
+    public Tribe Tribe => TribeSheet.GetRow(TribeId);
 
     public World? HomeWorld
     {
-        get => HomeWorldId > 0 ? _worldSheet.GetRow(HomeWorldId) : null;
+        get => HomeWorldId > 0 ? WorldSheet.GetRow(HomeWorldId) : null;
         set => HomeWorldId = value?.RowId ?? 0;
     }
 
@@ -103,24 +102,14 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     }
     public override string ToString() => ToString(null, null);
 
-    public string ToString(string? format, IFormatProvider? formatProvider)
+    public string ToString(string? format, IFormatProvider? formatProvider) => format switch
     {
-        switch (format)
-        {
-            case "a":
-                return "xxx @ xxx";
-            case "n":
-                return Name;
-            case "i":
-                return Initials;
-            case "is":
-                return $"{Initials} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
-            case "ns":
-            default:
-                return $"{Name} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}";
-        }
-
-    }
+        "a"  => "xxx @ xxx",
+        "n"  => Name,
+        "i"  => Initials,
+        "is" => $"{Initials} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}",
+        _    => $"{Name} @ {HomeWorld?.Name ?? CommonLoc.NotAvail_Abbrev}",
+    };
 
 
     public bool RemoveClass(Job type) => _classes.RemoveAll(job => job.Job == type) > 0;

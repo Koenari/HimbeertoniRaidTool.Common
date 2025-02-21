@@ -18,7 +18,7 @@ public class RaidSession : IHrtDataTypeWithId
     /// <summary>
     /// HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
 
     [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
@@ -27,12 +27,12 @@ public class RaidSession : IHrtDataTypeWithId
 
     [JsonIgnore] public DateTime EndTime => StartTime + Duration;
 
-    [JsonProperty("Participants")] private readonly HashSet<Participant> _participants = new();
+    [JsonProperty("Participants")] private readonly HashSet<Participant> _participants = [];
 
     [JsonProperty("Owner")] public Player? Organizer;
     [JsonProperty("Group")] public RaidGroup? Group;
     [JsonProperty("Status")] public EventStatus Status;
-    [JsonProperty("PlannedContent")] public List<InstanceWithLoot> PlannedContent = new();
+    [JsonProperty("PlannedContent")] public List<InstanceWithLoot> PlannedContent = [];
     [JsonProperty("Title")] public string Title = string.Empty;
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
 
@@ -83,17 +83,13 @@ public class RaidSession : IHrtDataTypeWithId
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class Participant
+[method: JsonConstructor]
+public class Participant(Player player)
 {
-    [JsonProperty("Player")] public readonly Player Player;
+    [JsonProperty("Player")] public readonly Player Player = player;
     [JsonProperty("InviteStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
     [JsonProperty("WasPresent")] public bool WasPresent = false;
     [JsonProperty("WasExcused")] public bool WasExcused = false;
-    [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = new();
+    [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = [];
 
-    [JsonConstructor]
-    public Participant(Player player)
-    {
-        Player = player;
-    }
 }

@@ -11,7 +11,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = new();
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
     [JsonProperty("Name")] public string Name;
 
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -102,20 +102,4 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
             (idx1, idx2) = (idx1 * 2, idx2 * 2);
         (_players[idx1], _players[idx2]) = (_players[idx2], _players[idx1]);
     }
-}
-
-[JsonObject(MemberSerialization.OptIn)]
-public class Alliance
-{
-
-    [JsonConstructor]
-    public Alliance(string name = "")
-    {
-        Name = name;
-        TimeStamp = DateTime.Now;
-        RaidGroups = new RaidGroup[3];
-    }
-    [JsonProperty("Name")] public string Name { get; set; }
-    public DateTime TimeStamp { get; set; }
-    [JsonProperty("Groups")] public RaidGroup[] RaidGroups { get; set; }
 }

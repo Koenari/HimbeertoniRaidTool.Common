@@ -13,9 +13,9 @@ public class PlayableClass : IHrtDataType
 {
     private static readonly ExcelSheet<ClassJob> ClassJobSheet = CommonLibrary.ExcelModule.GetSheet<ClassJob>();
 
-    [JsonProperty("BisSets")] private readonly List<GearSet> _bis = new();
+    [JsonProperty("BisSets")] private readonly List<GearSet> _bis = [];
 
-    [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = new();
+    [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = [];
 
     [JsonProperty("ActiveBiSIdx")] private int _curBisIdx;
     [JsonProperty("ActiveGearIndex")] private int _curGearIdx;

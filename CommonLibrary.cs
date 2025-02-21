@@ -3,9 +3,6 @@ using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
-using Lumina.Excel.Sheets;
-using Item = HimbeertoniRaidTool.Common.Data.Item;
-using LuminaItem = Lumina.Excel.Sheets.Item;
 
 namespace HimbeertoniRaidTool.Common;
 #pragma warning disable CS8618

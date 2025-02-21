@@ -3,8 +3,6 @@ using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
 using Lumina.Excel.Sheets;
-using XIVCalc.Calculations;
-using XIVCalc.Interfaces;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -44,7 +42,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     [JsonProperty("Name")] public string Name = "";
     [JsonProperty("Alias")] public string? Alias;
 
-    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = new();
+    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = [];
 
 
     [JsonProperty("TimeStamp")] public DateTime TimeStamp;

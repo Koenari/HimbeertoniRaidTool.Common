@@ -1,5 +1,4 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
-using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
