@@ -121,13 +121,6 @@ public static class EnumExtensions
         _                            => t.ToString(),
     };
 
-    public static string AlternativeFriendlyName(this StatType t) => t switch
-    {
-        StatType.CriticalHit                       => CommonLoc.StatType_CriticalDamage,
-        StatType.SpellSpeed or StatType.SkillSpeed => CommonLoc.StatType_SpsSksMultiplier,
-        _                                          => CommonLoc.undefined,
-    };
-
     public static string Abbrev(this StatType t) => t switch
     {
         StatType.CriticalHit   => CommonLoc.StatTypeAbbrev_CriticalHit,

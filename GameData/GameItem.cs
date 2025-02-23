@@ -1,17 +1,22 @@
 ﻿using HimbeertoniRaidTool.Common.Extensions;
+using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using Lumina.Text.ReadOnly;
 
 namespace HimbeertoniRaidTool.Common.GameData;
 
 /// <summary>
-///     Extends <see cref="Lumina.Excel.Sheets.Item" /> by using enums where possible
+///     Extends <see cref="Lumina.Excel.Sheets.Item" /> with enums and some additional logic
 /// </summary>
 public class GameItem(LuminaItem item)
 {
+
+    protected static readonly ExcelSheet<LuminaItem> ItemSheet = CommonLibrary.ExcelModule.GetSheet<LuminaItem>();
+
     private static readonly Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> MateriaLookupImpl = new(() =>
     {
-        var result = new Dictionary<uint, (MateriaCategory, MateriaLevel)>();
+        var result = new Dictionary<uint, (MateriaCategory, MateriaLevel)>
+            { { 0, (MateriaCategory.None, MateriaLevel.None) } };
         foreach (var materia in CommonLibrary.ExcelModule.GetSheet<Materia>())
         {
             int level = 0;
@@ -23,7 +28,27 @@ public class GameItem(LuminaItem item)
         }
         return result;
     });
-    public static Dictionary<uint, (MateriaCategory, MateriaLevel)> MateriaLookup => MateriaLookupImpl.Value;
+
+    private static readonly Lazy<Dictionary<(uint cat, MateriaLevel level), uint>> ReverseMateriaLookupImpl =
+        new(() =>
+        {
+            var result = new Dictionary<(uint, MateriaLevel), uint>();
+            foreach (var materia in CommonLibrary.ExcelModule.GetSheet<Materia>())
+            {
+                int level = 0;
+                foreach (var tier in materia.Item)
+                {
+                    result.Add((materia.RowId, (MateriaLevel)level), tier.RowId);
+                    level++;
+                }
+            }
+            return result;
+        });
+    public static Dictionary<uint, (MateriaCategory cat, MateriaLevel level)> MateriaLookup => MateriaLookupImpl.Value;
+    public static Dictionary<(uint, MateriaLevel), uint> ReverseMateriaLookup =>
+        ReverseMateriaLookupImpl.Value;
+
+    public GameItem(uint id) : this(ItemSheet.GetRow(id)) { }
 
     public uint ItemLevel => item.LevelItem.RowId;
 
@@ -55,7 +80,8 @@ public class GameItem(LuminaItem item)
 
     public ItemAction ItemAction => item.ItemAction.Value;
 
-    public IEnumerable<StatType> StatTypesAffected => item.BaseParam.Select(stat => (StatType)stat.Value.RowId);
+    public IEnumerable<StatType> StatTypesAffected =>
+        item.BaseParam.Where(stat => stat.RowId != 0).Select(stat => (StatType)stat.RowId);
 
     public int GetStat(StatType type, bool hq = false) => type switch
     {
@@ -65,9 +91,10 @@ public class GameItem(LuminaItem item)
         StatType.MagicDefense   => item.DefenseMag,
         StatType.Delay          => item.Delayms,
         //ToDo: Some cases missing
-        _ => item.BaseParam.Zip(item.BaseParamValue).Where(x => x.First.RowId == (byte)type)
+        _ => item.BaseParam.Zip(item.BaseParamValue).Where(param => param.First.RowId == (uint)type)
                  .Aggregate(0, (current, param) => current + param.Second)
-           + item.BaseParamSpecial.Zip(item.BaseParamValueSpecial).Where(x => hq && x.First.RowId == (byte)type)
-                 .Aggregate(0, (current, param) => current + param.Second),
+           + (CanBeHq && hq ? item.BaseParamSpecial.Zip(item.BaseParamValueSpecial)
+                                  .Where(x => x.First.RowId == (uint)type)
+                                  .Aggregate(0, (current, param) => current + param.Second) : 0),
     };
 }

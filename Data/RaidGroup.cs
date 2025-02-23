@@ -7,18 +7,34 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
 {
+    public static string DataTypeNameStatic => CommonLoc.DataTypeName_RaidGroup;
+
+    #region Serialized
+
     [JsonProperty("Members")] private readonly Player?[] _players;
-    /// <summary>
-    ///     HRT specific unique IDs used for remote storage and lookup.
-    /// </summary>
-    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
+
     [JsonProperty("Name")] public string Name;
 
     [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
     public RolePriority? RolePriority;
+
     [JsonProperty("TimeStamp")] public DateTime TimeStamp;
+
     [JsonProperty("Type")] public GroupType Type;
+
     [JsonProperty("TypeLocked")] public bool TypeLocked;
+
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+
+    /// <summary>
+    ///     HRT specific unique IDs used for remote storage and lookup.
+    /// </summary>
+    [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
+
+    #endregion
+
+    #region Constructors
 
     public RaidGroup() : this("") { }
 
@@ -36,17 +52,9 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
         }
     }
 
-    private IEnumerable<Player> Players
-    {
-        get
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                if (this[i].Filled)
-                    yield return this[i];
-            }
-        }
-    }
+    #endregion
+
+    #region Properties
 
     public int Count => Type switch
     {
@@ -75,19 +83,35 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
             _players[idx] = value;
         }
     }
-    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_RaidGroup;
 
     public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
+
     string IHrtDataType.Name => Name;
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Group;
-    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
-    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+
+    public HrtId.IdType IdType => HrtId.IdType.Group;
+
+    public string DataTypeName => DataTypeNameStatic;
+
+    IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+
+    private IEnumerable<Player> Players
+    {
+        get
+        {
+            for (int i = 0; i < Count; i++)
+            {
+                if (this[i].Filled)
+                    yield return this[i];
+            }
+        }
+    }
+
+    #endregion
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+
     public override string ToString() => Name;
 
     public void SwapPlayers(int idx1, int idx2)

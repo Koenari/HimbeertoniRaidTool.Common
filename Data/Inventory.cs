@@ -3,11 +3,12 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-[JsonObject]
+[JsonObject(MemberSerialization.OptIn)]
 public class Inventory : IEnumerable<KeyValuePair<int, InventoryEntry>>
 {
     //Todo: Does not work on changes withing Inventory entry
     [JsonProperty("LastUpdated")] public DateTime LastUpdated { get; private set; }
+
     [JsonProperty("Data")] private Dictionary<int, InventoryEntry> _data = new();
 
     public InventoryEntry this[int id]
@@ -55,12 +56,17 @@ public class Inventory : IEnumerable<KeyValuePair<int, InventoryEntry>>
     IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_data).GetEnumerator();
 }
 
-[JsonObject]
+[JsonObject(MemberSerialization.OptIn)]
 public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
 {
+    #region Serialized
 
     [JsonProperty("Data")] private Dictionary<Currency, int> _data = new();
     [JsonProperty("LastUpdated")] public DateTime LastUpdated { get; private set; }
+
+    #endregion
+
+
     public bool ContainsKey(Currency key) => _data.ContainsKey(key);
     public int this[Currency cur]
     {
@@ -85,28 +91,23 @@ public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
 }
 
 [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore,
-            MemberSerialization = MemberSerialization.Fields)]
+            MemberSerialization = MemberSerialization.OptIn)]
 public class InventoryEntry
 {
-    public int Quantity;
-    private string _type;
-    private Item? _hrtItem;
-    private GearItem? _gearItem;
-    private MateriaItem? _hrtMateria;
+    #region Serialized
 
-#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+    [JsonProperty] public int Quantity;
+    [JsonProperty] private string _type = string.Empty;
+    [JsonProperty] private Item? _hrtItem;
+    [JsonProperty] private GearItem? _gearItem;
+    [JsonProperty] private MateriaItem? _hrtMateria;
+
+    #endregion
     public InventoryEntry(Item item)
     {
         Item = item;
     }
-#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
-    private InventoryEntry(string typeArg)
-    {
-        _type = typeArg;
-    }
-
-    [JsonIgnore]
     public Item Item
     {
         get
@@ -119,23 +120,24 @@ public class InventoryEntry
         }
         set
         {
+            _hrtItem = null;
             _gearItem = null;
             _hrtMateria = null;
 
-            if (value is GearItem item)
+            switch (value)
             {
-                _gearItem = item;
-                _type = nameof(GearItem);
-            }
-            else if (value is MateriaItem mat)
-            {
-                _hrtMateria = mat;
-                _type = nameof(MateriaItem);
-            }
-            else
-            {
-                _hrtItem = value;
-                _type = nameof(Data.Item);
+                case GearItem item:
+                    _gearItem = item;
+                    _type = nameof(GearItem);
+                    break;
+                case MateriaItem mat:
+                    _hrtMateria = mat;
+                    _type = nameof(MateriaItem);
+                    break;
+                default:
+                    _hrtItem = value;
+                    _type = nameof(Data.Item);
+                    break;
             }
         }
     }

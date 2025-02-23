@@ -8,12 +8,17 @@ public class XivAccount : IHrtDataTypeWithId
 {
     public static string DataTypeNameStatic => "FFXIV account";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.XivAccount;
-    public string DataTypeName => DataTypeNameStatic;
+
+    private static SHA256 _sha256 = SHA256.Create();
+
+    #region Serialized
+
     [JsonProperty("Name")] public string Name { get; set; } = string.Empty;
 
     [JsonProperty("HashedId")] public ulong HashedId { get; set; }
-    
-    public HrtId.IdType IdType => IdTypeStatic;
+
+    [JsonProperty("Characters")] private List<Character> _characters = [];
+
     /// <summary>
     ///     HRT specific unique ID used for local storage.
     /// </summary>
@@ -23,24 +28,26 @@ public class XivAccount : IHrtDataTypeWithId
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
     [JsonProperty("RemoteIDs")] private readonly List<HrtId> _remoteIds = [];
-    
+
+    #endregion
+
+    public string DataTypeName => DataTypeNameStatic;
+
+    public HrtId.IdType IdType => IdTypeStatic;
+
+
     public IList<HrtId> RemoteIds => _remoteIds;
-    
-    [JsonProperty("Characters")] private List<Character> _characters = [];
-    
+
     public IList<Character> Characters => _characters;
-    
+
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
-    
+
     public static ulong HashId(ulong accountId)
     {
         if (accountId == 0)
             return 0;
-        using var sha256 = SHA256.Create();
-#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
         //Static version crashes in wine
-        var hash = sha256.ComputeHash(BitConverter.GetBytes(accountId));
-#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
+        byte[] hash = _sha256.ComputeHash(BitConverter.GetBytes(accountId));
         return BitConverter.ToUInt64(hash);
     }
 }

@@ -6,48 +6,47 @@ using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public interface IReadOnlyGearSet
-{
-    GearItem this[GearSetSlot slot] { get; }
-
-    FoodItem? Food { get; }
-    int GetStat(StatType type);
-    public GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None);
-}
-
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
 public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId
 {
     public const int NUM_SLOTS = 12;
+
+    public static string DataTypeNameStatic => CommonLoc.DataTypeName_GearSet;
+
+    #region Serialized
+
+    //Header data
+    [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
+
+    [JsonProperty("Name")] public string Name = "";
+
+    [JsonProperty("Alias")] public string? Alias;
+
+    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
+
+    [JsonProperty("IsManaged")] public bool IsSystemManaged { get; private set; }
+
     //Actual Gear data
     [JsonProperty("Items")] private readonly GearItem?[] _items = new GearItem?[NUM_SLOTS];
 
-    //Caches
-    [JsonIgnore] private int? _levelCache;
-
-    //Properties
-    [JsonProperty("LastEtroFetched")] [Obsolete("Use LastExternalFetchDate", true)]
-    public DateTime EtroFetchDate { set => LastExternalFetchDate = value; }
-
-    [JsonProperty("EtroID")] [Obsolete("Use ExternalId", true)]
-    public string EtroId { set => ExternalId = value; }
-
     [JsonProperty("Food")] public FoodItem? Food { get; set; }
 
+    //HRT/XRT Ids
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
+
+    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = [];
+
+    /*
+     * External Service data (non HRT/XRT)
+     */
     [JsonProperty("ExternalId")] public string ExternalId = "";
     [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
     [JsonProperty("LastExternalFetch")] public DateTime LastExternalFetchDate;
 
-    [JsonProperty("ManagedBy")] public GearSetManager ManagedBy;
-    [JsonProperty("Name")] public string Name = "";
-    [JsonProperty("Alias")] public string? Alias;
+    #endregion
 
-    [JsonProperty("RemoteIDs")] public List<HrtId> RemoteIDs = [];
-
-
-    [JsonProperty("TimeStamp")] public DateTime TimeStamp;
-
-    public bool IsManagedExternally => ManagedBy != GearSetManager.Hrt;
+    #region Constructors
 
     [JsonConstructor]
     public GearSet() : this(GearSetManager.Hrt) { }
@@ -66,12 +65,31 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     {
         CopyFrom(copyFrom);
     }
-    [JsonProperty("IsManaged")] public bool IsSystemManaged { get; private set; }
 
-    //Runtime only properties
+    #endregion
+
+    #region Properties
+
+    string IHrtDataType.Name => Alias ?? Name;
+
+    public bool IsManagedExternally => ManagedBy != GearSetManager.Hrt;
+
     public bool IsEmpty => this.All(x => x is { Id: 0 });
 
     public int ItemLevel => _levelCache ??= CalcItemLevel();
+
+    public HrtId.IdType IdType => HrtId.IdType.Gear;
+    public string DataTypeName => DataTypeNameStatic;
+
+    IList<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
+
+    public GearItem this[GearSetSlot slot]
+    {
+        get => this[ToIndex(slot)];
+        set => this[ToIndex(slot)] = value;
+    }
+
+    private int? _levelCache;
 
     private GearItem this[int idx]
     {
@@ -83,38 +101,46 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
         }
     }
 
+    #endregion
+
     public GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None) =>
         new(job, this, tribe, bonus);
 
     public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
                                                         .Where(slot => slot < GearSetSlot.SoulCrystal
                                                                     && slot != GearSetSlot.Waist);
-    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_GearSet;
+
     public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-    string IHrtDataType.Name => Alias ?? Name;
 
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Gear;
-    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
-    //IDs
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
-    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
-    public GearItem this[GearSetSlot slot]
-    {
-        get => this[ToIndex(slot)];
-        set => this[ToIndex(slot)] = value;
-    }
-
-    /*
-     * Caching stats is a problem since this needs to be invalidated when changing materia
-     */
+    // Caching stats is a problem since this needs to be invalidated when changing materia
     public int GetStat(StatType type) => this.Sum(x => x.GetStat(type));
 
     public void MarkAsSystemManaged() => IsSystemManaged = true;
+
+    public void CopyFrom(GearSet gearSet)
+    {
+        TimeStamp = gearSet.TimeStamp;
+        ExternalId = gearSet.ExternalId;
+        ExternalIdx = gearSet.ExternalIdx;
+        LastExternalFetchDate = gearSet.LastExternalFetchDate;
+        Name = gearSet.Name;
+        Alias = gearSet.Alias;
+        ManagedBy = gearSet.ManagedBy;
+        RemoteIDs = gearSet.RemoteIDs;
+        Food = gearSet.Food;
+        //Do an actual copy of the item
+        for (int i = 0; i < _items.Length; i++)
+        {
+            _items[i] = gearSet._items[i]?.Clone();
+        }
+        InvalidateCaches();
+    }
+
+    public override string ToString() => $"{Alias ?? Name} ({ItemLevel})";
 
     private void InvalidateCaches() => _levelCache = null;
 
@@ -148,25 +174,6 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
         _                    => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
     };
 
-    public void CopyFrom(GearSet gearSet)
-    {
-        TimeStamp = gearSet.TimeStamp;
-        ExternalId = gearSet.ExternalId;
-        ExternalIdx = gearSet.ExternalIdx;
-        LastExternalFetchDate = gearSet.LastExternalFetchDate;
-        Name = gearSet.Name;
-        Alias = gearSet.Alias;
-        ManagedBy = gearSet.ManagedBy;
-        RemoteIDs = gearSet.RemoteIDs;
-        Food = gearSet.Food;
-        //Do an actual copy of the item
-        for (int i = 0; i < _items.Length; i++)
-        {
-            _items[i] = gearSet._items[i]?.Clone();
-        }
-        InvalidateCaches();
-    }
-
     private IEnumerable<GearItem> AsEnumerable()
     {
         for (int i = 0; i < NUM_SLOTS; ++i)
@@ -174,30 +181,18 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
             yield return this[i];
         }
     }
-    public override string ToString() => $"{Alias ?? Name} ({ItemLevel})";
 }
 
-internal class GearSetOverride : IReadOnlyGearSet
+internal class GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item) : IReadOnlyGearSet
 {
-    private readonly IReadOnlyGearSet _base;
-    private readonly GearItem _override;
-    private readonly GearSetSlot _slot;
+    public GearItem this[GearSetSlot slot1] => slot1 == slot ? item : baseSet[slot1];
 
-    public GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item)
-    {
-        _base = baseSet;
-        _slot = slot;
-        _override = item;
-    }
-
-    public GearItem this[GearSetSlot slot] => slot == _slot ? _override : _base[slot];
-
-    public FoodItem? Food => _base.Food;
+    public FoodItem? Food => baseSet.Food;
     public int GetStat(StatType statType)
     {
-        int result = _base.GetStat(statType);
-        result -= _base[_slot].GetStat(statType);
-        result += _override.GetStat(statType);
+        int result = baseSet.GetStat(statType);
+        result -= baseSet[slot].GetStat(statType);
+        result += item.GetStat(statType);
         return result;
     }
     public GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None) =>

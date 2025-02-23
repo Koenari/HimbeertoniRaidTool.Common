@@ -2,22 +2,14 @@
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public class GameExpansion
+public class GameExpansion(byte v, MateriaLevel maxMatLevel, int maxLvl, int unlockedRaidTiers = 0)
 {
-    [JsonProperty] public readonly byte GameVersion;
-    [JsonProperty] public readonly int MaxLevel;
-    [JsonProperty] public readonly MateriaLevel MaxMateriaLevel;
+    public readonly byte GameVersion = v;
+    public readonly int MaxLevel = maxLvl;
+    public readonly MateriaLevel MaxMateriaLevel = maxMatLevel;
 
-    public GameExpansion(byte v, MateriaLevel maxMatLevel, int maxLvl, int unlockedRaidTiers = 0)
-    {
-        GameVersion = v;
-        MaxMateriaLevel = maxMatLevel;
-        MaxLevel = maxLvl;
-        NormalRaidTiers = new RaidTier[unlockedRaidTiers];
-        SavageRaidTiers = new RaidTier[unlockedRaidTiers];
-    }
-    public RaidTier[] SavageRaidTiers { get; init; }
-    public RaidTier[] NormalRaidTiers { get; init; }
+    public RaidTier[] SavageRaidTiers { get; init; } = new RaidTier[unlockedRaidTiers];
+    public RaidTier[] NormalRaidTiers { get; init; } = new RaidTier[unlockedRaidTiers];
 
     public RaidTier? CurrentSavage => SavageRaidTiers.Length != 0 ? SavageRaidTiers[^1] : null;
 

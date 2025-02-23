@@ -48,15 +48,13 @@ public static class ItemExtensions
 
     public static IEnumerable<GearItem> PossiblePurchases(this Item item)
     {
+        foreach (uint canBuy in ItemInfoService.GetPossiblePurchases(item.Id))
         {
-            foreach (uint canBuy in ItemInfoService.GetPossiblePurchases(item.Id))
-            {
-                yield return new GearItem(canBuy);
-            }
-            foreach (uint id in ItemInfoService.GetContainerContents(item.Id))
-            {
-                yield return new GearItem(id);
-            }
+            yield return new GearItem(canBuy);
+        }
+        foreach (uint id in ItemInfoService.GetContainerContents(item.Id))
+        {
+            yield return new GearItem(id);
         }
     }
     public static bool IsFood(this LuminaItem item) => item.ItemAction.RowId != 0

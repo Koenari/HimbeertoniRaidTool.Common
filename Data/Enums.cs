@@ -178,7 +178,7 @@ public enum MateriaLevel : byte
     XII = 11,
 }
 
-public enum MateriaCategory : ushort
+public enum MateriaCategory : uint
 {
     None = 0,
     Piety = 7,

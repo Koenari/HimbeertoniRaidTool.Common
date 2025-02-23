@@ -10,13 +10,37 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
 {
+    #region Static
+
     private static readonly ExcelSheet<World> WorldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
 
     private static readonly ExcelSheet<Tribe> TribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
-    //Properties
+
+    private static SHA256 _sha256 = SHA256.Create();
+
+    public static string DataTypeNameStatic => CommonLoc.DataType_Character;
+
+    public static ulong CalcCharId(ulong contentId)
+    {
+        if (contentId == 0)
+            return 0;
+        byte[] hash = _sha256.ComputeHash(BitConverter.GetBytes(contentId));
+        return BitConverter.ToUInt64(hash);
+    }
+
+    #endregion
+
+    #region Serialized
+
     [JsonProperty("Classes")] private readonly List<PlayableClass> _classes = [];
 
     [JsonProperty("MainInventory")] public readonly Inventory MainInventory = new();
+
+    /// <summary>
+    ///     HRT specific unique ID used for local storage.
+    /// </summary>
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
 
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
@@ -40,14 +64,18 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     [JsonProperty("LodestoneID")] public int LodestoneId;
     [JsonProperty("Name")] public string Name;
     [JsonProperty("Tribe")] public uint TribeId;
+
+    #endregion
+
     public Character() : this("", 0) { }
+
+    [JsonConstructor]
     public Character(string name, uint worldId)
     {
-        Name = name;
         HomeWorldId = worldId;
+        Name = name;
     }
 
-    //Runtime only Properties
     public Job? MainJob
     {
         get
@@ -75,22 +103,16 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     public IEnumerable<PlayableClass> Classes => _classes;
 
     public PlayableClass? this[Job? type] => _classes.Find(x => x.Job == type);
-    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataType_Character;
 
     public IEnumerator<PlayableClass> GetEnumerator() => Classes.GetEnumerator();
 
     IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
-    [JsonIgnore] string IHrtDataType.Name => Name;
+    string IHrtDataType.Name => Name;
 
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Character;
-    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
+    public HrtId.IdType IdType => HrtId.IdType.Character;
+    public string DataTypeName => DataTypeNameStatic;
 
-    /// <summary>
-    ///     HRT specific unique ID used for local storage.
-    /// </summary>
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
-    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+    IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
@@ -143,19 +165,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormat
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 
     public override int GetHashCode() => LocalId.GetHashCode();
-
-
-    public static ulong CalcCharId(ulong contentId)
-    {
-        if (contentId == 0)
-            return 0;
-        using var sha256 = SHA256.Create();
-#pragma warning disable CA1850 // Prefer static 'HashData' method over 'ComputeHash'
-        //Static version crashes in wine
-        byte[] hash = sha256.ComputeHash(BitConverter.GetBytes(contentId));
-#pragma warning restore CA1850 // Prefer static 'HashData' method over 'ComputeHash'
-        return BitConverter.ToUInt64(hash);
-    }
 
     public void MergeInfos(Character toMerge)
     {

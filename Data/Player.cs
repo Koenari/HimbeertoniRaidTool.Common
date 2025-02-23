@@ -6,25 +6,38 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 public class Player : IHrtDataTypeWithId
 {
-    [JsonProperty("Chars")]
-    private readonly List<Character> _characters = [];
-    [JsonProperty("AdditionalData", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public readonly AdditionalPlayerData AdditionalData = new();
+    #region Static
+
+    public static string DataTypeNameStatic => CommonLoc.DataTypeName_Player;
+
+    #endregion
+
+    #region Serialized
+
+    [JsonProperty("Chars")] private readonly List<Character> _characters = [];
+
+    [JsonProperty("MainCharIndex")] private int _mainCharIndex;
+
+    [JsonProperty("NickName")] public string NickName = "";
+
+    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public HrtId LocalId { get; set; } = HrtId.Empty;
 
     /// <summary>
     ///     HRT specific unique IDs used for remote storage and lookup.
     /// </summary>
     [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
-    [JsonProperty("MainCharIndex")]
-    private int _mainCharIndex;
 
-    [JsonProperty("NickName")]
-    public string NickName = "";
-    [JsonConstructor]
-    public Player() { }
+    #endregion
+
+    [JsonConstructor] public Player() { }
+
+    #region Properties
+
     public IEnumerable<Character> Characters => _characters;
 
     public bool Filled => !LocalId.IsEmpty;
+
     public Character MainChar
     {
         get
@@ -47,16 +60,17 @@ public class Player : IHrtDataTypeWithId
             _mainCharIndex = _characters.Count - 1;
         }
     }
-    [Obsolete("Use: MainChar.MainClass")] public PlayableClass? CurJob => MainChar.MainClass;
-    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_Player;
+
     public string Name => NickName;
-    [JsonIgnore] public HrtId.IdType IdType => HrtId.IdType.Player;
-    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
 
-    [JsonProperty("LocalID", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public HrtId LocalId { get; set; } = HrtId.Empty;
+    public HrtId.IdType IdType => HrtId.IdType.Player;
 
-    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+    public string DataTypeName => DataTypeNameStatic;
+
+    IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
+
+    #endregion
+
     public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
     public override string ToString() => Name;
 
@@ -67,15 +81,4 @@ public class Player : IHrtDataTypeWithId
         MainChar = mainChar;
     }
     public void AddCharacter(Character character) => _characters.Add(character);
-}
-
-[JsonObject(MemberSerialization.OptIn)]
-public class AdditionalPlayerData
-{
-    [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public Dictionary<string, float> FloatData = new();
-    [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public Dictionary<string, int> IntData = new();
-    [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public Dictionary<string, string> StringData = new();
 }

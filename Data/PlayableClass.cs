@@ -9,41 +9,38 @@ using XIVCalc.Lumina;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class PlayableClass : IHrtDataType
+public class PlayableClass(Job job) : IHrtDataType
 {
+    #region Static
+
     private static readonly ExcelSheet<ClassJob> ClassJobSheet = CommonLibrary.ExcelModule.GetSheet<ClassJob>();
+
+    #endregion
+
+    #region Serialized
 
     [JsonProperty("BisSets")] private readonly List<GearSet> _bis = [];
 
     [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = [];
 
     [JsonProperty("ActiveBiSIdx")] private int _curBisIdx;
+
     [JsonProperty("ActiveGearIndex")] private int _curGearIdx;
+
     [JsonProperty("Hide")] public bool HideInUi;
 
-    [JsonProperty("Job")]
-    public Job Job;
+    [JsonProperty("Job")] public Job Job = job;
+
     [JsonProperty("Level")] public int Level = 1;
-    public PlayableClass(Job job)
-    {
-        Job = job;
-    }
-    [JsonIgnore]
+
+    #endregion
+
     public ClassJob ClassJob => ClassJobSheet.GetRow((uint)Job);
+
     public Role Role => Job.GetRole();
-    [JsonProperty("Gear")] [Obsolete("Use CurGear", true)]
-    private GearSet GearMigration
-    {
-        set
-        {
-            value.MarkAsSystemManaged();
-            if (value.Name.Equals("HrtCurrent"))
-                value.Name = "Current";
-            _gearSets.Insert(0, value);
-        }
-    }
-    [JsonIgnore] public IEnumerable<GearSet> GearSets => _gearSets;
-    [JsonIgnore] public GearSet CurGear
+
+    public IEnumerable<GearSet> GearSets => _gearSets;
+    public GearSet CurGear
     {
         get
         {
@@ -86,12 +83,9 @@ public class PlayableClass : IHrtDataType
         }
     }
 
-    [JsonProperty("BIS")] [Obsolete("Use CurBis", true)]
-    private GearSet BisMigration { set => _bis.Insert(0, value); }
+    public IEnumerable<GearSet> BisSets => _bis;
 
-    [JsonIgnore] public IEnumerable<GearSet> BisSets => _bis;
-
-    [JsonIgnore] public GearSet CurBis
+    public GearSet CurBis
     {
         get
         {
@@ -135,9 +129,9 @@ public class PlayableClass : IHrtDataType
     public IEnumerable<(GearSetSlot, (GearItem, GearItem))> ItemTuples =>
         GearSet.Slots.Select(slot => (slot, this[slot]));
     public bool IsEmpty => Level == 1 && CurGear.IsEmpty && CurBis.IsEmpty;
-    [JsonIgnore] public static string DataTypeNameStatic => CommonLoc.DataTypeName_Job;
-    [JsonIgnore] public string DataTypeName => DataTypeNameStatic;
-    [JsonIgnore] public string Name => Job.ToString();
+    public static string DataTypeNameStatic => CommonLoc.DataTypeName_Job;
+    public string DataTypeName => DataTypeNameStatic;
+    public string Name => Job.ToString();
     /// <summary>
     ///     Evaluates if all the given slots have BiS item or an item with higher or equal item level as
     ///     given item
