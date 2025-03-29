@@ -96,22 +96,24 @@ public class Item : IEquatable<Item>, IHrtDataType
 public class ItemIdCollection : IEnumerable<uint>
 {
     public static readonly ItemIdCollection Empty = new();
-    private readonly ReadOnlyCollection<uint> _ids;
+    private readonly Collection<uint> _ids;
 
     public ItemIdCollection(params uint[] ids)
     {
-        _ids = new ReadOnlyCollection<uint>(ids.ToList());
+        _ids = new Collection<uint>(ids.ToList());
     }
 
     public ItemIdCollection(Range range, params uint[] ids)
     {
-        _ids = new ReadOnlyCollection<uint>(ToList(range).Concat(ids).ToList());
+        _ids = new Collection<uint>(ToList(range).Concat(ids).ToList());
     }
 
     public ItemIdCollection(IEnumerable<uint> ids)
     {
-        _ids = new ReadOnlyCollection<uint>(ids.ToList());
+        _ids = new Collection<uint>(ids.ToList());
     }
+
+    public void Add(uint id) => _ids.Add(id);
 
     public IEnumerator<uint> GetEnumerator() => _ids.GetEnumerator();
 

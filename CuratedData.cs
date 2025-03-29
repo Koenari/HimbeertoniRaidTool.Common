@@ -37,10 +37,12 @@ internal class CuratedData
             NormalRaidTiers =
             [
                 new RaidTier(Normal, 710, 700, "AAC Light-heavyweight Tier", [30135, 30137, 30139, 30141]),
+                new RaidTier(Normal, 750, 740, "AAC Cruiserweight Tier", [30145, 30147, 30149, 30151]),
             ],
             SavageRaidTiers =
             [
                 new RaidTier(Savage, 735, 730, "AAC Light-heavyweight Tier Savage", [30136, 30138, 30140, 30142]),
+                new RaidTier(Savage, 755, 750, "AAC Cruiserweight Savage", [30146, 30148, 30150, 30152]),
             ],
         },
     ];
@@ -50,33 +52,33 @@ internal class CuratedData
     {
         //6.0
         { 35734, 35245..35264 }, //Asphodelos weapon coffer
-        { 35735, new ItemIdCollection(35265, 35270, 35275, 35280, 35285, 35290, 35295) }, //Asphodelos headgear coffer
-        { 35736, new ItemIdCollection(35266, 35271, 35276, 35281, 35286, 35291, 35296) }, //Asphodelos chest gear coffer
-        { 35737, new ItemIdCollection(35267, 35272, 35277, 35282, 35287, 35292, 35297) }, //Asphodelos hand gear coffer
-        { 35738, new ItemIdCollection(35268, 35273, 35278, 35283, 35288, 35293, 35298) }, //Asphodelos leg gear coffer
-        { 35739, new ItemIdCollection(35269, 35274, 35279, 35284, 35289, 35294, 35299) }, //Asphodelos foot gear coffer
+        { 35735, [35265, 35270, 35275, 35280, 35285, 35290, 35295] }, //Asphodelos headgear coffer
+        { 35736, [35266, 35271, 35276, 35281, 35286, 35291, 35296] }, //Asphodelos chest gear coffer
+        { 35737, [35267, 35272, 35277, 35282, 35287, 35292, 35297] }, //Asphodelos hand gear coffer
+        { 35738, [35268, 35273, 35278, 35283, 35288, 35293, 35298] }, //Asphodelos leg gear coffer
+        { 35739, [35269, 35274, 35279, 35284, 35289, 35294, 35299] }, //Asphodelos foot gear coffer
         { 35740, 35300..35304 }, //Asphodelos earring coffer
         { 35741, 35305..35309 }, //Asphodelos necklace coffer
         { 35742, 35310..35314 }, //Asphodelos bracelet coffer
         { 35743, 35315..35319 }, //Asphodelos ring coffers
         //6.2
         { 38390, 38081..38099 }, //Abyssos weapon coffer
-        { 38391, new ItemIdCollection(38101, 38106, 38111, 38116, 38121, 38126, 38131) }, //Abyssos headgear coffer
-        { 38392, new ItemIdCollection(38102, 38107, 38112, 38117, 38122, 38127, 38132) }, //Abyssos chest gear coffer
-        { 38393, new ItemIdCollection(38103, 38108, 38113, 38118, 38123, 38128, 38133) }, //Abyssos hand gear coffer
-        { 38394, new ItemIdCollection(38104, 38109, 38114, 38119, 38124, 38129, 38134) }, //Abyssos leg gear coffer
-        { 38395, new ItemIdCollection(38105, 38110, 38115, 38120, 38125, 38130, 38135) }, //Abyssos foot gear coffer
+        { 38391, [38101, 38106, 38111, 38116, 38121, 38126, 38131] }, //Abyssos headgear coffer
+        { 38392, [38102, 38107, 38112, 38117, 38122, 38127, 38132] }, //Abyssos chest gear coffer
+        { 38393, [38103, 38108, 38113, 38118, 38123, 38128, 38133] }, //Abyssos hand gear coffer
+        { 38394, [38104, 38109, 38114, 38119, 38124, 38129, 38134] }, //Abyssos leg gear coffer
+        { 38395, [38105, 38110, 38115, 38120, 38125, 38130, 38135] }, //Abyssos foot gear coffer
         { 38396, 38136..38140 }, //Abyssos earring coffer
         { 38397, 38141..38145 }, //Abyssos necklace coffer
         { 38398, 38146..38150 }, //Abyssos bracelet coffer
         { 38399, 38151..38155 }, //Abyssos ring coffers
         //6.4
         { 40307, 40165..40183 }, //Ascension weapon coffer
-        { 40308, new ItemIdCollection(40185, 40190, 40195, 40200, 40205, 40210, 40215) }, //Ascension headgear coffer
-        { 40309, new ItemIdCollection(40186, 40191, 40196, 40201, 40206, 40211, 40216) }, //Ascension chest gear coffer
-        { 40310, new ItemIdCollection(40187, 40192, 40197, 40202, 40207, 40212, 40217) }, //Ascension hand gear coffer
-        { 40311, new ItemIdCollection(40188, 40193, 40198, 40203, 40208, 40213, 40218) }, //Ascension leg gear coffer
-        { 40312, new ItemIdCollection(40189, 40194, 40199, 40204, 40209, 40214, 40219) }, //Ascension foot gear coffer
+        { 40308, [40185, 40190, 40195, 40200, 40205, 40210, 40215] }, //Ascension headgear coffer
+        { 40309, [40186, 40191, 40196, 40201, 40206, 40211, 40216] }, //Ascension chest gear coffer
+        { 40310, [40187, 40192, 40197, 40202, 40207, 40212, 40217] }, //Ascension hand gear coffer
+        { 40311, [40188, 40193, 40198, 40203, 40208, 40213, 40218] }, //Ascension leg gear coffer
+        { 40312, [40189, 40194, 40199, 40204, 40209, 40214, 40219] }, //Ascension foot gear coffer
         { 40313, 40220..40224 }, //Ascension earring coffer
         { 40314, 40225..40229 }, //Ascension necklace coffer
         { 40315, 40230..40234 }, //Ascension bracelet coffer
@@ -84,15 +86,26 @@ internal class CuratedData
         //7.0
         { 43526, 42773..42794 }, //Skyruin weapon coffer
         { 43527, 43101..43121 }, //dark horse champion's weapon coffer (IL 735)
-        { 43528, new ItemIdCollection(43123, 43128, 43133, 43138, 43143, 43148, 43153) }, //dark horse headgear coffer
-        { 43529, new ItemIdCollection(43124, 43129, 43134, 43139, 43144, 43149, 43154) }, //dark horse chest gear coffer
-        { 43530, new ItemIdCollection(43125, 43130, 43135, 43140, 43145, 43150, 43155) }, //dark horse hand gear coffer
-        { 43531, new ItemIdCollection(43126, 43131, 43136, 43141, 43146, 43151, 43156) }, //dark horse leg gear coffer
-        { 43532, new ItemIdCollection(43127, 43132, 43137, 43142, 43147, 43152, 43157) }, //dark horse foot gear coffer
+        { 43528, [43123, 43128, 43133, 43138, 43143, 43148, 43153] }, //dark horse headgear coffer
+        { 43529, [43124, 43129, 43134, 43139, 43144, 43149, 43154] }, //dark horse chest gear coffer
+        { 43530, [43125, 43130, 43135, 43140, 43145, 43150, 43155] }, //dark horse hand gear coffer
+        { 43531, [43126, 43131, 43136, 43141, 43146, 43151, 43156] }, //dark horse leg gear coffer
+        { 43532, [43127, 43132, 43137, 43142, 43147, 43152, 43157] }, //dark horse foot gear coffer
         { 43533, 43158..43162 }, //dark horse earring coffer
         { 43534, 43163..43167 }, //dark horse necklace coffer
         { 43535, 43168..43172 }, //dark horse bracelet coffer
         { 43536, 43173..43177 }, //dark horse ring coffer
+        //7.2
+        { 46710, 46630..46650 }, //babyface champion's weapon coffer (IL 765)
+        { 46711, [46653, 46658, 46663, 46668, 46673, 46678, 46683] }, //babyface champion's head gear coffer (IL 760)
+        { 46712, [46654, 46659, 46664, 46669, 46674, 46679, 46684] }, //babyface champion's chest gear coffer (IL 760)
+        { 46713, [46655, 46660, 46665, 46670, 46675, 46680, 46685] }, //babyface champion's hand gear coffer (IL 760)
+        { 46714, [46656, 46661, 46666, 46671, 46676, 46681, 46686] }, //babyface champion's leg gear coffer (IL 760)
+        { 46715, [46657, 46662, 46667, 46672, 46677, 46682, 46687] }, //babyface champion's foot gear coffer (IL 760)
+        { 46716, 46687..46691 }, //babyface champion's earring gear coffer (IL 760)
+        { 46717, 46692..46696 }, //babyface champion's necklace gear coffer (IL 760)
+        { 46718, 46697..46701 }, //babyface champion's bracelet gear coffer (IL 760)
+        { 46719, 46702..46706 }, //babyface champion's ring gear coffer (IL 760)
     };
 
     //I only record Gear and items used to get gear
@@ -193,6 +206,15 @@ internal class CuratedData
         new(00100, Normal, 44550..44604), //Dungeon: Yuweyawata Field Station
         new(30144, Normal, 44514..44548), //Alliance-Raid - Jeuno: The First Walk
         new(20099, Extreme, 44696..44717, 44718..44719), // The Minstrel's Ballad: Sphene's Burden
-        new(64009, Unreal), //The Jade Stoa (Unreal)
+        new(64009, Unreal), //The Jade Stoa (Unreal)c
+        //7.2
+        new(30145, Normal, 46721..46726), //M1
+        new(30146, Savage, 46716..46719, 46732), //M1 S
+        new(30147, Normal, 46721..46726), //M2
+        new(30148, Savage, new ItemIdCollection(46711, 46713, 46715, 46731, 46728), 46733), //M2 S
+        new(30149, Normal, 46721..46726), //M3
+        new(30150, Savage, new ItemIdCollection(46712, 46714, 46730, 46729), 46734), //M3 S
+        new(30151, Normal, 46721..46726), //M4
+        new(30152, Savage, new ItemIdCollection(46630..46650, 46710), 46735), //M4 S
     ];
 }
