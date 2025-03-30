@@ -97,11 +97,11 @@ internal class CuratedData
         { 43536, 43173..43177 }, //dark horse ring coffer
         //7.2
         { 46710, 46630..46650 }, //babyface champion's weapon coffer (IL 765)
-        { 46711, [46653, 46658, 46663, 46668, 46673, 46678, 46683] }, //babyface champion's head gear coffer (IL 760)
-        { 46712, [46654, 46659, 46664, 46669, 46674, 46679, 46684] }, //babyface champion's chest gear coffer (IL 760)
-        { 46713, [46655, 46660, 46665, 46670, 46675, 46680, 46685] }, //babyface champion's hand gear coffer (IL 760)
-        { 46714, [46656, 46661, 46666, 46671, 46676, 46681, 46686] }, //babyface champion's leg gear coffer (IL 760)
-        { 46715, [46657, 46662, 46667, 46672, 46677, 46682, 46687] }, //babyface champion's foot gear coffer (IL 760)
+        { 46711, [46652, 46657, 46662, 46667, 46672, 46677, 46682] }, //babyface champion's head gear coffer (IL 760)
+        { 46712, [46653, 46658, 46663, 46668, 46673, 46678, 46683] }, //babyface champion's chest gear coffer (IL 760)
+        { 46713, [46654, 46659, 46664, 46669, 46674, 46679, 46684] }, //babyface champion's hand gear coffer (IL 760)
+        { 46714, [46655, 46660, 46665, 46670, 46675, 46680, 46685] }, //babyface champion's leg gear coffer (IL 760)
+        { 46715, [46656, 46661, 46666, 46671, 46676, 46681, 46686] }, //babyface champion's foot gear coffer (IL 760)
         { 46716, 46687..46691 }, //babyface champion's earring gear coffer (IL 760)
         { 46717, 46692..46696 }, //babyface champion's necklace gear coffer (IL 760)
         { 46718, 46697..46701 }, //babyface champion's bracelet gear coffer (IL 760)
