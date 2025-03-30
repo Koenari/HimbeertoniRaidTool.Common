@@ -42,7 +42,7 @@ internal class CuratedData
             SavageRaidTiers =
             [
                 new RaidTier(Savage, 735, 730, "AAC Light-heavyweight Tier Savage", [30136, 30138, 30140, 30142]),
-                new RaidTier(Savage, 755, 750, "AAC Cruiserweight Savage", [30146, 30148, 30150, 30152]),
+                new RaidTier(Savage, 765, 760, "AAC Cruiserweight Savage", [30146, 30148, 30150, 30152]),
             ],
         },
     ];
