@@ -73,6 +73,7 @@ internal class ItemInfoService
         (640, 3) => 45,
         (700, 2) => 46,
         (700, 3) => 47,
+        (720, 3) => 48,
         _        => itemId,
     };
 
