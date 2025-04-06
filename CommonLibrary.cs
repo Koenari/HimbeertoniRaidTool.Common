@@ -25,7 +25,8 @@ public static class CommonLibrary
             SetLanguage(language);
     }
 
-    public static void SetLanguage(string langCode) => CommonLoc.Culture = new CultureInfo(langCode);
+    public static void SetLanguage(string langCode) => SetLanguage(new CultureInfo(langCode));
+    public static void SetLanguage(CultureInfo culture) => CommonLoc.Culture = culture;
 
 }
 
