@@ -50,6 +50,15 @@ public enum EventStatus
     Finished = 4,
 }
 
+public enum ParticipationStatus
+{
+    Unknown = 0,
+    Present = 1,
+    Absent = 2,
+    ExcusedAbsent = 3,
+    Late = 4,
+}
+
 public enum ItemSource
 {
     Undefined = 0,

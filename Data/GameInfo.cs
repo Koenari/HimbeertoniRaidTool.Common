@@ -13,7 +13,7 @@ public static class GameInfo
     {
         var curatedData = new CuratedData();
         InstanceDb = new Dictionary<uint, InstanceWithLoot>();
-        foreach (var instance in curatedData.InstanceDb)
+        foreach (var instance in curatedData.InstanceData)
         {
             InstanceDb.Add(instance.InstanceId, instance);
         }

@@ -109,7 +109,7 @@ internal class CuratedData
     };
 
     //I only record Gear and items used to get gear
-    internal readonly HashSet<InstanceWithLoot> InstanceDb =
+    internal readonly HashSet<InstanceWithLoot> InstanceData =
     [
         //6.0
         new(78, Normal, 34155..34229),

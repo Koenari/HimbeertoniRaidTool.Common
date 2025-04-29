@@ -8,7 +8,7 @@ public class RaidSession : IHrtDataTypeWithId
 {
     public static string DataTypeNameStatic = "session";
     public string DataTypeName => DataTypeNameStatic;
-    public string Name => $"{Group?.Name} @ {StartTime:f}";
+    public string Name => Title.Length > 0 ? Title : $"{Group?.Name} @ {StartTime:f}";
 
     public HrtId.IdType IdType => HrtId.IdType.RaidSession;
 
@@ -32,7 +32,7 @@ public class RaidSession : IHrtDataTypeWithId
     [JsonProperty("Owner")] public Player? Organizer;
     [JsonProperty("Group")] public RaidGroup? Group;
     [JsonProperty("Status")] public EventStatus Status;
-    [JsonProperty("PlannedContent")] public List<InstanceWithLoot> PlannedContent = [];
+    [JsonProperty("PlannedContent")] public List<InstanceSession> PlannedContent = [];
     [JsonProperty("Title")] public string Title = string.Empty;
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
 
@@ -84,12 +84,35 @@ public class RaidSession : IHrtDataTypeWithId
 
 [JsonObject(MemberSerialization.OptIn)]
 [method: JsonConstructor]
+public class InstanceSession(InstanceWithLoot instance)
+{
+    [JsonProperty("InstanceId")] private readonly uint _instanceId = instance.InstanceId;
+    public InstanceWithLoot Instance => GameInfo.GetInstance(_instanceId);
+    [JsonProperty("Plan")] public PlannedStatus Plan { get; set; }
+    [JsonProperty("Tried")] public bool Tried { get; set; }
+    [JsonProperty("Killed")] public bool Killed { get; set; }
+    [JsonProperty("BestPercentage")] public float BestPercentage { get; set; }
+    [JsonProperty("Loot")] public Dictionary<Participant, List<Item>> Loot { get; } = [];
+
+
+    public enum PlannedStatus
+    {
+        Unknown = 0,
+        Planned = 1,
+        NotPlanned = 2,
+        SafeKill = 2,
+        Kill = 3,
+        Progress = 4,
+    }
+}
+
+[JsonObject(MemberSerialization.OptIn)]
+[method: JsonConstructor]
 public class Participant(Player player)
 {
     [JsonProperty("Player")] public readonly Player Player = player;
     [JsonProperty("InviteStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
-    [JsonProperty("WasPresent")] public bool WasPresent = false;
-    [JsonProperty("WasExcused")] public bool WasExcused = false;
+    [JsonProperty("ParticipationStatus")] public ParticipationStatus ParticipationStatus = ParticipationStatus.Unknown;
     [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = [];
 
 }
