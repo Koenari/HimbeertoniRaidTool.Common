@@ -1,6 +1,8 @@
-﻿namespace HimbeertoniRaidTool.Common.Data;
+﻿using ICloneable = HimbeertoniRaidTool.Common.Data.ICloneable;
 
-public static class Extensions
+namespace HimbeertoniRaidTool.Common.Extensions;
+
+public static class DataExtensions
 {
     public static T Clone<T>(this T source) where T : ICloneable
         => JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source))!;

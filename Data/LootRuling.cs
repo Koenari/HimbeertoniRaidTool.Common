@@ -1,4 +1,6 @@
-﻿namespace HimbeertoniRaidTool.Common.Data;
+﻿using HimbeertoniRaidTool.Common.Extensions;
+
+namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonDictionary]
 public class RolePriority : Dictionary<Role, int>

@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
 using Lumina.Excel;

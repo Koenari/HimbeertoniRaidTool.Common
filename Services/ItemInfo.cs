@@ -1,4 +1,5 @@
-﻿using Lumina.Excel;
+﻿using HimbeertoniRaidTool.Common.Extensions;
+using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using Item = HimbeertoniRaidTool.Common.Data.Item;
 
@@ -157,9 +158,9 @@ internal class ItemInfoService
                                                                  == ItemSource.Tome)))
                 return ItemSource.Tome;
             if (GetShopEntriesForItem(itemId).Any(se =>
-                                                      se.entry.ItemCosts.Any(
-                                                          e => GetSource(new Item(e.ItemCost.RowId), maxDepth)
-                                                            == ItemSource.Raid)))
+                                                      se.entry.ItemCosts.Any(e => GetSource(new Item(e.ItemCost.RowId),
+                                                                                     maxDepth)
+                                                                              == ItemSource.Raid)))
                 return ItemSource.Raid;
             return ItemSource.Shop;
         }

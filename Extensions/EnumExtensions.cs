@@ -1,8 +1,9 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
+using Role = HimbeertoniRaidTool.Common.Data.Role;
 
-namespace HimbeertoniRaidTool.Common.Data;
+namespace HimbeertoniRaidTool.Common.Extensions;
 
 public static class EnumExtensions
 {
