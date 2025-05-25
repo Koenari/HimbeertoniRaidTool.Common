@@ -41,6 +41,16 @@ public enum InviteStatus
     NoStatus = -1,
 }
 
+public enum ParticipationStatus
+{
+    NoStatus = 0,
+    Present = 1,
+    PartiallyPresent = 2,
+    Excused = 3,
+    Absent = 4,
+    PresentButLate = 5,
+}
+
 public enum EventStatus
 {
     Unknown = 0,
@@ -50,13 +60,13 @@ public enum EventStatus
     Finished = 4,
 }
 
-public enum ParticipationStatus
+public enum PlannedContentStatus
 {
     Unknown = 0,
-    Present = 1,
-    Absent = 2,
-    ExcusedAbsent = 3,
-    Late = 4,
+    FarmStatus = 1,
+    LikelyKilled = 2,
+    Progress = 3,
+    NotPlanned = 4,
 }
 
 public enum ItemSource
