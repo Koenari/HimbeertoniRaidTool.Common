@@ -3,7 +3,7 @@
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class User : IHrtDataTypeWithId
+public class User : IHrtDataTypeWithId<User>, ICloneable
 {
     public static string DataTypeNameStatic => "user";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.User;
@@ -59,8 +59,8 @@ public class User : IHrtDataTypeWithId
     }
 
     public bool OwnsCharacter(Character character) => _claimedCharacters.Contains(character)
-                                                   || _xivAccounts.Any(
-                                                          xivAccount => xivAccount.Characters.Contains(character));
+                                                   || _xivAccounts.Any(xivAccount =>
+                                                                           xivAccount.Characters.Contains(character));
 
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);

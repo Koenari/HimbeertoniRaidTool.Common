@@ -9,7 +9,7 @@ using XIVCalc.Lumina;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class PlayableClass(Job job) : IHrtDataType
+public class PlayableClass(Job job) : IHrtDataType, ICloneable
 {
     #region Static
 

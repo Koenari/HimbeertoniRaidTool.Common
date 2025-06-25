@@ -8,7 +8,7 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId, IFormattable
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character>, IFormattable, ICloneable
 {
     #region Static
 

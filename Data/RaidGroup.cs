@@ -5,7 +5,7 @@ using HimbeertoniRaidTool.Common.Security;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId
+public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICloneable
 {
     public static string DataTypeNameStatic => CommonLoc.DataTypeName_RaidGroup;
 

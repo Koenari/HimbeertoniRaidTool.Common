@@ -7,7 +7,7 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet>, ICloneable
 {
     public const int NUM_SLOTS = 12;
 

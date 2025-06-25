@@ -4,7 +4,7 @@ using HimbeertoniRaidTool.Common.Security;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player : IHrtDataTypeWithId
+public class Player : IHrtDataTypeWithId<Player>, ICloneable
 {
     #region Static
 

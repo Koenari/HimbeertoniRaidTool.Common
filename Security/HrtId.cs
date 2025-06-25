@@ -8,17 +8,17 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public static readonly HrtId Empty = new(0, IdType.None, 0);
     public static HrtId FromString(string id)
     {
-        var parts = id.Split('-');
+        string[] parts = id.Split('-');
         if (parts is not ["HRT", "1", _, _, _])
             return Empty;
-        if(!uint.TryParse(parts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture,  out var authority))
+        if (!uint.TryParse(parts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint authority))
             return Empty;
-        if(!Enum.TryParse<IdType>(parts[3], true, out var type))
+        if (!Enum.TryParse<IdType>(parts[3], true, out var type))
             return Empty;
-        if(!ulong.TryParse(parts[4], NumberStyles.HexNumber, CultureInfo.InvariantCulture ,out var sequence))
+        if (!ulong.TryParse(parts[4], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong sequence))
             return Empty;
         return new HrtId(authority, type, sequence);
-        
+
     }
     [JsonProperty]
     public readonly byte Revision = 1;
@@ -117,7 +117,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     }
 }
 
-public interface IHasHrtId : IEquatable<IHasHrtId>
+public interface IHasHrtId
 {
     public HrtId.IdType IdType { get; }
     public HrtId LocalId { get; set; }
@@ -126,4 +126,16 @@ public interface IHasHrtId : IEquatable<IHasHrtId>
     ///     XIV Raid Tool specific unique IDs used for remote storage and lookup.
     /// </summary>
     public IList<HrtId> RemoteIds { get; }
+}
+
+public interface IHasHrtId<T> : IHasHrtId where T : IHasHrtId<T>
+{
+    public static virtual bool operator ==(T obj1, T obj2)
+    {
+        return obj1.LocalId == obj2.LocalId;
+    }
+    public static virtual bool operator !=(T obj1, T obj2)
+    {
+        return !(obj1 == obj2);
+    }
 }

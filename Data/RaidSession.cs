@@ -4,7 +4,7 @@ using HimbeertoniRaidTool.Common.Security;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidSession : IHrtDataTypeWithId
+public class RaidSession : IHrtDataTypeWithId<RaidSession>
 {
     public static string DataTypeNameStatic = "session";
     public string DataTypeName => DataTypeNameStatic;
@@ -29,7 +29,7 @@ public class RaidSession : IHrtDataTypeWithId
 
     [JsonProperty("Participants")] private readonly HashSet<Participant> _participants = [];
 
-    [JsonProperty("Owner")] public Player? Organizer;
+    [JsonProperty("Owner")] public Reference<Player>? Organizer;
     [JsonProperty("Group")] public RaidGroup? Group;
     [JsonProperty("Status")] public EventStatus Status;
     [JsonProperty("PlannedContent")] public List<InstanceSession> PlannedContent = [];
@@ -38,7 +38,7 @@ public class RaidSession : IHrtDataTypeWithId
 
 
     [JsonConstructor]
-    private RaidSession(Player organizer)
+    private RaidSession(Reference<Player> organizer)
     {
         Organizer = organizer;
     }
@@ -46,7 +46,8 @@ public class RaidSession : IHrtDataTypeWithId
     public RaidSession() : this(DateTime.Now) { }
     public RaidSession(DateTime startTime) : this(startTime, TimeSpan.FromHours(1)) { }
 
-    public RaidSession(DateTime startTime, TimeSpan duration, Player? organizer = null, RaidGroup? group = null)
+    public RaidSession(DateTime startTime, TimeSpan duration, Reference<Player>? organizer = null,
+                       RaidGroup? group = null)
     {
         StartTime = startTime;
         Duration = duration;
@@ -60,19 +61,20 @@ public class RaidSession : IHrtDataTypeWithId
             return;
         foreach (var player in Group)
         {
-            if (player == Organizer) continue;
-            Invite(player, out _);
+            if (player == Organizer?.Data) continue;
+            Invite(new Reference<Player>(player), out _);
         }
     }
 
-    public Participant? this[Player player] => Participants.FirstOrDefault(p => player.Equals(p?.Player), null);
+    public Participant? this[Player player] => Participants.FirstOrDefault(p => player == p?.Player.Data, null);
 
-    public bool IsOrganizer(IHasHrtId player) => Organizer is not null && player.LocalId == Organizer.LocalId;
+    public bool IsOrganizer(IHasHrtId player) => Organizer is not null && player.LocalId == Organizer.Data.LocalId;
 
-    public bool Invite(Player newParticipant, [NotNullWhen(true)] out Participant? participant)
+    public bool Invite(Reference<Player> newParticipant, [NotNullWhen(true)] out Participant? participant)
     {
         participant = null;
-        if (_participants.Any(p => p.Player.Equals(newParticipant)) || newParticipant.LocalId.IsEmpty) return false;
+        if (_participants.Any(p => p.Player.Equals(newParticipant)) || newParticipant.Data.LocalId.IsEmpty)
+            return false;
         participant = new Participant(newParticipant);
         return _participants.Add(participant);
     }
@@ -81,23 +83,37 @@ public class RaidSession : IHrtDataTypeWithId
 
 
     public void CopyFrom(RaidSession dataCopy) => Title = dataCopy.Title;
+
+    public override string ToString() => Title.Length > 0 ? $"{Title} ({Group?.Name} @ {StartTime:f})"
+        : $"{Group?.Name} @ {StartTime:f}";
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-[method: JsonConstructor]
-public class InstanceSession(InstanceWithLoot instance)
+public class InstanceSession
 {
+
+
     #region Serialized
 
-    [JsonProperty("InstanceId")] private readonly uint _instanceId = instance.InstanceId;
+    [JsonProperty("InstanceId")] private readonly uint _instanceId;
     [JsonProperty("Plan")] public PlannedStatus Plan;
     [JsonProperty("Tried")] public bool Tried;
     [JsonProperty("Killed")] public bool Killed;
     [JsonProperty("BestPercentage")] public float BestPercentage;
+
     [JsonProperty("Loot")] public Dictionary<Participant, List<Item>> Loot { get; } = [];
 
     #endregion
 
+    public InstanceSession(InstanceWithLoot instance)
+    {
+        _instanceId = instance.InstanceId;
+    }
+    [JsonConstructor]
+    private InstanceSession(uint instanceId)
+    {
+        _instanceId = instanceId;
+    }
     public InstanceWithLoot Instance => GameInfo.GetInstance(_instanceId);
 
 
@@ -107,22 +123,27 @@ public class InstanceSession(InstanceWithLoot instance)
         Unknown = 0,
         Planned = 1,
         NotPlanned = 2,
-        SafeKill = 2,
-        Kill = 3,
-        Progress = 4,
+        SafeKill = 3,
+        Kill = 4,
+        Progress = 5,
     }
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-[method: JsonConstructor]
-public class Participant(Player player)
+public class Participant(Reference<Player> player)
 {
     #region Serialized
 
-    [JsonProperty("Player")] public readonly Player Player = player;
+    [JsonProperty("Player", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    public readonly Reference<Player> Player = player;
     [JsonProperty("InviteStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
     [JsonProperty("ParticipationStatus")] public ParticipationStatus ParticipationStatus = ParticipationStatus.NoStatus;
     [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = [];
+
+    [JsonConstructor]
+    private Participant() : this(new Reference<Player>(HrtId.Empty, _ => null))
+    {
+    }
 
     #endregion
 

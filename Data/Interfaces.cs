@@ -12,11 +12,12 @@ public interface IReadOnlyGearSet
     public GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None);
 }
 
-public interface IHrtDataType : ICloneable
+public interface IHrtDataType
 {
     public string DataTypeName { get; }
     public string Name { get; }
 }
 
 public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId;
+public interface IHrtDataTypeWithId<T> : IHrtDataTypeWithId, IHasHrtId<T> where T : IHasHrtId<T>;
 public interface ICloneable;

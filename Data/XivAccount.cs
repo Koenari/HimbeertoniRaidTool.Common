@@ -4,7 +4,7 @@ using HimbeertoniRaidTool.Common.Security;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class XivAccount : IHrtDataTypeWithId
+public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable
 {
     public static string DataTypeNameStatic => "FFXIV account";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.XivAccount;

@@ -33,7 +33,7 @@ public class HqItem : Item, IEquatable<HqItem>
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class Item : IEquatable<Item>, IHrtDataType
+public class Item : IEquatable<Item>, IHrtDataType, ICloneable
 {
     public static readonly Item Empty = new(0);
 
