@@ -31,9 +31,9 @@ public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable
 
     #endregion
 
-    public string DataTypeName => DataTypeNameStatic;
+    public static string DataTypeName => DataTypeNameStatic;
 
-    public HrtId.IdType IdType => IdTypeStatic;
+    public static HrtId.IdType IdType => IdTypeStatic;
 
 
     public IList<HrtId> RemoteIds => _remoteIds;

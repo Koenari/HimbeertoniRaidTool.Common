@@ -84,7 +84,7 @@ public class Item : IEquatable<Item>, IHrtDataType, ICloneable
 
     public string Name => GameItem.Name.ExtractText();
 
-    public string DataTypeName => CommonLoc.DataTypeName_item;
+    public static string DataTypeName => CommonLoc.DataTypeName_item;
 
     public override string ToString() => Name;
 

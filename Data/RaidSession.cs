@@ -6,11 +6,10 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class RaidSession : IHrtDataTypeWithId<RaidSession>
 {
-    public static string DataTypeNameStatic = "session";
-    public string DataTypeName => DataTypeNameStatic;
+    public static string DataTypeName => "raid session";
     public string Name => Title.Length > 0 ? Title : $"{Group?.Name} @ {StartTime:f}";
 
-    public HrtId.IdType IdType => HrtId.IdType.RaidSession;
+    public static HrtId.IdType IdType => HrtId.IdType.RaidSession;
 
     [JsonProperty("LocalId", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;

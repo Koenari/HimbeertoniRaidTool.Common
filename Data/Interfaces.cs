@@ -14,7 +14,7 @@ public interface IReadOnlyGearSet
 
 public interface IHrtDataType
 {
-    public string DataTypeName { get; }
+    public static abstract string DataTypeName { get; }
     public string Name { get; }
 }
 

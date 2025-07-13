@@ -7,7 +7,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 [JsonObject(MemberSerialization.OptIn)]
 public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICloneable
 {
-    public static string DataTypeNameStatic => CommonLoc.DataTypeName_RaidGroup;
+    public static string DataTypeName => CommonLoc.DataTypeName_RaidGroup;
+
+    public static HrtId.IdType IdType => HrtId.IdType.Group;
 
     #region Serialized
 
@@ -89,10 +91,6 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
     IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
 
     string IHrtDataType.Name => Name;
-
-    public HrtId.IdType IdType => HrtId.IdType.Group;
-
-    public string DataTypeName => DataTypeNameStatic;
 
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 

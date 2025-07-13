@@ -129,8 +129,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable
     public IEnumerable<(GearSetSlot, (GearItem, GearItem))> ItemTuples =>
         GearSet.Slots.Select(slot => (slot, this[slot]));
     public bool IsEmpty => Level == 1 && CurGear.IsEmpty && CurBis.IsEmpty;
-    public static string DataTypeNameStatic => CommonLoc.DataTypeName_Job;
-    public string DataTypeName => DataTypeNameStatic;
+    public static string DataTypeName => CommonLoc.DataTypeName_Job;
     public string Name => Job.ToString();
     /// <summary>
     ///     Evaluates if all the given slots have BiS item or an item with higher or equal item level as

@@ -8,7 +8,9 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable
 {
     #region Static
 
-    public static string DataTypeNameStatic => CommonLoc.DataTypeName_Player;
+    public static string DataTypeName => CommonLoc.DataTypeName_Player;
+
+    public static HrtId.IdType IdType => HrtId.IdType.Player;
 
     #endregion
 
@@ -62,10 +64,6 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable
     }
 
     public string Name => NickName;
-
-    public HrtId.IdType IdType => HrtId.IdType.Player;
-
-    public string DataTypeName => DataTypeNameStatic;
 
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 

@@ -31,11 +31,11 @@ public class User : IHrtDataTypeWithId<User>, ICloneable
 
     #endregion
 
-    public string DataTypeName => DataTypeNameStatic;
+    public static string DataTypeName => DataTypeNameStatic;
 
     public string Name => DisplayName;
 
-    public HrtId.IdType IdType => IdTypeStatic;
+    public static HrtId.IdType IdType => IdTypeStatic;
 
     public IList<HrtId> RemoteIds => _remoteIds;
 

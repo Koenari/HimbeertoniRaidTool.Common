@@ -11,7 +11,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
 {
     public const int NUM_SLOTS = 12;
 
-    public static string DataTypeNameStatic => CommonLoc.DataTypeName_GearSet;
+    public static string DataTypeName => CommonLoc.DataTypeName_GearSet;
+    public static HrtId.IdType IdType => HrtId.IdType.Gear;
 
     #region Serialized
 
@@ -77,9 +78,6 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public bool IsEmpty => this.All(x => x is { Id: 0 });
 
     public int ItemLevel => _levelCache ??= CalcItemLevel();
-
-    public HrtId.IdType IdType => HrtId.IdType.Gear;
-    public string DataTypeName => DataTypeNameStatic;
 
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIDs;
 

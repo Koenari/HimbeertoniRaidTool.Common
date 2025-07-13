@@ -119,7 +119,7 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
 
 public interface IHasHrtId
 {
-    public HrtId.IdType IdType { get; }
+    public static abstract HrtId.IdType IdType { get; }
     public HrtId LocalId { get; set; }
 
     /// <summary>

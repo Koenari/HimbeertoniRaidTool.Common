@@ -18,7 +18,9 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     private static SHA256 _sha256 = SHA256.Create();
 
-    public static string DataTypeNameStatic => CommonLoc.DataType_Character;
+    public static string DataTypeName => CommonLoc.DataType_Character;
+
+    public static HrtId.IdType IdType => HrtId.IdType.Character;
 
     public static ulong CalcCharId(ulong contentId)
     {
@@ -108,9 +110,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     IEnumerator IEnumerable.GetEnumerator() => Classes.GetEnumerator();
     string IHrtDataType.Name => Name;
-
-    public HrtId.IdType IdType => HrtId.IdType.Character;
-    public string DataTypeName => DataTypeNameStatic;
 
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
