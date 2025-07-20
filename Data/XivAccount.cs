@@ -1,10 +1,11 @@
 ﻿using System.Security.Cryptography;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable
+public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable<XivAccount>
 {
     public static string DataTypeNameStatic => "FFXIV account";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.XivAccount;
@@ -40,6 +41,7 @@ public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable
 
     public IList<Character> Characters => _characters;
 
+    public XivAccount Clone() => CloneService.Clone(this);
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
     public static ulong HashId(ulong accountId)

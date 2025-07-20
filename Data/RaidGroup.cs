@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICloneable
+public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICloneable<RaidGroup>
 {
     public static string DataTypeName => CommonLoc.DataTypeName_RaidGroup;
 
@@ -107,6 +108,8 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
     }
 
     #endregion
+
+    public RaidGroup Clone() => CloneService.Clone(this);
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 

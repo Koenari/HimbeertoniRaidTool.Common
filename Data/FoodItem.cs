@@ -6,7 +6,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class FoodItem : HqItem
+public class FoodItem : HqItem, ICloneable<FoodItem>
 {
     private static readonly ExcelSheet<ItemAction> ItemActionSheet = CommonLibrary.ExcelModule.GetSheet<ItemAction>();
     private static readonly ExcelSheet<ItemFood> FoodSheet = CommonLibrary.ExcelModule.GetSheet<ItemFood>();
@@ -55,4 +55,6 @@ public class FoodItem : HqItem
         }
         return before;
     }
+
+    public new FoodItem Clone() => new(Id);
 }

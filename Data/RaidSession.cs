@@ -1,10 +1,11 @@
 using System.Diagnostics.CodeAnalysis;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidSession : IHrtDataTypeWithId<RaidSession>
+public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSession>
 {
     public static string DataTypeName => "raid session";
     public string Name => Title.Length > 0 ? Title : $"{Group?.Name} @ {StartTime:f}";
@@ -77,6 +78,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>
         participant = new Participant(newParticipant);
         return _participants.Add(participant);
     }
+
+    public RaidSession Clone() => CloneService.Clone(this);
 
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 

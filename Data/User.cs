@@ -1,9 +1,10 @@
 ﻿using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class User : IHrtDataTypeWithId<User>, ICloneable
+public class User : IHrtDataTypeWithId<User>, ICloneable<User>
 {
     public static string DataTypeNameStatic => "user";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.User;
@@ -62,6 +63,6 @@ public class User : IHrtDataTypeWithId<User>, ICloneable
                                                    || _xivAccounts.Any(xivAccount =>
                                                                            xivAccount.Characters.Contains(character));
 
-
+    public User Clone() => CloneService.Clone(this);
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 }

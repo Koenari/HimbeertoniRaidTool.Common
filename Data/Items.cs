@@ -7,7 +7,7 @@ using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public class HqItem : Item, IEquatable<HqItem>
+public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>
 {
     private readonly bool _hq;
     [JsonProperty] public bool IsHq
@@ -22,6 +22,8 @@ public class HqItem : Item, IEquatable<HqItem>
         IsHq = hq;
     }
 
+    public new HqItem Clone() => new(Id, IsHq);
+
     public bool Equals(HqItem? other) => IsHq == other?.IsHq && base.Equals(other);
 
     public override string ToString() => Name + (IsHq ? " (HQ)" : string.Empty);
@@ -33,7 +35,7 @@ public class HqItem : Item, IEquatable<HqItem>
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class Item : IEquatable<Item>, IHrtDataType, ICloneable
+public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>
 {
     public static readonly Item Empty = new(0);
 
@@ -91,6 +93,8 @@ public class Item : IEquatable<Item>, IHrtDataType, ICloneable
     public override bool Equals(object? obj) => Equals(obj as Item);
 
     public override int GetHashCode() => Id.GetHashCode();
+
+    public Item Clone() => new(Id);
 }
 
 public class ItemIdCollection : IEnumerable<uint>

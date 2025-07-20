@@ -2,13 +2,14 @@
 using System.Security.Cryptography;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character>, IFormattable, ICloneable
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character>, IFormattable, ICloneable<Character>
 {
     #region Static
 
@@ -160,6 +161,8 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
         int idx = _classes.IndexOf(c);
         (_classes[idx], _classes[idx + 1]) = (_classes[idx + 1], _classes[idx]);
     }
+
+    public Character Clone() => CloneService.Clone(this);
 
     public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 

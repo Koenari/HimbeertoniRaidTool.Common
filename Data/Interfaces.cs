@@ -20,4 +20,8 @@ public interface IHrtDataType
 
 public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId;
 public interface IHrtDataTypeWithId<T> : IHrtDataTypeWithId, IHasHrtId<T> where T : IHasHrtId<T>;
-public interface ICloneable;
+
+public interface ICloneable<out TData>
+{
+    TData Clone();
+}

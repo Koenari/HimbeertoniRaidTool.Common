@@ -5,7 +5,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 [method: JsonConstructor]
-public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq)
+public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq), ICloneable<GearItem>
 {
     public static readonly new GearItem Empty = new();
 
@@ -51,6 +51,8 @@ public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq)
             return done;
         }
     }
+
+    public new GearItem Clone() => new(Id, IsHq);
     public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
 
     private void InvalidateCache() => _statCache.Clear();

@@ -1,5 +1,6 @@
 ﻿using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using XIVCalc.Calculations;
@@ -9,7 +10,7 @@ using XIVCalc.Lumina;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class PlayableClass(Job job) : IHrtDataType, ICloneable
+public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
 {
     #region Static
 
@@ -204,6 +205,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable
         return set.Food?.ApplyEffect(type, preFood) ?? preFood;
     }
 
+    public PlayableClass Clone() => CloneService.Clone(this);
     public bool Equals(PlayableClass? other)
     {
         if (other == null)

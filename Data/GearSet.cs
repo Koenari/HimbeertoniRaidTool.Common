@@ -2,12 +2,13 @@
 using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet>, ICloneable
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet>, ICloneable<GearSet>
 {
     public const int NUM_SLOTS = 12;
 
@@ -107,6 +108,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public static IEnumerable<GearSetSlot> Slots => Enum.GetValues<GearSetSlot>()
                                                         .Where(slot => slot < GearSetSlot.SoulCrystal
                                                                     && slot != GearSetSlot.Waist);
+
+    public GearSet Clone() => CloneService.Clone(this);
 
     public IEnumerator<GearItem> GetEnumerator() => AsEnumerable().GetEnumerator();
 

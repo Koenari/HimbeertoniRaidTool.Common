@@ -1,10 +1,11 @@
 ﻿using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player : IHrtDataTypeWithId<Player>, ICloneable
+public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
 {
     #region Static
 
@@ -68,6 +69,8 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
 
     #endregion
+
+    public Player Clone() => CloneService.Clone(this);
 
     public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
     public override string ToString() => Name;

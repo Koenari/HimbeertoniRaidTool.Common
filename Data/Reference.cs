@@ -3,7 +3,12 @@ using HimbeertoniRaidTool.Common.Security;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) where T : IHasHrtId<T>, new()
+public interface IReference
+{
+    public HrtId Id { get; }
+}
+
+public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference where T : IHasHrtId<T>, new()
 {
     private static T Default = new T();
     private T? _cache;
@@ -19,6 +24,6 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) where T : IHasHrtId
             return _cache  ?? Default;
         }
     }
-    
+    [JsonConstructor]
     public Reference(T obj) : this(obj.LocalId, _ => obj){}
 }
