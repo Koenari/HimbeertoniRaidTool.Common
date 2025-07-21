@@ -42,18 +42,17 @@ public class CloneService
                 return;
             }
             _references.TryAdd(value.Id, value);
-            serializer.Serialize(writer, value.Id, typeof(HrtId));
+            serializer.Serialize(writer, value.Id, value.GetType());
         }
 
         public override IReference? ReadJson(JsonReader reader, Type objectType, IReference? existingValue,
                                              bool hasExistingValue,
                                              JsonSerializer serializer)
         {
-            if (reader.TokenType == JsonToken.Null || objectType != typeof(IReference))
-                return null;
+            if (reader.TokenType == JsonToken.Null) return null;
             var id = JObject.Load(reader).ToObject<HrtId>();
             if (id is null) return null;
-            return _references.GetValueOrDefault(id);
+            return _references.GetValueOrDefault(id, null!);
         }
     }
 
