@@ -12,6 +12,9 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
 
     public static HrtId.IdType IdType => HrtId.IdType.RaidSession;
 
+
+    #region Serialized
+
     [JsonProperty("LocalId", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public HrtId LocalId { get; set; } = HrtId.Empty;
 
@@ -20,20 +23,27 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     /// </summary>
     [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
 
-    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
-
     [JsonProperty("StartTime")] public DateTime StartTime { get; set; }
+
     [JsonProperty("Duration")] public TimeSpan Duration { get; set; }
 
-    [JsonIgnore] public DateTime EndTime => StartTime + Duration;
-
-    [JsonProperty("Participants")] private readonly HashSet<Participant> _participants = [];
+    [JsonProperty("Participants", ObjectCreationHandling = ObjectCreationHandling.Replace)]
+    private readonly List<Participant> _participants = [];
 
     [JsonProperty("Owner")] public Reference<Player>? Organizer;
+
     [JsonProperty("Group")] public RaidGroup? Group;
+
     [JsonProperty("Status")] public EventStatus Status;
-    [JsonProperty("PlannedContent")] public List<InstanceSession> PlannedContent = [];
+
+    [JsonProperty("PlannedContent")] public readonly List<InstanceSession> PlannedContent = [];
+
     [JsonProperty("Title")] public string Title = string.Empty;
+
+    #endregion
+
+    [JsonIgnore] public DateTime EndTime => StartTime + Duration;
+    [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
 
 
@@ -76,7 +86,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         if (_participants.Any(p => p.Player.Equals(newParticipant)) || newParticipant.Data.LocalId.IsEmpty)
             return false;
         participant = new Participant(newParticipant);
-        return _participants.Add(participant);
+        _participants.Add(participant);
+        return true;
     }
 
     public RaidSession Clone() => CloneService.Clone(this);
@@ -84,10 +95,26 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
 
 
-    public void CopyFrom(RaidSession dataCopy) => Title = dataCopy.Title;
+    public void CopyFrom(RaidSession dataCopy)
+    {
+        Title = dataCopy.Title;
+        StartTime = dataCopy.StartTime;
+        Duration = dataCopy.Duration;
+        _participants.Clear();
+        _participants.AddRange(dataCopy._participants);
+        Organizer = dataCopy.Organizer;
+        Group = dataCopy.Group;
+        Status = dataCopy.Status;
+        PlannedContent.Clear();
+        PlannedContent.AddRange(dataCopy.PlannedContent);
+    }
 
-    public override string ToString() => Title.Length > 0 ? $"{Title} ({Group?.Name} @ {StartTime:f})"
-        : $"{Group?.Name} @ {StartTime:f}";
+    public override string ToString()
+    {
+        return Title.Length > 0 ? $"{Title} ({Group?.Name} @ {StartTime:f})"
+            : $"{Group?.Name} @ {StartTime:f}";
+    }
+
 }
 
 [JsonObject(MemberSerialization.OptIn)]
@@ -138,7 +165,7 @@ public class Participant(Reference<Player> player)
 
     [JsonProperty("Player", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     public readonly Reference<Player> Player = player;
-    [JsonProperty("InviteStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
+    [JsonProperty("InvitationStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
     [JsonProperty("ParticipationStatus")] public ParticipationStatus ParticipationStatus = ParticipationStatus.NoStatus;
     [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = [];
 
