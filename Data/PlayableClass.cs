@@ -20,9 +20,9 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
 
     #region Serialized
 
-    [JsonProperty("BisSets")] private readonly List<GearSet> _bis = [];
+    [JsonProperty("BisSets")] private readonly List<Reference<GearSet>> _bis = [];
 
-    [JsonProperty("GearSets")] private readonly List<GearSet> _gearSets = [];
+    [JsonProperty("GearSets")] private readonly List<Reference<GearSet>> _gearSets = [];
 
     [JsonProperty("ActiveBiSIdx")] private int _curBisIdx;
 
@@ -40,7 +40,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
 
     public Role Role => Job.GetRole();
 
-    public IEnumerable<GearSet> GearSets => _gearSets;
+    public IEnumerable<GearSet> GearSets => _gearSets.Select(set => set.Data);
     public GearSet CurGear
     {
         get
@@ -55,12 +55,12 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
                 _gearSets.Add(toAdd);
             }
             _curGearIdx = Math.Clamp(_curGearIdx, 0, _gearSets.Count - 1);
-            return _gearSets[_curGearIdx];
+            return _gearSets[_curGearIdx].Data;
         }
         set
         {
-            if (_gearSets.Count > 0 && value.Equals(_gearSets[_curGearIdx])) return;
-            _curGearIdx = _gearSets.FindIndex(s => s.Equals(value));
+            if (_gearSets.Count > 0 && value.Equals(_gearSets[_curGearIdx].Data)) return;
+            _curGearIdx = _gearSets.FindIndex(s => s.Data.Equals(value));
             if (_curGearIdx >= 0) return;
             _gearSets.Add(value);
             _curGearIdx = _gearSets.Count - 1;
@@ -75,8 +75,8 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
     {
         get
         {
-            if (_gearSets.Any(set => set.IsSystemManaged))
-                return _gearSets.First(set => set.IsSystemManaged);
+            if (_gearSets.Any(set => set.Data.IsSystemManaged))
+                return _gearSets.First(set => set.Data.IsSystemManaged).Data;
             var sysManaged = new GearSet(GearSetManager.Hrt, "Current");
             sysManaged.MarkAsSystemManaged();
             _gearSets.Add(sysManaged);
@@ -84,7 +84,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
         }
     }
 
-    public IEnumerable<GearSet> BisSets => _bis;
+    public IEnumerable<GearSet> BisSets => _bis.Select(reference => reference.Data);
 
     public GearSet CurBis
     {
@@ -96,12 +96,12 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
             if (_bis.Count == 0)
                 _bis.Add(new GearSet(GearSetManager.Hrt, "BiS"));
             _curBisIdx = Math.Clamp(_curBisIdx, 0, _bis.Count - 1);
-            return _bis[_curBisIdx];
+            return _bis[_curBisIdx].Data;
         }
         set
         {
-            if (_bis.Count > 0 && value.Equals(_bis[_curBisIdx])) return;
-            _curBisIdx = _bis.FindIndex(s => s.Equals(value));
+            if (_bis.Count > 0 && value.Equals(_bis[_curBisIdx].Data)) return;
+            _curBisIdx = _bis.FindIndex(s => s.Data.Equals(value));
             if (_curBisIdx >= 0) return;
             _bis.Add(value);
             _curBisIdx = _bis.Count - 1;
@@ -215,8 +215,8 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
     public override string ToString() => $"{Job} ({Level})";
     public void RemoveEmptySets()
     {
-        _gearSets.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
-        _bis.RemoveAll(set => set is { IsEmpty: true, LocalId.IsEmpty: true });
+        _gearSets.RemoveAll(set => set.Data is { IsEmpty: true, LocalId.IsEmpty: true });
+        _bis.RemoveAll(set => set.Data is { IsEmpty: true, LocalId.IsEmpty: true });
     }
 
     public void RemoveGearSet(GearSet gearSet) => _gearSets.Remove(gearSet);

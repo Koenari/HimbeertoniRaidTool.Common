@@ -17,7 +17,7 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
 
     #region Serialized
 
-    [JsonProperty("Chars")] private readonly List<Character> _characters = [];
+    [JsonProperty("Chars")] private readonly List<Reference<Character>> _characters = [];
 
     [JsonProperty("MainCharIndex")] private int _mainCharIndex;
 
@@ -37,7 +37,7 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
 
     #region Properties
 
-    public IEnumerable<Character> Characters => _characters;
+    public IEnumerable<Character> Characters => _characters.Select(c => c.Data);
 
     public bool Filled => !LocalId.IsEmpty;
 
@@ -51,12 +51,12 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
             if (_characters.Count == 0)
                 _characters.Add(new Character());
             _mainCharIndex = Math.Clamp(_mainCharIndex, 0, _characters.Count - 1);
-            return _characters[_mainCharIndex];
+            return _characters[_mainCharIndex].Data;
         }
         set
         {
-            if (_characters.Count > 0 && value.Equals(_characters[_mainCharIndex])) return;
-            _mainCharIndex = _characters.FindIndex(c => c.Equals(value));
+            if (_characters.Count > 0 && value.Equals(_characters[_mainCharIndex].Data)) return;
+            _mainCharIndex = _characters.FindIndex(c => c.Data.Equals(value));
             if (_mainCharIndex >= 0)
                 return;
             _characters.Add(value);
@@ -78,7 +78,7 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
     public void RemoveCharacter(Character character)
     {
         var mainChar = MainChar;
-        _characters.Remove(character);
+        _characters.RemoveAll(c => c.Data.Equals(character));
         MainChar = mainChar;
     }
     public void AddCharacter(Character character) => _characters.Add(character);

@@ -16,9 +16,9 @@ public class User : IHrtDataTypeWithId<User>, ICloneable<User>
 
     [JsonProperty("DisplayName")] public string DisplayName { get; set; } = string.Empty;
 
-    [JsonProperty("XIVAccounts")] private List<XivAccount> _xivAccounts = [];
+    [JsonProperty("XIVAccounts")] private List<Reference<XivAccount>> _xivAccounts = [];
 
-    [JsonProperty("Characters")] private List<Character> _claimedCharacters = [];
+    [JsonProperty("Characters")] private List<Reference<Character>> _claimedCharacters = [];
 
     /// <summary>
     ///     HRT specific unique ID used for local storage.
@@ -40,9 +40,9 @@ public class User : IHrtDataTypeWithId<User>, ICloneable<User>
 
     public IList<HrtId> RemoteIds => _remoteIds;
 
-    public IList<XivAccount> XivAccounts => _xivAccounts;
+    public IEnumerable<XivAccount> XivAccounts => _xivAccounts.Select(ac => ac.Data);
 
-    public IList<Character> ClaimedCharacters => _claimedCharacters;
+    public IEnumerable<Character> ClaimedCharacters => _claimedCharacters.Select(cc => cc.Data);
 
     public IEnumerable<Character> OwnedCharacters
     {
@@ -52,7 +52,7 @@ public class User : IHrtDataTypeWithId<User>, ICloneable<User>
             {
                 yield return character;
             }
-            foreach (var character in _xivAccounts.SelectMany(xivAccount => xivAccount.Characters))
+            foreach (var character in _xivAccounts.SelectMany(xivAccount => xivAccount.Data.Characters))
             {
                 yield return character;
             }
@@ -61,7 +61,8 @@ public class User : IHrtDataTypeWithId<User>, ICloneable<User>
 
     public bool OwnsCharacter(Character character) => _claimedCharacters.Contains(character)
                                                    || _xivAccounts.Any(xivAccount =>
-                                                                           xivAccount.Characters.Contains(character));
+                                                                           xivAccount.Data.Characters.Contains(
+                                                                               character));
 
     public User Clone() => CloneService.Clone(this);
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);

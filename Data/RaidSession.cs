@@ -48,7 +48,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
 
 
     [JsonConstructor]
-    private RaidSession(Reference<Player> organizer)
+    private RaidSession(Player organizer)
     {
         Organizer = organizer;
     }

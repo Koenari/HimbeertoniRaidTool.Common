@@ -14,7 +14,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
 
     #region Serialized
 
-    [JsonProperty("Members")] private readonly Player?[] _players;
+    [JsonProperty("Members")] private readonly Reference<Player>?[] _players;
 
     [JsonProperty("Name")] public string Name;
 
@@ -48,7 +48,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
         Type = type;
         TimeStamp = DateTime.Now;
         Name = name;
-        _players = new Player[8];
+        _players = new Reference<Player>[8];
         for (int i = 0; i < _players.Length; i++)
         {
             _players[i] = new Player();
@@ -75,7 +75,8 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
                 throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            return _players[idx] ??= new Player();
+            var player = _players[idx] ??= new Player();
+            return player.Data;
         }
         set
         {

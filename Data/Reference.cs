@@ -8,7 +8,7 @@ public interface IReference
     public HrtId Id { get; }
 }
 
-public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference where T : IHasHrtId<T>, new()
+public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEquatable<Reference<T>> where T : IHasHrtId<T>, new()
 {
     private static T Default = new T();
     private T? _cache;
@@ -24,6 +24,15 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference where 
             return _cache  ?? Default;
         }
     }
+
+    public override int GetHashCode() => Id.GetHashCode();
+
+    public override bool Equals(object? obj) => Equals(obj as Reference<T>);
+    public bool Equals(Reference<T>? other) => this.Id.Equals(other?.Id);
+
     [JsonConstructor]
     public Reference(T obj) : this(obj.LocalId, _ => obj){}
+    
+    public static implicit operator T(Reference<T> obj) => obj.Data;
+    public static implicit operator Reference<T>(T obj) => new Reference<T>(obj);
 }
