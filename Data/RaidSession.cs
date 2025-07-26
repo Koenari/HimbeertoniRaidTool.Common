@@ -85,6 +85,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         _participants.Add(participant);
         return true;
     }
+    public void Remove(Reference<Player> toDelete) => _participants.RemoveAll(p => p.Player.Equals(toDelete));
 
     public RaidSession Clone() => CloneService.Clone(this);
 
@@ -110,6 +111,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         return Title.Length > 0 ? $"{Title} ({Group?.Name} @ {StartTime:f})"
             : $"{Group?.Name} @ {StartTime:f}";
     }
+
 
 }
 

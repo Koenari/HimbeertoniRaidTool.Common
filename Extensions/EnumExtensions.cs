@@ -95,6 +95,13 @@ public static class EnumExtensions
         return mat.Name.Length > 9 ? mat.Name[..^9] : "";
     }
 
+    public static bool WillBePresent(this InviteStatus status) => status switch
+    {
+        InviteStatus.Accepted  => true,
+        InviteStatus.Confirmed => true,
+        _                      => false,
+    };
+
     public static string FriendlyName(this StatType t) => t switch
     {
         StatType.Strength            => CommonLoc.StatType_Strength,
