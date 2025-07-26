@@ -46,13 +46,9 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     [JsonIgnore] IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
 
+    [JsonIgnore] public int NumParticipants => _participants.Count;
 
     [JsonConstructor]
-    private RaidSession(Player organizer)
-    {
-        Organizer = organizer;
-    }
-
     public RaidSession() : this(DateTime.Now) { }
     public RaidSession(DateTime startTime) : this(startTime, TimeSpan.FromHours(1)) { }
 
