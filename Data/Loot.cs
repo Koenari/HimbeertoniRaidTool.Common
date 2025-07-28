@@ -54,4 +54,13 @@ public class InstanceWithLoot
         GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
         PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
     }
+
+    public static bool operator ==(InstanceWithLoot? left, InstanceWithLoot? right)
+    {
+        return left?.InstanceId == right?.InstanceId;
+    }
+    public static bool operator !=(InstanceWithLoot? left, InstanceWithLoot? right)
+    {
+        return !(left == right);
+    }
 }

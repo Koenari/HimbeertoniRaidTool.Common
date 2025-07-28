@@ -36,7 +36,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
 
     [JsonProperty("Status")] public EventStatus Status;
 
-    [JsonProperty("PlannedContent")] public readonly List<InstanceSession> PlannedContent = [];
+    [JsonProperty("PlannedContent")] private readonly List<InstanceSession> _plannedContent = [];
 
     [JsonProperty("Title")] public string Title = string.Empty;
 
@@ -47,6 +47,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     [JsonIgnore] public IEnumerable<Participant> Participants => _participants;
 
     [JsonIgnore] public int NumParticipants => _participants.Count;
+
+    [JsonIgnore] public IReadOnlyList<InstanceSession> PlannedContent => _plannedContent;
 
     [JsonConstructor]
     public RaidSession() : this(DateTime.Now) { }
@@ -83,9 +85,26 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
             return false;
         participant = new Participant(newParticipant);
         _participants.Add(participant);
+        foreach (var instanceSession in PlannedContent)
+        {
+            instanceSession.Loot.Add(participant, []);
+        }
         return true;
     }
-    public void Remove(Reference<Player> toDelete) => _participants.RemoveAll(p => p.Player.Equals(toDelete));
+    public void Uninvite(Reference<Player> toDelete) => _participants.RemoveAll(p => p.Player.Equals(toDelete));
+
+    public void AddInstance(InstanceSession instance)
+    {
+        if (PlannedContent.Any(i => i.Instance == instance.Instance)) return;
+        foreach (var participant in _participants)
+        {
+            instance.Loot.Add(participant, []);
+        }
+        _plannedContent.Add(instance);
+    }
+
+    public void RemoveInstance(InstanceSession instance) =>
+        _plannedContent.RemoveAll(i => i.Instance == instance.Instance);
 
     public RaidSession Clone() => CloneService.Clone(this);
 
@@ -102,8 +121,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         Organizer = dataCopy.Organizer;
         Group = dataCopy.Group;
         Status = dataCopy.Status;
-        PlannedContent.Clear();
-        PlannedContent.AddRange(dataCopy.PlannedContent);
+        _plannedContent.Clear();
+        _plannedContent.AddRange(dataCopy.PlannedContent);
     }
 
     public override string ToString()
