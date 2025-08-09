@@ -1,5 +1,6 @@
 using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
+using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -52,7 +53,7 @@ public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq), ICloneable
         }
     }
 
-    public new GearItem Clone() => new(Id, IsHq);
+    public new GearItem Clone() => CloneService.Clone(this);
     public bool Equals(GearItem? other) => Equals(other, ItemComparisonMode.Full);
 
     private void InvalidateCache() => _statCache.Clear();
