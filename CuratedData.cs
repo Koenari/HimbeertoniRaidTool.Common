@@ -106,6 +106,8 @@ internal class CuratedData
         { 46717, 46692..46696 }, //babyface champion's necklace gear coffer (IL 760)
         { 46718, 46697..46701 }, //babyface champion's bracelet gear coffer (IL 760)
         { 46719, 46702..46706 }, //babyface champion's ring gear coffer (IL 760)
+        //7.3
+        { 46981, 46984..47005 }, //ageless weapon coffers (IL 755)
     };
 
     //I only record Gear and items used to get gear
@@ -155,11 +157,9 @@ internal class CuratedData
         new(89, Normal, 38957.. 39011), //Lapis Manalis
         new(30125, Normal, new ItemIdCollection(39089..39123, 39373, 39481, 39600, 39601, 39602), 38950), //Euphrosyne
         //6.4
-        //Dungeon
-        new(90, Normal, 40240..40294),
-        //Trial
-        new(20089),
-        new(20090, Extreme, new ItemIdCollection(39940..39959, 40296), 40295),
+        new(90, Normal, 40240..40294), //Dungeon
+        new(20089, Normal), //Trial
+        new(20090, Extreme, new ItemIdCollection(39940..39959, 40296), 40295), //Trial
         //Raids
         new(30126, Normal, 40297..40302),
         new(30127, Savage, 40313..40316, 40303),
@@ -170,28 +170,25 @@ internal class CuratedData
         new(30132, Normal, 40297..40302, 40317),
         new(30133, Savage, new ItemIdCollection(40165..40183, 40307), 40306),
         //6.5
-        //Dungeon (The Lunar Subterrane)
-        new(91, Normal, 40765..40819),
-        //Trial (The Abyssal Fracture)
-        new(20091),
+        new(00091, Normal, 40765..40819), //Dungeon (The Lunar Subterrane)
+        new(20091, Normal), //Trial (The Abyssal Fracture)
         new(20092, Extreme, new ItemIdCollection(41033..41051, 41054), 41053),
-        //Alliance Raid (Thaleia)
-        new(30134, Normal, 40897..40931),
+        new(30134, Normal, 40897..40931), //Alliance Raid (Thaleia)
         //7.0
         //Dungeons
-        new(92, Normal, 42067..42143), //Worqor Zormor
-        new(93, Normal, 42529..42568), //Origenics
-        new(94, Normal, 41913..41989), //Ihuykatumu
-        new(95), //Alexandria
-        new(96, Normal, 42221..42297), //The Skydeep Cenote
-        new(97, Normal, 42375..42451), //Vanguard
-        new(98), //Tender Valley
-        new(99), //The Strayborough Deadwalk
+        new(00092, Normal, 42067..42143), //Worqor Zormor
+        new(00093, Normal, 42529..42568), //Origenics
+        new(00094, Normal, 41913..41989), //Ihuykatumu
+        new(00095, Normal), //Alexandria
+        new(00096, Normal, 42221..42297), //The Skydeep Cenote
+        new(00097, Normal, 42375..42451), //Vanguard
+        new(00098, Normal), //Tender Valley
+        new(00099, Normal), //The Strayborough Deadwalk
         //Trials
-        new(20093), //Worqor Lar Dor
+        new(20093, Normal), //Worqor Lar Dor
         new(20094, Extreme, new ItemIdCollection(42773..42794, 43526), 43539), //Worqor Lar Dor
-        new(20095), //The Interphos
-        new(20096), //Everkeep
+        new(20095, Normal), //The Interphos
+        new(20096, Normal), //Everkeep
         new(20097, Extreme, 42795..42814, 43540), //Everkeep
         //Raids
         new(30135, Normal, 43541..43546), //M1
@@ -206,8 +203,9 @@ internal class CuratedData
         new(00100, Normal, 44550..44604), //Dungeon: Yuweyawata Field Station
         new(30144, Normal, 44514..44548), //Alliance-Raid - Jeuno: The First Walk
         new(20099, Extreme, 44696..44717, 44718..44719), // The Minstrel's Ballad: Sphene's Burden
-        new(64009, Unreal), //The Jade Stoa (Unreal)c
+        new(64009, Unreal), //The Jade Stoa (Unreal)
         //7.2
+        new(00101, Normal, 46344..46398), //Dungeon: The underkeep
         new(30145, Normal, 46721..46726), //M1
         new(30146, Savage, 46716..46719, 46732), //M1 S
         new(30147, Normal, 46721..46726), //M2
@@ -216,5 +214,11 @@ internal class CuratedData
         new(30150, Savage, new ItemIdCollection(46712, 46714, 46730, 46729), 46734), //M3 S
         new(30151, Normal, 46721..46726), //M4
         new(30152, Savage, new ItemIdCollection(46630..46650, 46710), 46735), //M4 S
+        //7.3
+        new(00102, Normal, 47108..47162), //Dungeon: The Meso Terminal
+        new(30153, Normal, 46860..46894), //Alliance Raid: San d'Oria: The Second Walk
+        new(20104, Normal), //Trial: the Ageless Necropolis
+        new(20105, Extreme, 46984..47005, 46981..46982), //Trial:The Minstrel's Ballad: Necron's Embrace
+        new(64011, Unreal), //The Wreath of Snakes (Unreal)
     ];
 }

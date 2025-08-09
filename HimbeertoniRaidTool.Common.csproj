@@ -32,7 +32,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="XIVCalc.Lumina" Version="7.2.2" />
+        <PackageReference Include="XIVCalc.Lumina" Version="7.3.1"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -44,8 +44,8 @@ public class InstanceWithLoot
             }
         }
     }
-    public InstanceWithLoot(uint id, EncounterDifficulty difficulty = EncounterDifficulty.Normal,
-                            ItemIdCollection? possibleLoot = null, ItemIdCollection? guaranteedLoot = null)
+    public InstanceWithLoot(uint id, EncounterDifficulty difficulty, ItemIdCollection? possibleLoot = null,
+                            ItemIdCollection? guaranteedLoot = null)
     {
         _instanceContent = InstanceSheet.GetRow(id);
         _contentFinderCondition = ContentFinderLookup.TryGetValue(id, out uint contentId)
