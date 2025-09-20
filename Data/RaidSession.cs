@@ -87,7 +87,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         _participants.Add(participant);
         foreach (var instanceSession in PlannedContent)
         {
-            instanceSession.Loot.Add(participant, []);
+            instanceSession.Loot.Add(participant.Player.Id, []);
         }
         return true;
     }
@@ -98,7 +98,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
         if (PlannedContent.Any(i => i.Instance == instance.Instance)) return;
         foreach (var participant in _participants)
         {
-            instance.Loot.Add(participant, []);
+            instance.Loot.Add(participant.Player.Id, []);
         }
         _plannedContent.Add(instance);
     }
@@ -147,7 +147,7 @@ public class InstanceSession
     [JsonProperty("Killed")] public bool Killed;
     [JsonProperty("BestPercentage")] public float BestPercentage;
 
-    [JsonProperty("Loot")] public Dictionary<Participant, List<Item>> Loot { get; } = [];
+    [JsonProperty("Loot")] public Dictionary<HrtId, List<Item>> Loot { get; } = [];
 
     #endregion
 
