@@ -23,6 +23,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     public static HrtId.IdType IdType => HrtId.IdType.Character;
 
+    public static ulong CalcCharId(long contentId) => CalcCharId((ulong)contentId);
     public static ulong CalcCharId(ulong contentId)
     {
         if (contentId == 0)
@@ -163,8 +164,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     }
 
     public Character Clone() => CloneService.Clone(this);
-
-    public override bool Equals(object? obj) => obj is Character objS && Equals(objS);
 
     public override int GetHashCode() => LocalId.GetHashCode();
 

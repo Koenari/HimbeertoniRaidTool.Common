@@ -30,7 +30,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     [JsonProperty("Participants", ObjectCreationHandling = ObjectCreationHandling.Replace)]
     private readonly List<Participant> _participants = [];
 
-    [JsonProperty("Owner")] public Reference<Player>? Organizer;
+    [JsonProperty("Owner")] public Reference<Character>? Organizer;
 
     [JsonProperty("Group")] public RaidGroup? Group;
 
@@ -54,7 +54,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     public RaidSession() : this(DateTime.Now) { }
     public RaidSession(DateTime startTime) : this(startTime, TimeSpan.FromHours(1)) { }
 
-    public RaidSession(DateTime startTime, TimeSpan duration, Reference<Player>? organizer = null,
+    public RaidSession(DateTime startTime, TimeSpan duration, Reference<Character>? organizer = null,
                        RaidGroup? group = null)
     {
         StartTime = startTime;
@@ -69,36 +69,37 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
             return;
         foreach (var player in Group)
         {
-            if (player == Organizer?.Data) continue;
-            Invite(new Reference<Player>(player), out _);
+            if (player.MainChar == Organizer?.Data) continue;
+            Invite(new Reference<Character>(player.MainChar), out _);
         }
     }
 
-    public Participant? this[Player player] => Participants.FirstOrDefault(p => player == p?.Player.Data, null);
+    public Participant? this[Character character] =>
+        Participants.FirstOrDefault(p => character.Equals(p?.Character.Data), null);
 
     public bool IsOrganizer(IHasHrtId player) => Organizer is not null && player.LocalId == Organizer.Data.LocalId;
 
-    public bool Invite(Reference<Player> newParticipant, [NotNullWhen(true)] out Participant? participant)
+    public bool Invite(Reference<Character> newParticipant, [NotNullWhen(true)] out Participant? participant)
     {
         participant = null;
-        if (_participants.Any(p => p.Player.Equals(newParticipant)) || newParticipant.Data.LocalId.IsEmpty)
+        if (_participants.Any(p => p.Character.Equals(newParticipant)) || newParticipant.Data.LocalId.IsEmpty)
             return false;
         participant = new Participant(newParticipant);
         _participants.Add(participant);
         foreach (var instanceSession in PlannedContent)
         {
-            instanceSession.Loot.Add(participant.Player.Id, []);
+            instanceSession.Loot.Add(participant.Character.Id, []);
         }
         return true;
     }
-    public void Uninvite(Reference<Player> toDelete) => _participants.RemoveAll(p => p.Player.Equals(toDelete));
+    public void Uninvite(Reference<Character> toDelete) => _participants.RemoveAll(p => p.Character.Equals(toDelete));
 
     public void AddInstance(InstanceSession instance)
     {
         if (PlannedContent.Any(i => i.Instance == instance.Instance)) return;
         foreach (var participant in _participants)
         {
-            instance.Loot.Add(participant.Player.Id, []);
+            instance.Loot.Add(participant.Character.Id, []);
         }
         _plannedContent.Add(instance);
     }
@@ -176,18 +177,18 @@ public class InstanceSession
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class Participant(Reference<Player> player)
+public class Participant(Reference<Character> character)
 {
     #region Serialized
 
     [JsonProperty("Player", ObjectCreationHandling = ObjectCreationHandling.Replace)]
-    public readonly Reference<Player> Player = player;
+    public readonly Reference<Character> Character = character;
     [JsonProperty("InvitationStatus")] public InviteStatus InvitationStatus = InviteStatus.NoStatus;
     [JsonProperty("ParticipationStatus")] public ParticipationStatus ParticipationStatus = ParticipationStatus.NoStatus;
     [JsonProperty("Loot")] public readonly HashSet<GearItem> ReceivedLoot = [];
 
     [JsonConstructor]
-    private Participant() : this(new Reference<Player>(HrtId.Empty, _ => null))
+    private Participant() : this(new Reference<Character>(HrtId.Empty, _ => null))
     {
     }
 

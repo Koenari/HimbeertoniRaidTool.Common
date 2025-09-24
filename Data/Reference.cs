@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using HimbeertoniRaidTool.Common.Security;
 
@@ -14,7 +15,7 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEqua
     private T? _cache;
     private Func<HrtId, T?> getter { get; } = getObject;
     
-    public HrtId Id { get; }= id;
+    public HrtId Id { get; } = id;
     public bool Loaded => _cache is not null;
     public T Data
     {
@@ -32,5 +33,7 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEqua
     public Reference(T obj) : this(obj.LocalId, _ => obj){}
     
     public static implicit operator T(Reference<T> obj) => obj.Data;
-    public static implicit operator Reference<T>(T obj) => new Reference<T>(obj);
+    
+    [return: NotNullIfNotNull(nameof(obj))]
+    public static implicit operator Reference<T>?(T? obj) => obj is null ? null: new Reference<T>(obj);
 }

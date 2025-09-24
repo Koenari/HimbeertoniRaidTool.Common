@@ -128,7 +128,7 @@ public interface IHasHrtId
     public IList<HrtId> RemoteIds { get; }
 }
 
-public interface IHasHrtId<T> : IHasHrtId where T : IHasHrtId<T>
+public interface IHasHrtId<in T> : IHasHrtId where T : IHasHrtId<T>
 {
     public static virtual bool operator ==(T obj1, T obj2)
     {

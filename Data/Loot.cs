@@ -55,6 +55,11 @@ public class InstanceWithLoot
         PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
     }
 
+    public override string ToString() => $"{Name} ({Difficulty})";
+
+    public override bool Equals(object? obj) => obj is InstanceWithLoot other && InstanceId == other.InstanceId;
+    public override int GetHashCode() => (int)InstanceId;
+
     public static bool operator ==(InstanceWithLoot? left, InstanceWithLoot? right)
     {
         return left?.InstanceId == right?.InstanceId;
