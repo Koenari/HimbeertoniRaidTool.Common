@@ -286,4 +286,41 @@ public static class EnumExtensions
         PartyBonus.FivePercent  => CommonLoc.PartyBonus_FivePercent,
         _                       => throw new ArgumentOutOfRangeException(nameof(bonus), bonus, null),
     };
+
+    public static string FriendlyName(this InviteStatus status) => status switch
+    {
+        InviteStatus.NoStatus   => CommonLoc.InviteStatus_NoStatus,
+        InviteStatus.NotInvited => CommonLoc.InviteStatus_NotInvited,
+        InviteStatus.Invited    => CommonLoc.InviteStatus_Invited,
+        InviteStatus.Declined   => CommonLoc.InviteStatus_Declined,
+        InviteStatus.Unsure     => CommonLoc.InviteStatus_Unsure,
+        InviteStatus.Accepted   => CommonLoc.InviteStatus_Accepted,
+        InviteStatus.Revoked    => CommonLoc.InviteStatus_Revoked,
+        InviteStatus.Confirmed  => CommonLoc.InviteStatus_Confirmed,
+        _                       => status.ToString(),
+    };
+
+    public static string FriendlyName(this ParticipationStatus status) => status switch
+    {
+        ParticipationStatus.NoStatus         => CommonLoc.ParticipationStatus_No_Status,
+        ParticipationStatus.Present          => CommonLoc.ParticipationStatus_Present,
+        ParticipationStatus.PartiallyPresent => CommonLoc.ParticipationStatus_Partially_Present,
+        ParticipationStatus.Excused          => CommonLoc.ParticipationStatus_Excused,
+        ParticipationStatus.Absent           => CommonLoc.ParticipationStatus_Absent,
+        ParticipationStatus.PresentButLate   => CommonLoc.ParticipationStatus_Present_But_Late,
+        _                                    => status.ToString(),
+    };
+
+    public static string FriendlyName(InstanceSession.PlannedStatus status) => status switch
+    {
+
+
+        InstanceSession.PlannedStatus.Unknown    => CommonLoc.PlannedStatus_Unknown,
+        InstanceSession.PlannedStatus.Planned    => CommonLoc.PlannedStatus_Planned,
+        InstanceSession.PlannedStatus.NotPlanned => CommonLoc.PlannedStatus_Not_Planned,
+        InstanceSession.PlannedStatus.SafeKill   => CommonLoc.PlannedStatus_Safe_Kill,
+        InstanceSession.PlannedStatus.Kill       => CommonLoc.PlannedStatus_Kill,
+        InstanceSession.PlannedStatus.Progress   => CommonLoc.PlannedStatus_Progress,
+        _                                        => status.ToString(),
+    };
 }

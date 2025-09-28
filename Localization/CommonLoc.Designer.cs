@@ -411,6 +411,78 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Accepted.
+        /// </summary>
+        public static string InviteStatus_Accepted {
+            get {
+                return ResourceManager.GetString("InviteStatus_Accepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmed.
+        /// </summary>
+        public static string InviteStatus_Confirmed {
+            get {
+                return ResourceManager.GetString("InviteStatus_Confirmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Declined.
+        /// </summary>
+        public static string InviteStatus_Declined {
+            get {
+                return ResourceManager.GetString("InviteStatus_Declined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invited.
+        /// </summary>
+        public static string InviteStatus_Invited {
+            get {
+                return ResourceManager.GetString("InviteStatus_Invited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Status.
+        /// </summary>
+        public static string InviteStatus_NoStatus {
+            get {
+                return ResourceManager.GetString("InviteStatus_NoStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Invited.
+        /// </summary>
+        public static string InviteStatus_NotInvited {
+            get {
+                return ResourceManager.GetString("InviteStatus_NotInvited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revoked.
+        /// </summary>
+        public static string InviteStatus_Revoked {
+            get {
+                return ResourceManager.GetString("InviteStatus_Revoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsure.
+        /// </summary>
+        public static string InviteStatus_Unsure {
+            get {
+                return ResourceManager.GetString("InviteStatus_Unsure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Crafted.
         /// </summary>
         public static string ItemSource_Crafted {
@@ -708,6 +780,60 @@ namespace HimbeertoniRaidTool.Common.Localization {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Absent.
+        /// </summary>
+        public static string ParticipationStatus_Absent {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_Absent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Excused.
+        /// </summary>
+        public static string ParticipationStatus_Excused {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_Excused", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Status.
+        /// </summary>
+        public static string ParticipationStatus_No_Status {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_No_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partially Present.
+        /// </summary>
+        public static string ParticipationStatus_Partially_Present {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_Partially_Present", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Present.
+        /// </summary>
+        public static string ParticipationStatus_Present {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_Present", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Present But Late.
+        /// </summary>
+        public static string ParticipationStatus_Present_But_Late {
+            get {
+                return ResourceManager.GetString("ParticipationStatus_Present_But_Late", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Full Bonus.
         /// </summary>
         public static string PartyBonus_FivePercent {
@@ -740,6 +866,60 @@ namespace HimbeertoniRaidTool.Common.Localization {
         public static string PartyBonus_ThreePercent {
             get {
                 return ResourceManager.GetString("PartyBonus_ThreePercent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Planned to Kill.
+        /// </summary>
+        public static string PlannedStatus_Kill {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Kill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Planned.
+        /// </summary>
+        public static string PlannedStatus_Not_Planned {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Not_Planned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Planned.
+        /// </summary>
+        public static string PlannedStatus_Planned {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Planned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress.
+        /// </summary>
+        public static string PlannedStatus_Progress {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Progress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Safe Kill.
+        /// </summary>
+        public static string PlannedStatus_Safe_Kill {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Safe_Kill", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown.
+        /// </summary>
+        public static string PlannedStatus_Unknown {
+            get {
+                return ResourceManager.GetString("PlannedStatus_Unknown", resourceCulture);
             }
         }
         
