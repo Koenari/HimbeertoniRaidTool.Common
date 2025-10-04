@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Security.Cryptography;
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
@@ -9,7 +10,8 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character>, IFormattable, ICloneable<Character>
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character, CharacterDto>, IFormattable,
+                         ICloneable<Character>
 {
     #region Static
 
@@ -190,4 +192,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
         _classes.AddRange(toMerge._classes);
     }
+    public CharacterDto ToDto() => new(this);
+    public void UpdateFromDto(CharacterDto dto) => throw new NotImplementedException();
 }

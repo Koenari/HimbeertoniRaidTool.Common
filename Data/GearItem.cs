@@ -1,3 +1,4 @@
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
@@ -6,7 +7,8 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 [method: JsonConstructor]
-public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq), ICloneable<GearItem>
+public class GearItem(uint id = 0, bool hq = false)
+    : HqItem(id, hq), ICloneable<GearItem>, IHasDtoIsCreatable<GearItem, GearItemDto>
 {
     public static readonly new GearItem Empty = new();
 
@@ -141,5 +143,18 @@ public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq), ICloneable
             maxAllowed--;
 
         return maxAllowed;
+    }
+    public new GearItemDto ToDto() => new(this);
+    public static GearItem FromDto(GearItemDto dto)
+    {
+        var result = new GearItem(dto.Id, dto.Hq);
+        if (result.IsRelic() && dto.RelicStats != null)
+            result.RelicStats = dto.RelicStats.ToDictionary(x => x.Key, x => x.Value);
+        if (dto.Materia == null) return result;
+        foreach (var mat in dto.Materia)
+        {
+            result.AddMateria(new MateriaItem(mat.Id));
+        }
+        return result;
     }
 }

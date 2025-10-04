@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
@@ -8,7 +9,8 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet>, ICloneable<GearSet>
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet, GearSetDto>,
+                       ICloneable<GearSet>
 {
     public const int NUM_SLOTS = 12;
 
@@ -182,6 +184,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
             yield return this[i];
         }
     }
+    public GearSetDto ToDto() => new(this);
+    public void UpdateFromDto(GearSetDto dto) => throw new NotImplementedException();
 }
 
 internal class GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item) : IReadOnlyGearSet

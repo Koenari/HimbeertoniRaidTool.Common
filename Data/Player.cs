@@ -1,11 +1,12 @@
-﻿using HimbeertoniRaidTool.Common.Localization;
+﻿using HimbeertoniRaidTool.Common.Data.Dto;
+using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
+public class Player : IHrtDataTypeWithId<Player, PlayerDto>, ICloneable<Player>
 {
     #region Static
 
@@ -82,4 +83,6 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
         MainChar = mainChar;
     }
     public void AddCharacter(Character character) => _characters.Add(character);
+    public PlayerDto ToDto() => new(this);
+    public void UpdateFromDto(PlayerDto dto) => throw new NotImplementedException();
 }

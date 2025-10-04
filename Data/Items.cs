@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.GameData;
 using HimbeertoniRaidTool.Common.Localization;
 using Lumina.Excel.Sheets;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>
+public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>, IHasDtoIsCreatable<HqItem, HqItemDto>
 {
     private readonly bool _hq;
     [JsonProperty] public bool IsHq
@@ -28,14 +29,16 @@ public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>
 
     public override string ToString() => Name + (IsHq ? " (HQ)" : string.Empty);
 
+    public static HqItem FromDto(HqItemDto dto) => new(dto.Id, dto.Hq);
     public override bool Equals(object? obj) => Equals(obj as HqItem);
 
     public override int GetHashCode() => HashCode.Combine(base.GetHashCode(), IsHq);
+    public new HqItemDto ToDto() => new(this);
 }
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
 [ImmutableObject(true)]
-public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>
+public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>, IHasDtoIsCreatable<Item, ItemDto>
 {
     public static readonly Item Empty = new(0);
 
@@ -90,11 +93,13 @@ public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>
 
     public override string ToString() => Name;
 
+    public static Item FromDto(ItemDto dto) => new(dto.Id);
     public override bool Equals(object? obj) => Equals(obj as Item);
 
     public override int GetHashCode() => Id.GetHashCode();
 
     public Item Clone() => new(Id);
+    public ItemDto ToDto() => new(this);
 }
 
 public class ItemIdCollection : IEnumerable<uint>

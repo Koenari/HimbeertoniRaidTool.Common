@@ -1,4 +1,5 @@
-﻿using HimbeertoniRaidTool.Common.Extensions;
+﻿using HimbeertoniRaidTool.Common.Data.Dto;
+using HimbeertoniRaidTool.Common.Extensions;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Services;
 using Lumina.Excel;
@@ -10,7 +11,8 @@ using XIVCalc.Lumina;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
+public class PlayableClass(Job job)
+    : IHrtDataType, ICloneable<PlayableClass>, IConvertibleToDto<ClassDto>
 {
     #region Static
 
@@ -222,6 +224,8 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
     public void RemoveGearSet(GearSet gearSet) => _gearSets.Remove(gearSet);
 
     public void RemoveBisSet(GearSet bisSet) => _bis.Remove(bisSet);
+    public ClassDto ToDto() => new(this);
+    public void UpdateFromDto(ClassDto dto) => throw new NotImplementedException();
 }
 
 public class GearSetStatBlock(

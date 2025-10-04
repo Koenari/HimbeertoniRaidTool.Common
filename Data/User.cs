@@ -1,10 +1,11 @@
-﻿using HimbeertoniRaidTool.Common.Security;
+﻿using HimbeertoniRaidTool.Common.Data.Dto;
+using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class User : IHrtDataTypeWithId<User>, ICloneable<User>
+public class User : IHrtDataTypeWithId<User, UserDto>, ICloneable<User>
 {
     public static string DataTypeNameStatic => "user";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.User;
@@ -66,4 +67,10 @@ public class User : IHrtDataTypeWithId<User>, ICloneable<User>
 
     public User Clone() => CloneService.Clone(this);
     public bool Equals(IHasHrtId? other) => LocalId.Equals(other?.LocalId);
+    public UserDto ToDto() => new(this);
+    public void UpdateFromDto(UserDto dto)
+    {
+        Username = dto.Username;
+        DisplayName = dto.DisplayName;
+    }
 }

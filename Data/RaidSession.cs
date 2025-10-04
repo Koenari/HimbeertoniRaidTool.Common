@@ -1,11 +1,12 @@
 using System.Diagnostics.CodeAnalysis;
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSession>
+public class RaidSession : IHrtDataTypeWithId<RaidSession, RaidSessionDto>, ICloneable<RaidSession>
 {
     public static string DataTypeName => "raid session";
     public string Name => Title.Length > 0 ? Title : $"{Group?.Name} @ {StartTime:f}";
@@ -133,12 +134,13 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
     }
 
 
+    public RaidSessionDto ToDto() => new(this);
+    public void UpdateFromDto(RaidSessionDto dto) => throw new NotImplementedException();
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class InstanceSession
+public class InstanceSession : IConvertibleToDto<InstanceSessionDto>
 {
-
 
     #region Serialized
 
@@ -174,10 +176,13 @@ public class InstanceSession
         Kill = 4,
         Progress = 5,
     }
+
+    public InstanceSessionDto ToDto() => new(this);
+    public void UpdateFromDto(InstanceSessionDto dto) => throw new NotImplementedException();
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class Participant(Reference<Character> character)
+public class Participant(Reference<Character> character) : IConvertibleToDto<ParticipantDto>
 {
     #region Serialized
 
@@ -195,4 +200,6 @@ public class Participant(Reference<Character> character)
     #endregion
 
 
+    public ParticipantDto ToDto() => new(this);
+    public void UpdateFromDto(ParticipantDto dto) => throw new NotImplementedException();
 }

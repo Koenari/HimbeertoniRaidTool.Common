@@ -1,11 +1,12 @@
 ﻿using System.Security.Cryptography;
+using HimbeertoniRaidTool.Common.Data.Dto;
 using HimbeertoniRaidTool.Common.Security;
 using HimbeertoniRaidTool.Common.Services;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable<XivAccount>
+public class XivAccount : IHrtDataTypeWithId<XivAccount, XivAccountDto>, ICloneable<XivAccount>
 {
     public static string DataTypeNameStatic => "FFXIV account";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.XivAccount;
@@ -51,5 +52,11 @@ public class XivAccount : IHrtDataTypeWithId<XivAccount>, ICloneable<XivAccount>
         //Static version crashes in wine
         byte[] hash = _sha256.ComputeHash(BitConverter.GetBytes(accountId));
         return BitConverter.ToUInt64(hash);
+    }
+    public XivAccountDto ToDto() => new(this);
+    public void UpdateFromDto(XivAccountDto dto)
+    {
+        Name = dto.Name;
+        HashedId = dto.HashedId;
     }
 }

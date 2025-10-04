@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics.CodeAnalysis;
+using HimbeertoniRaidTool.Common.Data.Dto;
 
 namespace HimbeertoniRaidTool.Common.Data;
 
@@ -57,7 +58,7 @@ public class Inventory : IEnumerable<KeyValuePair<int, InventoryEntry>>
 }
 
 [JsonObject(MemberSerialization.OptIn)]
-public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
+public class Wallet : IEnumerable<KeyValuePair<Currency, int>>, IHasDtoIsCreatableAndUpdatable<Wallet, WalletDto>
 {
     #region Serialized
 
@@ -88,6 +89,18 @@ public class Wallet : IEnumerable<KeyValuePair<Currency, int>>
         return _data.Remove(item.Key);
     }
     public int Count => _data.Count;
+    public WalletDto ToDto() => new(this);
+    public void UpdateFromDto(WalletDto dto)
+    {
+        _data = dto.Data;
+        LastUpdated = dto.LastUpdated;
+
+    }
+    public static Wallet FromDto(WalletDto dto) => new()
+    {
+        _data = dto.Data,
+        LastUpdated = dto.LastUpdated,
+    };
 }
 
 [JsonObject(ItemNullValueHandling = NullValueHandling.Ignore, MissingMemberHandling = MissingMemberHandling.Ignore,
