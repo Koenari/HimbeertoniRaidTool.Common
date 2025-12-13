@@ -18,17 +18,6 @@ public enum Month : int
     December = 12,
 }
 
-public enum Weekday
-{
-    Monday = 1,
-    Tuesday = 2,
-    Wednesday = 3,
-    Thursday = 4,
-    Friday = 5,
-    Saturday = 6,
-    Sunday = 7,
-}
-
 public enum InviteStatus
 {
     NotInvited = 0,
