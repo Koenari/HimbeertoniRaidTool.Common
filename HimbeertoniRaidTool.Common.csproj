@@ -2,7 +2,7 @@
     <PropertyGroup>
         <PackageProjectUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common</PackageProjectUrl>
         <Authors>Koenari</Authors>
-        <Version>1.10.1.1</Version>
+        <Version>1.10.1.2</Version>
         <TargetFramework>net9.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
