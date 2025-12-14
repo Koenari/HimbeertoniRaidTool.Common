@@ -15,6 +15,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     public static string DataTypeName => CommonLoc.DataTypeName_GearSet;
     public static HrtId.IdType IdType => HrtId.IdType.Gear;
 
+    public static GearSet Empty => new();
+
     #region Serialized
 
     //Header data

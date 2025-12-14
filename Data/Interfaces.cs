@@ -9,17 +9,21 @@ public interface IReadOnlyGearSet
 
     FoodItem? Food { get; }
     int GetStat(StatType type);
-    public GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None);
+    GearSetStatBlock GetStatBlock(PlayableClass job, Tribe? tribe = null, PartyBonus bonus = PartyBonus.None);
 }
 
 public interface IHrtDataType
 {
-    public static abstract string DataTypeName { get; }
-    public string Name { get; }
+    static abstract string DataTypeName { get; }
+    string Name { get; }
 }
 
 public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId;
-public interface IHrtDataTypeWithId<in T> : IHrtDataTypeWithId, IHasHrtId<T> where T : IHasHrtId<T>;
+
+public interface IHrtDataTypeWithId<T> : IHrtDataTypeWithId, IHasHrtId<T> where T : IHasHrtId<T>
+{
+    static abstract T Empty { get; }
+}
 
 public interface ICloneable<out TData>
 {

@@ -13,6 +13,8 @@ public class Player : IHrtDataTypeWithId<Player>, ICloneable<Player>
 
     public static HrtId.IdType IdType => HrtId.IdType.Player;
 
+    public static Player Empty => new();
+
     #endregion
 
     #region Serialized

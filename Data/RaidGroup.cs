@@ -12,6 +12,8 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
 
     public static HrtId.IdType IdType => HrtId.IdType.Group;
 
+    public static RaidGroup Empty => new();
+
     #region Serialized
 
     [JsonProperty("Members")] private readonly Reference<Player>?[] _players;

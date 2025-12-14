@@ -9,9 +9,9 @@ public interface IReference
     public HrtId Id { get; }
 }
 
-public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEquatable<Reference<T>> where T : class, IHasHrtId<T>, new()
+public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEquatable<Reference<T>> where T : class, IHrtDataTypeWithId<T>
 {
-    private static T Default = new T();
+    private static T Default = T.Empty;
     private T? _cache;
     private Func<HrtId, T?> getter { get; } = getObject;
     

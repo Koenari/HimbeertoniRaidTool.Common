@@ -12,6 +12,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession>, ICloneable<RaidSessi
 
     public static HrtId.IdType IdType => HrtId.IdType.RaidSession;
 
+    public static RaidSession Empty => new();
+
 
     #region Serialized
 
