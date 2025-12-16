@@ -11,6 +11,8 @@ public class XivAccount : IHrtDataTypeWithId<XivAccount, XivAccountDto>, IClonea
     public static string DataTypeNameStatic => "FFXIV account";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.XivAccount;
 
+    public static XivAccount Empty => new();
+
     private static SHA256 _sha256 = SHA256.Create();
 
     #region Serialized

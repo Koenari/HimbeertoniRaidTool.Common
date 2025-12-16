@@ -10,6 +10,7 @@ public class User : IHrtDataTypeWithId<User, UserDto>, ICloneable<User>
     public static string DataTypeNameStatic => "user";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.User;
 
+    public static User Empty => new();
 
     #region Serialized
 

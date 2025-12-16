@@ -251,30 +251,29 @@ public static class EnumExtensions
         _               => throw new ArgumentOutOfRangeException(nameof(month), month, null),
     };
 
-    public static string Name(this Weekday day) => day switch
+    public static string Name(this DayOfWeek day) => day switch
     {
 
-        Weekday.Monday    => CommonLoc.Weekday_Monday,
-        Weekday.Tuesday   => CommonLoc.Weekday_Tuesday,
-        Weekday.Wednesday => CommonLoc.Weekday_Wednesday,
-        Weekday.Thursday  => CommonLoc.Weekday_Thursday,
-        Weekday.Friday    => CommonLoc.Weekday_Friday,
-        Weekday.Saturday  => CommonLoc.Weekday_Saturday,
-        Weekday.Sunday    => CommonLoc.Weekday_Sunday,
-        _                 => throw new ArgumentOutOfRangeException(nameof(day), day, null),
+        DayOfWeek.Monday    => CommonLoc.Weekday_Monday,
+        DayOfWeek.Tuesday   => CommonLoc.Weekday_Tuesday,
+        DayOfWeek.Wednesday => CommonLoc.Weekday_Wednesday,
+        DayOfWeek.Thursday  => CommonLoc.Weekday_Thursday,
+        DayOfWeek.Friday    => CommonLoc.Weekday_Friday,
+        DayOfWeek.Saturday  => CommonLoc.Weekday_Saturday,
+        DayOfWeek.Sunday    => CommonLoc.Weekday_Sunday,
+        _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
     };
-
-    public static string Abbrev(this Weekday day) => day switch
+    public static string Abbrev(this DayOfWeek day) => day switch
     {
 
-        Weekday.Monday    => CommonLoc.Weekday_Abbrev_Monday,
-        Weekday.Tuesday   => CommonLoc.Weekday_Abbrev_Tuesday,
-        Weekday.Wednesday => CommonLoc.Weekday_Abbrev_Wednesday,
-        Weekday.Thursday  => CommonLoc.Weekday_Abbrev_Thursday,
-        Weekday.Friday    => CommonLoc.Weekday_Abbrev_Friday,
-        Weekday.Saturday  => CommonLoc.Weekday_Abbrev_Saturday,
-        Weekday.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
-        _                 => throw new ArgumentOutOfRangeException(nameof(day), day, null),
+        DayOfWeek.Monday    => CommonLoc.Weekday_Abbrev_Monday,
+        DayOfWeek.Tuesday   => CommonLoc.Weekday_Abbrev_Tuesday,
+        DayOfWeek.Wednesday => CommonLoc.Weekday_Abbrev_Wednesday,
+        DayOfWeek.Thursday  => CommonLoc.Weekday_Abbrev_Thursday,
+        DayOfWeek.Friday    => CommonLoc.Weekday_Abbrev_Friday,
+        DayOfWeek.Saturday  => CommonLoc.Weekday_Abbrev_Saturday,
+        DayOfWeek.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
+        _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
     };
 
     public static string FriendlyName(this PartyBonus bonus) => bonus switch

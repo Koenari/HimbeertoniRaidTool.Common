@@ -25,6 +25,8 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     public static HrtId.IdType IdType => HrtId.IdType.Character;
 
+    public static Character Empty => new();
+
     public static ulong CalcCharId(long contentId) => CalcCharId((ulong)contentId);
     public static ulong CalcCharId(ulong contentId)
     {

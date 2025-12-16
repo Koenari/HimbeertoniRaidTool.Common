@@ -13,6 +13,8 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession, RaidSessionDto>, IClo
 
     public static HrtId.IdType IdType => HrtId.IdType.RaidSession;
 
+    public static RaidSession Empty => new();
+
 
     #region Serialized
 
