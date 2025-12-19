@@ -99,7 +99,7 @@ public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>
 
 public class ItemIdCollection : IEnumerable<uint>
 {
-    public static readonly ItemIdCollection Empty = new();
+    public static readonly ItemIdCollection Empty = [];
     private readonly Collection<uint> _ids;
 
     public ItemIdCollection(params uint[] ids)

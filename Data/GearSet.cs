@@ -45,7 +45,7 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
      * External Service data (non HRT/XRT)
      */
     [JsonProperty("ExternalId")] public string ExternalId = "";
-    [JsonProperty("ExternalIdx")] public int ExternalIdx = 0;
+    [JsonProperty("ExternalIdx")] public int ExternalIdx;
     [JsonProperty("LastExternalFetch")] public DateTime LastExternalFetchDate;
 
     #endregion
@@ -174,7 +174,9 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
         GearSetSlot.Wrist    => 8,
         GearSetSlot.Ring1    => 9,
         GearSetSlot.Ring2    => 10,
-        _                    => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
+        GearSetSlot.Waist or GearSetSlot.SoulCrystal or GearSetSlot.None => throw new IndexOutOfRangeException(
+            $"GearSlot {slot} does not exist"),
+        _ => throw new IndexOutOfRangeException($"GearSlot {slot} does not exist"),
     };
 
     private IEnumerable<GearItem> AsEnumerable()

@@ -167,6 +167,9 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     public Character Clone() => CloneService.Clone(this);
 
+
+    // ReSharper disable NonReadonlyMemberInGetHashCode
+    //TODO: Figure out proper way
     public override int GetHashCode() => LocalId.GetHashCode();
 
     public void MergeInfos(Character toMerge)

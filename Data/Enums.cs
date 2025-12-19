@@ -2,7 +2,7 @@
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public enum Month : int
+public enum Month
 {
     January = 1,
     February = 2,
