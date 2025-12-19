@@ -14,8 +14,12 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEqua
     private static T Default = T.Empty;
     private T? _cache;
     private Func<HrtId, T?> getter { get; } = getObject;
-    
-    public HrtId Id { get; } = id;
+
+    public HrtId Id
+    {
+        get => _cache?.LocalId ?? field;
+        
+    } = id;
     public bool Loaded => _cache is not null;
     public T Data
     {
