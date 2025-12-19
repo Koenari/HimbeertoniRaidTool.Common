@@ -69,6 +69,8 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     [JsonProperty("LodestoneID")] public int LodestoneId;
     [JsonProperty("Name")] public string Name;
     [JsonProperty("Tribe")] public uint TribeId;
+    // ReSharper disable once ReplaceWithFieldKeyword Does not work with Json serialization
+    [JsonProperty("MainJob")] private Job? _mainJob;
 
     #endregion
 
@@ -81,17 +83,17 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
         Name = name;
     }
 
-    [field: JsonProperty("MainJob")]
+
     public Job? MainJob
     {
         get
         {
-            if (_classes.All(c => c.Job != field))
-                field = null;
-            field ??= _classes.FirstOrDefault()?.Job;
-            return field;
+            if (_classes.All(c => c.Job != _mainJob))
+                _mainJob = null;
+            _mainJob ??= _classes.FirstOrDefault()?.Job;
+            return _mainJob;
         }
-        set;
+        set => _mainJob = value;
     }
 
     public PlayableClass? MainClass => this[MainJob];
