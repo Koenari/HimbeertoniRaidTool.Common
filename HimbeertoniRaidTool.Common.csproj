@@ -3,11 +3,11 @@
         <PackageProjectUrl>https://github.com/Koenari/HimbeertoniRaidTool.Common</PackageProjectUrl>
         <Authors>Koenari</Authors>
         <Version>1.10.1.2</Version>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
     </PropertyGroup>
     <PropertyGroup>
         <Nullable>enable</Nullable>
-        <LangVersion>12</LangVersion>
+        <LangVersion>14</LangVersion>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     </PropertyGroup>
     <PropertyGroup>

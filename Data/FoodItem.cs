@@ -8,13 +8,13 @@ namespace HimbeertoniRaidTool.Common.Data;
 [ImmutableObject(true)]
 public class FoodItem : HqItem, ICloneable<FoodItem>
 {
-    private static readonly ExcelSheet<ItemAction> ItemActionSheet = CommonLibrary.ExcelModule.GetSheet<ItemAction>();
-    private static readonly ExcelSheet<ItemFood> FoodSheet = CommonLibrary.ExcelModule.GetSheet<ItemFood>();
+    private static readonly ExcelSheet<ItemAction> _itemActionSheet = CommonLibrary.ExcelModule.GetSheet<ItemAction>();
+    private static readonly ExcelSheet<ItemFood> _foodSheet = CommonLibrary.ExcelModule.GetSheet<ItemFood>();
     private readonly ItemFood? _luminaFood;
     public FoodItem(uint id) : base(id)
     {
         if (GameItem.IsFood)
-            _luminaFood = FoodSheet.GetRow(GameItem.ItemAction.Data[1]);
+            _luminaFood = _foodSheet.GetRow(GameItem.ItemAction.Data[1]);
         IsHq = true;
     }
 

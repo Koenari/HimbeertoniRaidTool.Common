@@ -6,9 +6,9 @@ namespace HimbeertoniRaidTool.Common.Data;
 public class RolePriority : Dictionary<Role, int>
 {
     public delegate bool InputIntImpl(string desc, ref int val);
-    private int Max => this.Aggregate(0, (sum, x) => Math.Max(sum, x.Value));
-    public int GetPriority(Role r) => TryGetValue(r, out int val) ? val : Max + 1;
-    public int GetPriority(Role? r) => r is not null ? GetPriority(r.Value) : Max + 1;
+    private int _max => this.Aggregate(0, (sum, x) => Math.Max(sum, x.Value));
+    public int GetPriority(Role r) => TryGetValue(r, out int val) ? val : _max + 1;
+    public int GetPriority(Role? r) => r is not null ? GetPriority(r.Value) : _max + 1;
     public void DrawEdit(InputIntImpl uiImplementation)
     {
         foreach (var r in Enum.GetValues<Role>())
@@ -20,7 +20,7 @@ public class RolePriority : Dictionary<Role, int>
             }
             if (!ContainsKey(r))
             {
-                Add(r, Max + 1);
+                Add(r, _max + 1);
             }
             int val = this[r];
             if (uiImplementation($"{r}##RolePriority", ref val))

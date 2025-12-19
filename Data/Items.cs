@@ -9,11 +9,10 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>
 {
-    private readonly bool _hq;
     [JsonProperty] public bool IsHq
     {
-        get => _hq && CanBeHq;
-        init => _hq = value & CanBeHq;
+        get => field && CanBeHq;
+        init => field = value & CanBeHq;
     }
 
     [JsonConstructor]

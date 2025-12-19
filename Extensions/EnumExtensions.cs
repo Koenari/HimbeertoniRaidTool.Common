@@ -16,18 +16,8 @@ public static class EnumExtensions
         return _jobCache[j] ??= _jobSheet.GetRow((uint)j);
     }
 
-    public static Role GetRole(this Job c)
-    {
-        var cj = GetClassJob(c);
-        if (cj.PartyBonus > 4)
-            return (Role)cj.PartyBonus;
-        return (Role)cj.Role;
-    }
-
     public static bool IsCombatRole(this Role role) =>
         role is Role.Tank or Role.Healer or Role.Melee or Role.Caster or Role.Ranged;
-
-    public static StatType MainStat(this Job job) => (StatType)GetClassJob(job).PrimaryStat;
 
     public static int GroupSize(this GroupType groupType) => groupType switch
     {
@@ -37,17 +27,24 @@ public static class EnumExtensions
         _               => 0,
     };
 
-    public static bool CanHaveShield(this Job job) => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
+    extension(Job job)
+    {
+        public bool CanHaveShield() => job is Job.PLD or Job.THM or Job.GLA or Job.CNJ;
+        public bool IsCombatJob() => job is < Job.CRP or > Job.FSH;
+        public bool IsDoH() => job is >= Job.MIN and <= Job.FSH;
+        public bool IsDoL() => job is >= Job.CRP and <= Job.CUL;
+        public Job GetBaseJob() => (Job)GetClassJob(job).ClassJobParent.RowId;
+        public bool HasBaseJob() => job.GetBaseJob() is not Job.ADV;
+        public Role GetRole()
+        {
+            var cj = GetClassJob(job);
+            if (cj.PartyBonus > 4)
+                return (Role)cj.PartyBonus;
+            return (Role)cj.Role;
+        }
+        public StatType MainStat() => (StatType)GetClassJob(job).PrimaryStat;
+    }
 
-    public static bool IsCombatJob(this Job j) => j is < Job.CRP or > Job.FSH;
-
-    public static bool IsDoH(this Job j) => j is >= Job.MIN and <= Job.FSH;
-
-    public static bool IsDoL(this Job j) => j is >= Job.CRP and <= Job.CUL;
-
-    public static Job GetBaseJob(this Job j) => (Job)GetClassJob(j).ClassJobParent.RowId;
-
-    public static bool HasBaseJob(this Job j) => GetBaseJob(j) is not Job.ADV;
     public static StatType GetStatType(this MateriaCategory materiaCategory) => materiaCategory switch
     {
         MateriaCategory.Piety         => StatType.Piety,
@@ -74,21 +71,6 @@ public static class EnumExtensions
         _                    => ItemSource.Undefined,
     };
 
-    public static bool IsSecondary(this StatType statType) => statType switch
-    {
-        StatType.CriticalHit   => true,
-        StatType.Determination => true,
-        StatType.DirectHitRate => true,
-        StatType.SpellSpeed    => true,
-        StatType.SkillSpeed    => true,
-        StatType.Piety         => true,
-        StatType.Tenacity      => true,
-        StatType.Craftsmanship => true,
-        StatType.Control       => true,
-        StatType.Gathering     => true,
-        StatType.Perception    => true,
-        _                      => false,
-    };
     public static string PrefixName(this MateriaCategory cat)
     {
         MateriaItem mat = new(cat, MateriaLevel.I);
@@ -102,49 +84,66 @@ public static class EnumExtensions
         _                      => false,
     };
 
-    public static string FriendlyName(this StatType t) => t switch
+    extension(StatType t)
     {
-        StatType.Strength            => CommonLoc.StatType_Strength,
-        StatType.Dexterity           => CommonLoc.StatType_Dexterity,
-        StatType.Vitality            => CommonLoc.StatType_Vitality,
-        StatType.Intelligence        => CommonLoc.StatType_Intelligence,
-        StatType.Mind                => CommonLoc.StatType_Mind,
-        StatType.Piety               => CommonLoc.StatType_Piety,
-        StatType.HP                  => CommonLoc.StatType_HP,
-        StatType.MP                  => CommonLoc.StatType_MP,
-        StatType.PhysicalDamage      => CommonLoc.StatType_PhysicalDamage,
-        StatType.MagicalDamage       => CommonLoc.StatType_MagicDamage,
-        StatType.Tenacity            => CommonLoc.StatType_Tenacity,
-        StatType.AttackPower         => CommonLoc.StatType_AttackPower,
-        StatType.Defense             => CommonLoc.StatType_Defense,
-        StatType.DirectHitRate       => CommonLoc.StatType_Direct_Hit,
-        StatType.MagicDefense        => CommonLoc.StatType_MagicalDefense,
-        StatType.CriticalHitPower    => CommonLoc.StatType_Critical_Hit_Power,
-        StatType.CriticalHit         => CommonLoc.StatType_Critical_Hit,
-        StatType.AttackMagicPotency  => CommonLoc.StatType_AttackMagicPotency,
-        StatType.HealingMagicPotency => CommonLoc.StatType_HealingMagicPotency,
-        StatType.Determination       => CommonLoc.StatType_Determination,
-        StatType.SkillSpeed          => CommonLoc.StatType_Skill_Speed,
-        StatType.SpellSpeed          => CommonLoc.StatType_SpellSpeed,
-        _                            => t.ToString(),
-    };
-
-    public static string Abbrev(this StatType t) => t switch
-    {
-        StatType.CriticalHit   => CommonLoc.StatTypeAbbrev_CriticalHit,
-        StatType.DirectHitRate => CommonLoc.StatTypeAbbrev_DirectHit,
-        StatType.SkillSpeed    => CommonLoc.StatTypeAbbrev_SkillSpeed,
-        StatType.SpellSpeed    => CommonLoc.StatTypeAbbrev_SpellSpeed,
-        StatType.Determination => CommonLoc.StatTypeAbbrev_Determination,
-        StatType.Piety         => CommonLoc.StatTypeAbbrev_Piety,
-        StatType.Mind          => CommonLoc.StatTypeAbbrev_Mind,
-        StatType.Strength      => CommonLoc.StatTypeAbbrev_Strength,
-        StatType.Dexterity     => CommonLoc.StatTypeAbbrev_Dexterity,
-        StatType.Intelligence  => CommonLoc.StatTypeAbbrev_Intelligence,
-        StatType.Vitality      => CommonLoc.StatTypeAbbrev_Vitality,
-        StatType.Tenacity      => CommonLoc.StatTypeAbbrev_Tenacity,
-        _                      => "XXX",
-    };
+        public string FriendlyName() => t switch
+        {
+            StatType.Strength            => CommonLoc.StatType_Strength,
+            StatType.Dexterity           => CommonLoc.StatType_Dexterity,
+            StatType.Vitality            => CommonLoc.StatType_Vitality,
+            StatType.Intelligence        => CommonLoc.StatType_Intelligence,
+            StatType.Mind                => CommonLoc.StatType_Mind,
+            StatType.Piety               => CommonLoc.StatType_Piety,
+            StatType.HP                  => CommonLoc.StatType_HP,
+            StatType.MP                  => CommonLoc.StatType_MP,
+            StatType.PhysicalDamage      => CommonLoc.StatType_PhysicalDamage,
+            StatType.MagicalDamage       => CommonLoc.StatType_MagicDamage,
+            StatType.Tenacity            => CommonLoc.StatType_Tenacity,
+            StatType.AttackPower         => CommonLoc.StatType_AttackPower,
+            StatType.Defense             => CommonLoc.StatType_Defense,
+            StatType.DirectHitRate       => CommonLoc.StatType_Direct_Hit,
+            StatType.MagicDefense        => CommonLoc.StatType_MagicalDefense,
+            StatType.CriticalHitPower    => CommonLoc.StatType_Critical_Hit_Power,
+            StatType.CriticalHit         => CommonLoc.StatType_Critical_Hit,
+            StatType.AttackMagicPotency  => CommonLoc.StatType_AttackMagicPotency,
+            StatType.HealingMagicPotency => CommonLoc.StatType_HealingMagicPotency,
+            StatType.Determination       => CommonLoc.StatType_Determination,
+            StatType.SkillSpeed          => CommonLoc.StatType_Skill_Speed,
+            StatType.SpellSpeed          => CommonLoc.StatType_SpellSpeed,
+            _                            => t.ToString(),
+        };
+        public string Abbrev() => t switch
+        {
+            StatType.CriticalHit   => CommonLoc.StatTypeAbbrev_CriticalHit,
+            StatType.DirectHitRate => CommonLoc.StatTypeAbbrev_DirectHit,
+            StatType.SkillSpeed    => CommonLoc.StatTypeAbbrev_SkillSpeed,
+            StatType.SpellSpeed    => CommonLoc.StatTypeAbbrev_SpellSpeed,
+            StatType.Determination => CommonLoc.StatTypeAbbrev_Determination,
+            StatType.Piety         => CommonLoc.StatTypeAbbrev_Piety,
+            StatType.Mind          => CommonLoc.StatTypeAbbrev_Mind,
+            StatType.Strength      => CommonLoc.StatTypeAbbrev_Strength,
+            StatType.Dexterity     => CommonLoc.StatTypeAbbrev_Dexterity,
+            StatType.Intelligence  => CommonLoc.StatTypeAbbrev_Intelligence,
+            StatType.Vitality      => CommonLoc.StatTypeAbbrev_Vitality,
+            StatType.Tenacity      => CommonLoc.StatTypeAbbrev_Tenacity,
+            _                      => "XXX",
+        };
+        public bool IsSecondary() => t switch
+        {
+            StatType.CriticalHit   => true,
+            StatType.Determination => true,
+            StatType.DirectHitRate => true,
+            StatType.SpellSpeed    => true,
+            StatType.SkillSpeed    => true,
+            StatType.Piety         => true,
+            StatType.Tenacity      => true,
+            StatType.Craftsmanship => true,
+            StatType.Control       => true,
+            StatType.Gathering     => true,
+            StatType.Perception    => true,
+            _                      => false,
+        };
+    }
 
     public static string FriendlyName(this GearSetManager manager) => manager switch
     {
@@ -216,65 +215,71 @@ public static class EnumExtensions
         _           => CommonLoc.undefined,
     };
 
-    public static string Name(this Month month) => month switch
+    extension(Month month)
     {
+        public string Name() => month switch
+        {
 
-        Month.January   => CommonLoc.Month_January,
-        Month.February  => CommonLoc.Month_February,
-        Month.March     => CommonLoc.Month_March,
-        Month.April     => CommonLoc.Month_April,
-        Month.May       => CommonLoc.Month_May,
-        Month.June      => CommonLoc.Month_June,
-        Month.July      => CommonLoc.Month_July,
-        Month.August    => CommonLoc.Month_August,
-        Month.September => CommonLoc.Month_September,
-        Month.October   => CommonLoc.Month_October,
-        Month.November  => CommonLoc.Month_November,
-        Month.December  => CommonLoc.Month_December,
-        _               => CommonLoc.Unknown,
-    };
-    public static string Abrrev(this Month month) => month switch
+            Month.January   => CommonLoc.Month_January,
+            Month.February  => CommonLoc.Month_February,
+            Month.March     => CommonLoc.Month_March,
+            Month.April     => CommonLoc.Month_April,
+            Month.May       => CommonLoc.Month_May,
+            Month.June      => CommonLoc.Month_June,
+            Month.July      => CommonLoc.Month_July,
+            Month.August    => CommonLoc.Month_August,
+            Month.September => CommonLoc.Month_September,
+            Month.October   => CommonLoc.Month_October,
+            Month.November  => CommonLoc.Month_November,
+            Month.December  => CommonLoc.Month_December,
+            _               => CommonLoc.Unknown,
+        };
+        public string Abrrev() => month switch
+        {
+
+            Month.January   => CommonLoc.Month_Abrrev_January,
+            Month.February  => CommonLoc.Month_Abrrev_February,
+            Month.March     => CommonLoc.Month_Abrrev_March,
+            Month.April     => CommonLoc.Month_Abrrev_April,
+            Month.May       => CommonLoc.Month_Abrrev_May,
+            Month.June      => CommonLoc.Month_Abrrev_June,
+            Month.July      => CommonLoc.Month_Abrrev_July,
+            Month.August    => CommonLoc.Month_Abrrev_August,
+            Month.September => CommonLoc.Month_Abrrev_September,
+            Month.October   => CommonLoc.Month_Abrrev_October,
+            Month.November  => CommonLoc.Month_Abrrev_November,
+            Month.December  => CommonLoc.Month_Abrrev_December,
+            _               => throw new ArgumentOutOfRangeException(nameof(month), month, null),
+        };
+    }
+
+    extension(DayOfWeek day)
     {
+        public string Name() => day switch
+        {
 
-        Month.January   => CommonLoc.Month_Abrrev_January,
-        Month.February  => CommonLoc.Month_Abrrev_February,
-        Month.March     => CommonLoc.Month_Abrrev_March,
-        Month.April     => CommonLoc.Month_Abrrev_April,
-        Month.May       => CommonLoc.Month_Abrrev_May,
-        Month.June      => CommonLoc.Month_Abrrev_June,
-        Month.July      => CommonLoc.Month_Abrrev_July,
-        Month.August    => CommonLoc.Month_Abrrev_August,
-        Month.September => CommonLoc.Month_Abrrev_September,
-        Month.October   => CommonLoc.Month_Abrrev_October,
-        Month.November  => CommonLoc.Month_Abrrev_November,
-        Month.December  => CommonLoc.Month_Abrrev_December,
-        _               => throw new ArgumentOutOfRangeException(nameof(month), month, null),
-    };
+            DayOfWeek.Monday    => CommonLoc.Weekday_Monday,
+            DayOfWeek.Tuesday   => CommonLoc.Weekday_Tuesday,
+            DayOfWeek.Wednesday => CommonLoc.Weekday_Wednesday,
+            DayOfWeek.Thursday  => CommonLoc.Weekday_Thursday,
+            DayOfWeek.Friday    => CommonLoc.Weekday_Friday,
+            DayOfWeek.Saturday  => CommonLoc.Weekday_Saturday,
+            DayOfWeek.Sunday    => CommonLoc.Weekday_Sunday,
+            _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
+        };
+        public string Abbrev() => day switch
+        {
 
-    public static string Name(this DayOfWeek day) => day switch
-    {
-
-        DayOfWeek.Monday    => CommonLoc.Weekday_Monday,
-        DayOfWeek.Tuesday   => CommonLoc.Weekday_Tuesday,
-        DayOfWeek.Wednesday => CommonLoc.Weekday_Wednesday,
-        DayOfWeek.Thursday  => CommonLoc.Weekday_Thursday,
-        DayOfWeek.Friday    => CommonLoc.Weekday_Friday,
-        DayOfWeek.Saturday  => CommonLoc.Weekday_Saturday,
-        DayOfWeek.Sunday    => CommonLoc.Weekday_Sunday,
-        _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
-    };
-    public static string Abbrev(this DayOfWeek day) => day switch
-    {
-
-        DayOfWeek.Monday    => CommonLoc.Weekday_Abbrev_Monday,
-        DayOfWeek.Tuesday   => CommonLoc.Weekday_Abbrev_Tuesday,
-        DayOfWeek.Wednesday => CommonLoc.Weekday_Abbrev_Wednesday,
-        DayOfWeek.Thursday  => CommonLoc.Weekday_Abbrev_Thursday,
-        DayOfWeek.Friday    => CommonLoc.Weekday_Abbrev_Friday,
-        DayOfWeek.Saturday  => CommonLoc.Weekday_Abbrev_Saturday,
-        DayOfWeek.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
-        _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
-    };
+            DayOfWeek.Monday    => CommonLoc.Weekday_Abbrev_Monday,
+            DayOfWeek.Tuesday   => CommonLoc.Weekday_Abbrev_Tuesday,
+            DayOfWeek.Wednesday => CommonLoc.Weekday_Abbrev_Wednesday,
+            DayOfWeek.Thursday  => CommonLoc.Weekday_Abbrev_Thursday,
+            DayOfWeek.Friday    => CommonLoc.Weekday_Abbrev_Friday,
+            DayOfWeek.Saturday  => CommonLoc.Weekday_Abbrev_Saturday,
+            DayOfWeek.Sunday    => CommonLoc.Weekday_Abbrev_Sunday,
+            _                   => throw new ArgumentOutOfRangeException(nameof(day), day, null),
+        };
+    }
 
     public static string FriendlyName(this PartyBonus bonus) => bonus switch
     {
@@ -310,16 +315,16 @@ public static class EnumExtensions
         _                                    => status.ToString(),
     };
 
-    public static string FriendlyName(InstanceSession.PlannedStatus status) => status switch
+    public static string FriendlyName(PlannedStatus status) => status switch
     {
 
 
-        InstanceSession.PlannedStatus.Unknown    => CommonLoc.PlannedStatus_Unknown,
-        InstanceSession.PlannedStatus.Planned    => CommonLoc.PlannedStatus_Planned,
-        InstanceSession.PlannedStatus.NotPlanned => CommonLoc.PlannedStatus_Not_Planned,
-        InstanceSession.PlannedStatus.SafeKill   => CommonLoc.PlannedStatus_Safe_Kill,
-        InstanceSession.PlannedStatus.Kill       => CommonLoc.PlannedStatus_Kill,
-        InstanceSession.PlannedStatus.Progress   => CommonLoc.PlannedStatus_Progress,
-        _                                        => status.ToString(),
+        PlannedStatus.Unknown    => CommonLoc.PlannedStatus_Unknown,
+        PlannedStatus.Planned    => CommonLoc.PlannedStatus_Planned,
+        PlannedStatus.NotPlanned => CommonLoc.PlannedStatus_Not_Planned,
+        PlannedStatus.SafeKill   => CommonLoc.PlannedStatus_Safe_Kill,
+        PlannedStatus.Kill       => CommonLoc.PlannedStatus_Kill,
+        PlannedStatus.Progress   => CommonLoc.PlannedStatus_Progress,
+        _                        => status.ToString(),
     };
 }

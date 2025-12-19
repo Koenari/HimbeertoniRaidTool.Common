@@ -14,7 +14,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
 {
     #region Static
 
-    private static readonly ExcelSheet<ClassJob> ClassJobSheet = CommonLibrary.ExcelModule.GetSheet<ClassJob>();
+    private static readonly ExcelSheet<ClassJob> _classJobSheet = CommonLibrary.ExcelModule.GetSheet<ClassJob>();
 
     #endregion
 
@@ -36,7 +36,7 @@ public class PlayableClass(Job job) : IHrtDataType, ICloneable<PlayableClass>
 
     #endregion
 
-    public ClassJob ClassJob => ClassJobSheet.GetRow((uint)Job);
+    public ClassJob ClassJob => _classJobSheet.GetRow((uint)Job);
 
     public Role Role => Job.GetRole();
 

@@ -22,7 +22,7 @@ public class GearItem(uint id = 0, bool hq = false) : HqItem(id, hq), ICloneable
     //This holds the total stats of this gear item (including materia)
     private readonly Dictionary<StatType, int> _statCache = new();
 
-    public new string DataTypeName => CommonLoc.DataTypeName_item_gear;
+    public static new string DataTypeName => CommonLoc.DataTypeName_item_gear;
 
     public IEnumerable<GearSetSlot> Slots => EquipSlotCategory.AvailableSlots();
 

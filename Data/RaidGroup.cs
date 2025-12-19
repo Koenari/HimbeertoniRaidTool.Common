@@ -16,7 +16,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
 
     #region Serialized
 
-    [JsonProperty("Members")] private readonly Reference<Player>?[] _players;
+    [JsonProperty("Members")] private readonly Reference<Player>?[] _members;
 
     [JsonProperty("Name")] public string Name;
 
@@ -50,10 +50,10 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
         Type = type;
         TimeStamp = DateTime.Now;
         Name = name;
-        _players = new Reference<Player>[8];
-        for (int i = 0; i < _players.Length; i++)
+        _members = new Reference<Player>[8];
+        for (int i = 0; i < _members.Length; i++)
         {
-            _players[i] = new Player();
+            _members[i] = new Player();
         }
     }
 
@@ -77,7 +77,7 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
                 throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            var player = _players[idx] ??= new Player();
+            var player = _members[idx] ??= new Player();
             return player.Data;
         }
         set
@@ -86,29 +86,24 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
                 throw new IndexOutOfRangeException($"Raid group of type {Type} has no member at index {idx}");
             if (Type == GroupType.Group)
                 idx *= 2;
-            _players[idx] = value;
+            _members[idx] = value;
         }
     }
 
-    public IEnumerator<Player> GetEnumerator() => Players.GetEnumerator();
+    public IEnumerator<Player> GetEnumerator()
+    {
+        for (int i = 0; i < Count; i++)
+        {
+            if (this[i].Filled)
+                yield return this[i];
+        }
+    }
 
-    IEnumerator IEnumerable.GetEnumerator() => Players.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     string IHrtDataType.Name => Name;
 
     IList<HrtId> IHasHrtId.RemoteIds => RemoteIds;
-
-    private IEnumerable<Player> Players
-    {
-        get
-        {
-            for (int i = 0; i < Count; i++)
-            {
-                if (this[i].Filled)
-                    yield return this[i];
-            }
-        }
-    }
 
     #endregion
 
@@ -128,6 +123,6 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup>, ICl
                 $"Raid group of type {Type} has no member at index {Math.Max(idx1, idx2)}");
         if (Type == GroupType.Group)
             (idx1, idx2) = (idx1 * 2, idx2 * 2);
-        (_players[idx1], _players[idx2]) = (_players[idx2], _players[idx1]);
+        (_members[idx1], _members[idx2]) = (_members[idx2], _members[idx1]);
     }
 }

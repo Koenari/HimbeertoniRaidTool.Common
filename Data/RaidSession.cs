@@ -164,18 +164,6 @@ public class InstanceSession
         _instanceId = instanceId;
     }
     public InstanceWithLoot Instance => GameInfo.GetInstance(_instanceId);
-
-
-
-    public enum PlannedStatus
-    {
-        Unknown = 0,
-        Planned = 1,
-        NotPlanned = 2,
-        SafeKill = 3,
-        Kill = 4,
-        Progress = 5,
-    }
 }
 
 [JsonObject(MemberSerialization.OptIn)]
