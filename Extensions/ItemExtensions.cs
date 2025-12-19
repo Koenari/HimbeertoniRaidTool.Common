@@ -55,7 +55,7 @@ public static class ItemExtensions
         public IEnumerable<InstanceWithLoot> LootSources() =>
             ItemInfoService.GetLootSources(item.RowId);
         public bool IsFood() => item.ItemAction.RowId != 0
-                             && item.ItemAction.Value.Type is 845 or 844
+                             && item.ItemAction.Value.Action.RowId is 845 or 844
                              && item.ItemAction.Value.Data[0] == 48;
     }
 

@@ -29,10 +29,10 @@
         <Using Alias="LuminaItem" Include="Lumina.Excel.Sheets.Item"/>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3">
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4">
             <PrivateAssets>runtime</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="XIVCalc.Lumina" Version="7.3.1"/>
+        <PackageReference Include="XIVCalc.Lumina" Version="7.4.1"/>
     </ItemGroup>
 
     <ItemGroup>
