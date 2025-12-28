@@ -9,13 +9,10 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
     public static HrtId FromString(string id)
     {
         string[] parts = id.Split('-');
-        if (parts is not ["HRT", "1", _, _, _])
-            return Empty;
-        if (!uint.TryParse(parts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint authority))
-            return Empty;
-        if (!Enum.TryParse<IdType>(parts[3], true, out var type))
-            return Empty;
-        if (!ulong.TryParse(parts[4], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong sequence))
+        if (parts is not ["HRT", "1", _, _, _]
+         || !uint.TryParse(parts[2], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out uint authority)
+         || !Enum.TryParse<IdType>(parts[3], true, out var type)
+         || !ulong.TryParse(parts[4], NumberStyles.HexNumber, CultureInfo.InvariantCulture, out ulong sequence))
             return Empty;
         return new HrtId(authority, type, sequence);
 
@@ -119,13 +116,13 @@ public class HrtId : IEquatable<HrtId>, IComparable<HrtId>
 
 public interface IHasHrtId
 {
-    public static abstract HrtId.IdType IdType { get; }
-    public HrtId LocalId { get; set; }
+    static abstract HrtId.IdType IdType { get; }
+    HrtId LocalId { get; set; }
 
     /// <summary>
     ///     XIV Raid Tool specific unique IDs used for remote storage and lookup.
     /// </summary>
-    public IList<HrtId> RemoteIds { get; }
+    IList<HrtId> RemoteIds { get; }
 }
 
 public interface IHasHrtId<in T> : IHasHrtId where T : IHasHrtId<T>

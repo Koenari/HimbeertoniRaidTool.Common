@@ -2,7 +2,7 @@
 
 namespace HimbeertoniRaidTool.Common.Data;
 
-public enum Month : int
+public enum Month
 {
     January = 1,
     February = 2,
@@ -49,13 +49,14 @@ public enum EventStatus
     Finished = 4,
 }
 
-public enum PlannedContentStatus
+public enum PlannedStatus
 {
     Unknown = 0,
-    FarmStatus = 1,
-    LikelyKilled = 2,
-    Progress = 3,
-    NotPlanned = 4,
+    Planned = 1,
+    NotPlanned = 2,
+    SafeKill = 3,
+    Kill = 4,
+    Progress = 5,
 }
 
 public enum ItemSource

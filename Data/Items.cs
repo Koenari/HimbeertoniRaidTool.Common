@@ -10,11 +10,10 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public class HqItem : Item, IEquatable<HqItem>, ICloneable<HqItem>, IHasDtoIsCreatable<HqItem, HqItemDto>
 {
-    private readonly bool _hq;
     [JsonProperty] public bool IsHq
     {
-        get => _hq && CanBeHq;
-        init => _hq = value & CanBeHq;
+        get => field && CanBeHq;
+        init => field = value & CanBeHq;
     }
 
     [JsonConstructor]
@@ -104,7 +103,7 @@ public class Item : IEquatable<Item>, IHrtDataType, ICloneable<Item>, IHasDtoIsC
 
 public class ItemIdCollection : IEnumerable<uint>
 {
-    public static readonly ItemIdCollection Empty = new();
+    public static readonly ItemIdCollection Empty = [];
     private readonly Collection<uint> _ids;
 
     public ItemIdCollection(params uint[] ids)

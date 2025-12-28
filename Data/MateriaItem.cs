@@ -11,7 +11,7 @@ namespace HimbeertoniRaidTool.Common.Data;
 [ImmutableObject(true)]
 public class MateriaItem(uint id) : Item(id)
 {
-    private static readonly ExcelSheet<Materia> MateriaSheet = CommonLibrary.ExcelModule.GetSheet<Materia>();
+    private static readonly ExcelSheet<Materia> _materiaSheet = CommonLibrary.ExcelModule.GetSheet<Materia>();
 
 
     [JsonConstructor] //This is used to convert old data to new id based item data
@@ -24,9 +24,7 @@ public class MateriaItem(uint id) : Item(id)
     {
     }
 
-    public static string DataTypeNameStatic => CommonLoc.DataTypeName_materia;
-
-    public new string DataTypeName => DataTypeNameStatic;
+    public static new string DataTypeName => CommonLoc.DataTypeName_materia;
 
     public MateriaCategory Category => GameItem.MateriaLookup[Id].cat;
 
@@ -35,6 +33,6 @@ public class MateriaItem(uint id) : Item(id)
     public StatType StatType => Category.GetStatType();
 
     public int GetStat() => Category != MateriaCategory.None && Level != MateriaLevel.None
-        ? MateriaSheet.GetRow((uint)Category).Value[(byte)Level] : 0;
+        ? _materiaSheet.GetRow((uint)Category).Value[(byte)Level] : 0;
 
 }

@@ -15,9 +15,9 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 {
     #region Static
 
-    private static readonly ExcelSheet<World> WorldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
+    private static readonly ExcelSheet<World> _worldSheet = CommonLibrary.ExcelModule.GetSheet<World>();
 
-    private static readonly ExcelSheet<Tribe> TribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
+    private static readonly ExcelSheet<Tribe> _tribeSheet = CommonLibrary.ExcelModule.GetSheet<Tribe>();
 
     private static SHA256 _sha256 = SHA256.Create();
 
@@ -55,7 +55,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     /// </summary>
     [JsonProperty("RemoteIDs")] public readonly List<HrtId> RemoteIds = [];
     [JsonProperty("Wallet")] public readonly Wallet Wallet = new();
-    [JsonProperty("MainJob")] private Job? _mainJob;
 
     /// <summary>
     ///     Character unique ID calculated from characters ContentID.
@@ -72,6 +71,8 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     [JsonProperty("LodestoneID")] public int LodestoneId;
     [JsonProperty("Name")] public string Name;
     [JsonProperty("Tribe")] public uint TribeId;
+    // ReSharper disable once ReplaceWithFieldKeyword Does not work with Json serialization
+    [JsonProperty("MainJob")] private Job? _mainJob;
 
     #endregion
 
@@ -83,6 +84,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
         HomeWorldId = worldId;
         Name = name;
     }
+
 
     public Job? MainJob
     {
@@ -97,11 +99,11 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     }
 
     public PlayableClass? MainClass => this[MainJob];
-    public Tribe Tribe => TribeSheet.GetRow(TribeId);
+    public Tribe Tribe => _tribeSheet.GetRow(TribeId);
 
     public World? HomeWorld
     {
-        get => HomeWorldId > 0 ? WorldSheet.GetRow(HomeWorldId) : null;
+        get => HomeWorldId > 0 ? _worldSheet.GetRow(HomeWorldId) : null;
         set => HomeWorldId = value?.RowId ?? 0;
     }
 
@@ -169,6 +171,9 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
 
     public Character Clone() => CloneService.Clone(this);
 
+
+    // ReSharper disable NonReadonlyMemberInGetHashCode
+    //TODO: Figure out proper way
     public override int GetHashCode() => LocalId.GetHashCode();
 
     public void MergeInfos(Character toMerge)

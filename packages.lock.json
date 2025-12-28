@@ -1,43 +1,57 @@
 {
   "version": 1,
   "dependencies": {
-    "net9.0": {
+    "net10.0": {
       "Newtonsoft.Json": {
         "type": "Direct",
-        "requested": "[13.0.3, )",
-        "resolved": "13.0.3",
-        "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
+        "requested": "[13.0.4, )",
+        "resolved": "13.0.4",
+        "contentHash": "pdgNNMai3zv51W5aq268sujXUyx7SNdE2bj1wZcWjAQrKMFZV260lbqYop1d2GM67JI1huLRwxo9ZqnfF/lC6A=="
       },
       "XIVCalc.Lumina": {
         "type": "Direct",
-        "requested": "[7.3.1, )",
-        "resolved": "7.3.1",
-        "contentHash": "aJ9Gw9N7CPAeLz5QlmIC9otAVLmn79QNyI9albGL9/upAnB+bPTF/z9jBN66Md1iEAbiPBaGDfQj0/p7JhW/Kw==",
+        "requested": "[7.4.1, )",
+        "resolved": "7.4.1",
+        "contentHash": "md3ygQOfQbB5EUl429AaR+CqxSPgP6pMbleTmDaFeoVdabRsTGqR8F29VfKylvhCaUUOmYEVadewK1Fewo/OCg==",
         "dependencies": {
-          "Lumina.Excel": "7.3.1",
+          "Lumina.Excel": "7.4.1",
           "XIVCalc": "0.3.1"
         }
       },
+      "BCnEncoder.Net": {
+        "type": "Transitive",
+        "resolved": "2.2.1",
+        "contentHash": "tI5+/OQo0kciLqWrViRjpOH+IL3FjexYnoWZajiGV41g/EM9CGbWsxsPzBDmpoxNkrV9uox/EtIhCIi9chBSFw==",
+        "dependencies": {
+          "CommunityToolkit.HighPerformance": "8.4.0"
+        }
+      },
+      "CommunityToolkit.HighPerformance": {
+        "type": "Transitive",
+        "resolved": "8.4.0",
+        "contentHash": "flxspiBs0G/0GMp7IK2J2ijV9bTG6hEwFc/z6ekHqB6nwRJ4Ry2yLdx+TkbCUYFCl4XhABkAwomeKbT6zM2Zlg=="
+      },
       "Lumina": {
         "type": "Transitive",
-        "resolved": "6.3.0",
-        "contentHash": "FQlZ16KhXtPGCEq1KeRTDZ14uq6qrvW2vYnNNlCpW7Xs1iLhF8AJsbYG8S0y1NnP7BRholPY8KGToVTsvmb8jw==",
+        "resolved": "7.1.0",
+        "contentHash": "7zjreOpMXOhf+m5uTefoLZO6Mt3y68XhK036eDOS5JJ8yuIjAgFteWkzdCRcss8+PH5skMnDMDUZoTJJefQCtg==",
         "dependencies": {
-          "Microsoft.Extensions.ObjectPool": "8.0.7"
+          "BCnEncoder.Net": "2.2.1",
+          "Microsoft.Extensions.ObjectPool": "10.0.0"
         }
       },
       "Lumina.Excel": {
         "type": "Transitive",
-        "resolved": "7.3.1",
-        "contentHash": "NKjlWOi/hnBx6ZHV/VmDknIFQLuBmBoqdufDxawzoAsAwye2dibZdMYyz/gIezSRzAMbU0qP9h51uYo65eiWIQ==",
+        "resolved": "7.4.1",
+        "contentHash": "j8MeFA8MFFhXOrhfMrmTJAyIzwLVMF/52hujG00sFEYCLb25AFW8NhkiG8O1PLksdkeTnEvirNSfD5sPXBcTrg==",
         "dependencies": {
-          "Lumina": "6.3.0"
+          "Lumina": "7.1.0"
         }
       },
       "Microsoft.Extensions.ObjectPool": {
         "type": "Transitive",
-        "resolved": "8.0.7",
-        "contentHash": "2yLweyqmpuuFSRo+I3sLHMxmnAgNcI537kBJiyv49U2ZEqo00jZcG8lrnD8uCiOJp9IklYyTZULtbsXoFVzsjQ=="
+        "resolved": "10.0.0",
+        "contentHash": "bpeCq0IYmVLACyEUMzFIOQX+zZUElG1t+nu1lSxthe7B+1oNYking7b91305+jNB6iwojp9fqTY9O+Nh7ULQxg=="
       },
       "XIVCalc": {
         "type": "Transitive",

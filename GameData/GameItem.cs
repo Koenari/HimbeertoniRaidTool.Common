@@ -13,7 +13,7 @@ public class GameItem(LuminaItem item)
 
     protected static readonly ExcelSheet<LuminaItem> ItemSheet = CommonLibrary.ExcelModule.GetSheet<LuminaItem>();
 
-    private static readonly Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> MateriaLookupImpl = new(() =>
+    private static readonly Lazy<Dictionary<uint, (MateriaCategory, MateriaLevel)>> _materiaLookupImpl = new(() =>
     {
         var result = new Dictionary<uint, (MateriaCategory, MateriaLevel)>
             { { 0, (MateriaCategory.None, MateriaLevel.None) } };
@@ -29,7 +29,7 @@ public class GameItem(LuminaItem item)
         return result;
     });
 
-    private static readonly Lazy<Dictionary<(uint cat, MateriaLevel level), uint>> ReverseMateriaLookupImpl =
+    private static readonly Lazy<Dictionary<(uint cat, MateriaLevel level), uint>> _reverseMateriaLookupImpl =
         new(() =>
         {
             var result = new Dictionary<(uint, MateriaLevel), uint>();
@@ -44,9 +44,9 @@ public class GameItem(LuminaItem item)
             }
             return result;
         });
-    public static Dictionary<uint, (MateriaCategory cat, MateriaLevel level)> MateriaLookup => MateriaLookupImpl.Value;
+    public static Dictionary<uint, (MateriaCategory cat, MateriaLevel level)> MateriaLookup => _materiaLookupImpl.Value;
     public static Dictionary<(uint, MateriaLevel), uint> ReverseMateriaLookup =>
-        ReverseMateriaLookupImpl.Value;
+        _reverseMateriaLookupImpl.Value;
 
     public GameItem(uint id) : this(ItemSheet.GetRow(id)) { }
 

@@ -38,11 +38,13 @@ internal class CuratedData
             [
                 new RaidTier(Normal, 710, 700, "AAC Light-heavyweight Tier", [30135, 30137, 30139, 30141]),
                 new RaidTier(Normal, 750, 740, "AAC Cruiserweight Tier", [30145, 30147, 30149, 30151]),
+                new RaidTier(Normal, 790, 780, "AAC Heavyweight Tier", [30154, 30156, 30158, 30160]),
             ],
             SavageRaidTiers =
             [
                 new RaidTier(Savage, 735, 730, "AAC Light-heavyweight Tier Savage", [30136, 30138, 30140, 30142]),
                 new RaidTier(Savage, 765, 760, "AAC Cruiserweight Savage", [30146, 30148, 30150, 30152]),
+                new RaidTier(Savage, 795, 790, "AAC Heavyweight Savage", [30155, 30157, 30159, 30161]),
             ],
         },
     ];
@@ -108,6 +110,18 @@ internal class CuratedData
         { 46719, 46702..46706 }, //babyface champion's ring gear coffer (IL 760)
         //7.3
         { 46981, 46984..47005 }, //ageless weapon coffers (IL 755)
+        //7.4
+        { 49738, 49658..49678 }, //Grand Champion's Weapon Coffer (IL 795)
+        { 49739, [49680, 49685, 49690, 49695, 49700, 49705, 49710] }, //Grand Champion's Head Gear Coffer (IL 790)
+        { 49740, [49681, 49686, 49691, 49696, 49701, 49706, 49711] }, //Grand Champion's Chest Gear Coffer (IL 790)
+        { 49741, [49682, 49687, 49692, 49697, 49702, 49707, 49712] }, //Grand Champion's Hand Gear Coffer (IL 790)
+        { 49742, [49683, 49688, 49693, 49698, 49703, 49708, 49713] }, //Grand Champion's Leg Gear Coffer (IL 790)
+        { 49743, [49684, 49689, 49694, 49699, 49704, 49709, 49714] }, //Grand Champion's Foot Gear Coffer (IL 790)
+        { 49744, 49715..49719 }, //Grand Champion's Earring Coffer (IL 790)
+        { 49745, 49720..49724 }, //Grand Champion's Necklace Coffer (IL 790)
+        { 49746, 49725..49729 }, //Grand Champion's Bracelet Coffer (IL 790)
+        { 49747, 49730..49735 }, //Grand Champion's Ring Coffer (IL 790)
+
     };
 
     //I only record Gear and items used to get gear
@@ -220,5 +234,15 @@ internal class CuratedData
         new(20104, Normal), //Trial: the Ageless Necropolis
         new(20105, Extreme, 46984..47005, 46981..46982), //Trial:The Minstrel's Ballad: Necron's Embrace
         new(64011, Unreal), //The Wreath of Snakes (Unreal)
+        //7.4
+        new(00103, Normal, 49372..49426), //Mistwake,
+        new(30154, Normal, 49749..49754), //M1
+        new(30155, Savage, 49744..49747, 49760), //M1 S
+        new(30156, Normal, 49749..49754), //M2
+        new(30157, Savage, new ItemIdCollection(49739, 49741, 49743, 49756, 49759), 49761), //M2 S
+        new(30158, Normal, 49749..49754), //M3
+        new(30159, Savage, new ItemIdCollection(49740, 49742, 49757, 49758), 49762), //M3 S
+        new(30160, Normal, 49749..49754, 49755), //M4
+        new(30161, Savage, new ItemIdCollection(49658..49678, 49738), 49763), //M4 S
     ];
 }

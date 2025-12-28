@@ -6,17 +6,17 @@ namespace HimbeertoniRaidTool.Common.Data;
 
 public class InstanceWithLoot
 {
-    private static readonly ExcelSheet<InstanceContent> InstanceSheet =
+    private static readonly ExcelSheet<InstanceContent> _instanceSheet =
         CommonLibrary.ExcelModule.GetSheet<InstanceContent>();
-    private static readonly ExcelSheet<ContentFinderCondition> ContentFinderSheet =
+    private static readonly ExcelSheet<ContentFinderCondition> _contentFinderSheet =
         CommonLibrary.ExcelModule.GetSheet<ContentFinderCondition>();
-    private static readonly Dictionary<uint, uint> ContentFinderLookup;
+    private static readonly Dictionary<uint, uint> _contentFinderLookup;
     static InstanceWithLoot()
     {
-        ContentFinderLookup = new Dictionary<uint, uint>();
-        foreach (ContentFinderCondition? row in ContentFinderSheet.Where(x => x.ContentLinkType == 1))
+        _contentFinderLookup = new Dictionary<uint, uint>();
+        foreach (ContentFinderCondition? row in _contentFinderSheet.Where(x => x.ContentLinkType == 1))
         {
-            ContentFinderLookup.TryAdd(row.Value.Content.RowId, row.Value.RowId);
+            _contentFinderLookup.TryAdd(row.Value.Content.RowId, row.Value.RowId);
         }
     }
     public bool IsAvailable => _contentFinderCondition is not null;
@@ -47,9 +47,9 @@ public class InstanceWithLoot
     public InstanceWithLoot(uint id, EncounterDifficulty difficulty, ItemIdCollection? possibleLoot = null,
                             ItemIdCollection? guaranteedLoot = null)
     {
-        _instanceContent = InstanceSheet.GetRow(id);
-        _contentFinderCondition = ContentFinderLookup.TryGetValue(id, out uint contentId)
-            ? ContentFinderSheet.GetRow(contentId) : null;
+        _instanceContent = _instanceSheet.GetRow(id);
+        _contentFinderCondition = _contentFinderLookup.TryGetValue(id, out uint contentId)
+            ? _contentFinderSheet.GetRow(contentId) : null;
         Difficulty = difficulty;
         GuaranteedItems = (guaranteedLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));
         PossibleItems = (possibleLoot ?? ItemIdCollection.Empty).Select((selectId, _) => new Item(selectId));

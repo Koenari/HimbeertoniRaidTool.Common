@@ -5,13 +5,10 @@ namespace HimbeertoniRaidTool.Common.Services;
 
 public class CloneService
 {
-    private static CloneService Instance { get; } = new();
+    private static CloneService _instance { get; } = new();
 
     private readonly JsonSerializer _serializer;
-    private readonly JsonSerializerSettings _settings = new()
-    {
-
-    };
+    private readonly JsonSerializerSettings _settings = new();
     private readonly ReferenceConverter _referenceConverter = new();
 
     private CloneService()
@@ -29,7 +26,7 @@ public class CloneService
         return _serializer.Deserialize<TData>(reader)!;
     }
 
-    public static TData Clone<TData>(TData data) => Instance.InternalClone(data);
+    public static TData Clone<TData>(TData data) => _instance.InternalClone(data);
 
     private class ReferenceConverter : JsonConverter<IReference>
     {

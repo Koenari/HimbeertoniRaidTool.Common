@@ -9,11 +9,10 @@ namespace HimbeertoniRaidTool.Common;
 public static class CommonLibrary
 {
     private static bool _isInitialized;
-    private static ExcelModule? _excelModule;
     internal static ExcelModule ExcelModule
     {
-        get => _excelModule ?? throw new InvalidOperationException("CommonLibrary is not initialized.");
-        private set => _excelModule = value;
+        get => field ?? throw new InvalidOperationException("CommonLibrary is not initialized.");
+        private set;
     }
     public static void Init(ExcelModule module, string? language = null)
     {
