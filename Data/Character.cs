@@ -10,7 +10,7 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Character, CharacterDto>, IFormattable,
+public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithDto<Character, CharacterDto>, IFormattable,
                          ICloneable<Character>
 {
     #region Static
@@ -201,4 +201,6 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
     }
     public CharacterDto ToDto() => new(this);
     public void UpdateFromDto(CharacterDto dto) => throw new NotImplementedException();
+    
+    public static Character FromDto(CharacterDto dto) => throw new NotImplementedException();
 }

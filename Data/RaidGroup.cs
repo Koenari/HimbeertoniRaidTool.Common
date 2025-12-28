@@ -7,7 +7,7 @@ using HimbeertoniRaidTool.Common.Services;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup, RaidGroupDto>, ICloneable<RaidGroup>
+public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithDto<RaidGroup, RaidGroupDto>, ICloneable<RaidGroup>, ICreatableFromDto<RaidGroup, RaidGroupDto>
 {
     public static string DataTypeName => CommonLoc.DataTypeName_RaidGroup;
 
@@ -128,4 +128,6 @@ public class RaidGroup : IEnumerable<Player>, IHrtDataTypeWithId<RaidGroup, Raid
     }
     public RaidGroupDto ToDto() => new(this);
     public void UpdateFromDto(RaidGroupDto dto) => throw new NotImplementedException();
+    
+    public static RaidGroup FromDto(RaidGroupDto dto) => throw new NotImplementedException();
 }

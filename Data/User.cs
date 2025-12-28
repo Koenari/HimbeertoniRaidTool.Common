@@ -5,7 +5,7 @@ using HimbeertoniRaidTool.Common.Services;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class User : IHrtDataTypeWithId<User, UserDto>, ICloneable<User>
+public class User : IHrtDataTypeWithDto<User, UserDto>, ICloneable<User>
 {
     public static string DataTypeNameStatic => "user";
     public static HrtId.IdType IdTypeStatic => HrtId.IdType.User;
@@ -74,4 +74,5 @@ public class User : IHrtDataTypeWithId<User, UserDto>, ICloneable<User>
         Username = dto.Username;
         DisplayName = dto.DisplayName;
     }
+    public static User FromDto(UserDto dto) => throw new NotImplementedException();
 }

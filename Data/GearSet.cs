@@ -9,7 +9,7 @@ using Lumina.Excel.Sheets;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore)]
-public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithId<GearSet, GearSetDto>,
+public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWithDto<GearSet, GearSetDto>,
                        ICloneable<GearSet>
 {
     public const int NUM_SLOTS = 12;
@@ -190,6 +190,8 @@ public class GearSet : IEnumerable<GearItem>, IReadOnlyGearSet, IHrtDataTypeWith
     }
     public GearSetDto ToDto() => new(this);
     public void UpdateFromDto(GearSetDto dto) => throw new NotImplementedException();
+    
+    public static GearSet FromDto(GearSetDto dto) => throw  new NotImplementedException();
 }
 
 internal class GearSetOverride(IReadOnlyGearSet baseSet, GearSetSlot slot, GearItem item) : IReadOnlyGearSet

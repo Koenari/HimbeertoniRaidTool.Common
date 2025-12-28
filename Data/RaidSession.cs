@@ -6,7 +6,7 @@ using HimbeertoniRaidTool.Common.Services;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization.OptIn)]
-public class RaidSession : IHrtDataTypeWithId<RaidSession, RaidSessionDto>, ICloneable<RaidSession>
+public class RaidSession : IHrtDataTypeWithDto<RaidSession, RaidSessionDto>, ICloneable<RaidSession>
 {
     public static string DataTypeName => "raid session";
     public string Name => Title.Length > 0 ? Title : $"{Group?.Name} @ {StartTime:f}";
@@ -129,6 +129,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession, RaidSessionDto>, IClo
         _plannedContent.AddRange(dataCopy.PlannedContent);
     }
 
+    
     public override string ToString()
     {
         return Title.Length > 0 ? $"{Title} ({Group?.Name} @ {StartTime:f})"
@@ -138,6 +139,7 @@ public class RaidSession : IHrtDataTypeWithId<RaidSession, RaidSessionDto>, IClo
 
     public RaidSessionDto ToDto() => new(this);
     public void UpdateFromDto(RaidSessionDto dto) => throw new NotImplementedException();
+    public static RaidSession FromDto(RaidSessionDto dto) => throw new NotImplementedException();
 }
 
 [JsonObject(MemberSerialization.OptIn)]

@@ -32,7 +32,7 @@ public sealed class ParticipantDto(Participant participant)
 public sealed class InstanceSessionDto(InstanceSession session)
 {
     public uint InstanceId = session.Instance.InstanceId;
-    public InstanceSession.PlannedStatus Plan = session.Plan;
+    public PlannedStatus Plan = session.Plan;
     public bool Tried = session.Tried;
     public bool Killed = session.Killed;
     public float BestPercentage = session.BestPercentage;

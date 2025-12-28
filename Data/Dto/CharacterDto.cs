@@ -14,13 +14,7 @@ public class CharacterDto
         LodestoneId = character.LodestoneId;
         Name = character.Name;
         TribeId = character.TribeId;
-        foreach (var job in character.Classes)
-        {
-            Classes.Add(job.ToDto());
-        }
-
     }
-    public readonly IList<ClassDto> Classes = [];
 
     public readonly WalletDto Wallet;
 

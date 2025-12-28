@@ -6,7 +6,7 @@ using HimbeertoniRaidTool.Common.Services;
 namespace HimbeertoniRaidTool.Common.Data;
 
 [JsonObject(MemberSerialization = MemberSerialization.OptIn)]
-public class Player : IHrtDataTypeWithId<Player, PlayerDto>, ICloneable<Player>
+public class Player : IHrtDataTypeWithDto<Player, PlayerDto>, ICloneable<Player>
 {
     #region Static
 
@@ -76,15 +76,18 @@ public class Player : IHrtDataTypeWithId<Player, PlayerDto>, ICloneable<Player>
     public Player Clone() => CloneService.Clone(this);
 
     public bool Equals(IHasHrtId? obj) => LocalId.Equals(obj?.LocalId);
+    
     public override string ToString() => Name;
 
-    public void RemoveCharacter(Character character)
+    public bool RemoveCharacter(HrtId character)
     {
         var mainChar = MainChar;
-        _characters.RemoveAll(c => c.Data.Equals(character));
+        var removed = _characters.RemoveAll(c => c.Id.Equals(character));
         MainChar = mainChar;
+        return removed > 0;
     }
     public void AddCharacter(Character character) => _characters.Add(character);
     public PlayerDto ToDto() => new(this);
     public void UpdateFromDto(PlayerDto dto) => throw new NotImplementedException();
+    public static Player FromDto(PlayerDto dto) => throw new NotImplementedException();
 }

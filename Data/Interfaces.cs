@@ -41,10 +41,15 @@ public interface IHrtDataType
 
 public interface IHrtDataTypeWithId : IHrtDataType, IHasHrtId;
 
-public interface IHrtDataTypeWithId<TData, TDto> : IHrtDataTypeWithId, IHasHrtId<TData>, IHasDtoIsUpdatable<TDto>
+public interface IHrtDataTypeWithId<TData> : IHrtDataTypeWithId, IHasHrtId<TData>
     where TData : IHasHrtId<TData>
 {
     static abstract TData Empty { get; }
+}
+
+public interface IHrtDataTypeWithDto<TData, TDto> : IHrtDataTypeWithId<TData>,IHasDtoIsCreatableAndUpdatable<TData, TDto> where TData : IHasHrtId<TData>
+{
+    
 }
 
 public interface ICloneable<out TData>
