@@ -435,4 +435,64 @@
   <data name="PartyBonus_FivePercent" xml:space="preserve">
         <value>Voller Bonus</value>
     </data>
+  <data name="InviteStatus_NoStatus" xml:space="preserve">
+        <value>Kein Status</value>
+    </data>
+  <data name="InviteStatus_NotInvited" xml:space="preserve">
+        <value>Nicht Eingeladen</value>
+    </data>
+  <data name="InviteStatus_Invited" xml:space="preserve">
+        <value>Eingeladen</value>
+    </data>
+  <data name="InviteStatus_Declined" xml:space="preserve">
+        <value>Abgelehnt</value>
+    </data>
+  <data name="InviteStatus_Unsure" xml:space="preserve">
+        <value>Unsicher</value>
+    </data>
+  <data name="InviteStatus_Accepted" xml:space="preserve">
+        <value>Angenommen</value>
+    </data>
+  <data name="InviteStatus_Revoked" xml:space="preserve">
+        <value>Widerrufen</value>
+    </data>
+  <data name="InviteStatus_Confirmed" xml:space="preserve">
+        <value>Bestätigt</value>
+    </data>
+  <data name="ParticipationStatus_No_Status" xml:space="preserve">
+        <value>Kein Status</value>
+    </data>
+  <data name="ParticipationStatus_Present" xml:space="preserve">
+        <value>Anwesend</value>
+    </data>
+  <data name="ParticipationStatus_Partially_Present" xml:space="preserve">
+        <value>Teilweise anwesend</value>
+    </data>
+  <data name="ParticipationStatus_Excused" xml:space="preserve">
+        <value>Entschuldigt</value>
+    </data>
+  <data name="ParticipationStatus_Absent" xml:space="preserve">
+        <value>Abwesend</value>
+    </data>
+  <data name="ParticipationStatus_Present_But_Late" xml:space="preserve">
+        <value>Anwesend aber spät</value>
+    </data>
+  <data name="PlannedStatus_Unknown" xml:space="preserve">
+        <value>Unbekannt</value>
+    </data>
+  <data name="PlannedStatus_Planned" xml:space="preserve">
+        <value>Geplant</value>
+    </data>
+  <data name="PlannedStatus_Not_Planned" xml:space="preserve">
+        <value>Nicht geplant</value>
+    </data>
+  <data name="PlannedStatus_Safe_Kill" xml:space="preserve">
+        <value>Sicherer Kill</value>
+    </data>
+  <data name="PlannedStatus_Kill" xml:space="preserve">
+        <value>Geplanter Kill</value>
+    </data>
+  <data name="PlannedStatus_Progress" xml:space="preserve">
+        <value>Progress</value>
+    </data>
 </root>
