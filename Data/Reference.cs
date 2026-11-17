@@ -35,7 +35,9 @@ public class Reference<T>(HrtId id,Func<HrtId,T?> getObject) : IReference, IEqua
     public override bool Equals(object? obj) => Equals(obj as Reference<T>);
     public bool Equals(Reference<T>? other) => this.Id.Equals(other?.Id);
     public Reference(T obj) : this(obj.LocalId, _ => obj){}
-    
+
+    public override string? ToString() => Data.ToString();
+
     public static implicit operator T(Reference<T> obj) => obj.Data;
     
     [return: NotNullIfNotNull(nameof(obj))]

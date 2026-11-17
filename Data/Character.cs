@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Globalization;
 using System.Security.Cryptography;
 using HimbeertoniRaidTool.Common.Localization;
 using HimbeertoniRaidTool.Common.Security;
@@ -127,7 +128,7 @@ public class Character : IEnumerable<PlayableClass>, IHrtDataTypeWithId<Characte
         _classes.Add(classToAdd);
         return classToAdd;
     }
-    public override string ToString() => ToString(null, null);
+    public override string ToString() => ToString(null, CultureInfo.InvariantCulture);
 
     public string ToString(string? format, IFormatProvider? formatProvider) => format switch
     {
